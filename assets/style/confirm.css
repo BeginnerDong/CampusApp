@@ -1,0 +1,16 @@
+
+.coupon .item{align-items: flex-start;}
+.coupon .pic{width: 140rpx;height: 140rpx;display: block;}
+.coupon .rr{width: 75%;}
+.coupon .tag{margin-right: 20rpx;color: #0fca86;}
+.coupon .tagIcon{width: 26rpx;height: 26rpx;display: block;margin-right: 10rpx;}
+
+
+/* 数量加减 */
+.numBox{ border-radius: 8rpx;}
+.numBox .btn{ width: 44rpx; height: 44rpx;color: #999; font-size:40rpx ; text-align: center; line-height: 40rpx;border-radius: 6rpx;background: #F5F5F5;}
+.numBox view.num{ width: 60rpx; color: #333; font-size: 28rpx;text-align: center;}
+.numBox view.plus{background: #222;}
+
+.payShow{width: 80%;padding: 100rpx 40rpx;box-sizing: border-box;position: fixed; top: 50%;left: 50%;transform: translate(-50%,-50%);z-index: 45;}
+.payShow .time{line-height: 50rpx;padding: 0 30rpx;background: #F5F5F5;border-radius: 30rpx;}

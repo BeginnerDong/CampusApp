@@ -1,0 +1,6 @@
+
+	/* 报名提示框 */
+	.alertBox{width: 80%;position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);z-index: 60;box-sizing: border-box;}
+	.alertBox .seltBtn{border-top: 1px solid #eee;}
+	.alertBox .half{width: 50%;box-sizing: border-box;line-height: 100rpx;}
+	.alertBox .half:first-child{border-right: 1px solid #eee;}

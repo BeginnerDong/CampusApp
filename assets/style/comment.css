@@ -1,0 +1,35 @@
+
+	/* 评论 */
+	.comment .child{padding: 30rpx 0;box-sizing: border-box;border-bottom: 1px solid #eee;position: relative;overflow: hidden;}
+	.comment .child .photo{width: 90rpx; height: 90rpx;margin-right:20rpx;}
+	.comment .child .photo image{width: 100%;height: 100%; display: block;border-radius: 50%;}
+	.comment .child .name{width: 400rpx;}
+	.comment .child .dian{width: 10rpx;height: 10rpx;border-radius: 50%;background: #c9c9c9;margin-left: 10rpx;}
+	.comment .child .imgbox{display: flex;flex-wrap: wrap;}
+	
+	.comment .imgbox .lisThree{ width:220rpx;height: 220rpx; overflow: hidden; margin-right: 15rpx;}
+	.comment .imgbox .lisThree:nth-child(3n){margin-right: 0;}
+	.comment .imgbox .lisOne{width: 100%; height: 360rpx;}
+	.comment .imgbox .lisTwo{width:240rpx; height: 240rpx;margin-right: 30rpx;}
+	.comment .imgbox .lisTwo:nth-child(2n){margin-right: 0;}
+	.comment .imgbox .img{margin-top: 20rpx;}
+	.comment .imgbox image{width: 100%;height: 100%;display: block;border-radius: 10rpx;}
+	
+	.comment .label .lis{ margin-left:90rpx;}
+	.comment .label .lis image{width: 30rpx; height:30rpx; display: block; margin-right: 10rpx;}
+	
+	/* 活动图片 */
+	.activeBox .imgbox .lisThree{width: 200rpx;height: 200rpx;}
+	.activeBox .imgbox .lisThree image{border-radius: 0;}
+	
+	/* 已报名图标 */
+	.FX-icon{position: absolute;top: 0;left: 0;width: 80rpx;height: 83rpx;z-index: 1;}
+	
+	.zongheShow{padding: 20rpx 6%;position: relative;z-index: 60;border-top: 1px solid #eee;max-height: 500rpx;overflow-y: auto;}
+	.zongheShow .item{padding: 20rpx 0; color: #666;}
+	.zongheShow .item .selIcon{width: 26rpx; height: 19rpx; display: block; display: none;}
+	.zongheShow .item.on{color: #222;font-weight: bold;}
+	.zongheShow .item.on .selIcon{display: block;}
+	
+	
+	

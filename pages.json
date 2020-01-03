@@ -1,0 +1,458 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "登录",//设置页面标题文字
+				"onReachBottomDistance":100,
+				 "navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/register/register",
+			"style": {
+				"navigationBarTitleText": "注册",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/registerMsg/registerMsg",
+			"style": {
+				"navigationBarTitleText": "完善信息",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/postDetails/postDetails",
+			"style": {
+				"navigationBarTitleText": "详情",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/post-plDetail/post-plDetail",
+			"style": {
+				"navigationBarTitleText": "评论详情",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/persDynamic/persDynamic",
+			"style": {
+				"navigationBarTitleText": "个人动态",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/postDetails-Two/postDetails-Two",
+			"style": {
+				"navigationBarTitleText": "详情",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/report/report",
+			"style": {
+				"navigationBarTitleText": "举报",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/activityDetail/activityDetail",
+			"style": {
+				"navigationBarTitleText": "活动详情",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/activity/activity",
+			"style": {
+				"navigationBarTitleText": "活动",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/user/user",
+			"style": {
+				"navigationBarTitleText": "我的",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/seach/seach",
+			"style": {
+				"navigationBarTitleText": "搜索",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/seachDetail/seachDetail",
+			"style": {
+				"navigationBarTitleText": "搜索",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/userHome/userHome",
+			"style": {
+				"navigationBarTitleText": "ta的主页",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/userHome-tidings/userHome-tidings",
+			"style": {
+				"navigationBarTitleText": "私信",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/activityFaBu/activityFaBu",
+			"style": {
+				"navigationBarTitleText": "发布活动",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/find/find",
+			"style": {
+				"navigationBarTitleText": "发现",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/communityHome/communityHome",
+			"style": {
+				"navigationBarTitleText": "社区主页",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/communityFaBu/communityFaBu",
+			"style": {
+				"navigationBarTitleText": "社区发布",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/NIP/NIP",
+			"style": {
+				"navigationBarTitleText": "NIP",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/foodLists/foodLists",
+			"style": {
+				"navigationBarTitleText": "美食",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/foodDetail/foodDetail",
+			"style": {
+				"navigationBarTitleText": "详情",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/food-orderConfirm/food-orderConfirm",
+			"style": {
+				"navigationBarTitleText": "确认订单",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/shopDetail/shopDetail",
+			"style": {
+				"navigationBarTitleText": "店铺详情",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/shop-comment/shop-comment",
+			"style": {
+				"navigationBarTitleText": "评论",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/integralShop/integralShop",
+			"style": {
+				"navigationBarTitleText": "积分商城",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/integralShop-detail/integralShop-detail",
+			"style": {
+				"navigationBarTitleText": "商品详情",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/integral-orderConfirm/integral-orderConfirm",
+			"style": {
+				"navigationBarTitleText": "确认兑换",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/tidings/tidings",
+			"style": {
+				"navigationBarTitleText": "消息",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/userSetting/userSetting",
+			"style": {
+				"navigationBarTitleText": "设置",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/userSetting-notice/userSetting-notice",
+			"style": {
+				"navigationBarTitleText": "通知",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/userSetting-help/userSetting-help",
+			"style": {
+				"navigationBarTitleText": "帮助与客服",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-realname/user-realname",
+			"style": {
+				"navigationBarTitleText": "实名认证",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/personHome/personHome",
+			"style": {
+				"navigationBarTitleText": "个人主页",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/personHome-replaceImg/personHome-replaceImg",
+			"style": {
+				"navigationBarTitleText": "更换背景",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/person-followok/person-followok",
+			"style": {
+				"navigationBarTitleText": "关注",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/person-follow/person-follow",
+			"style": {
+				"navigationBarTitleText": "被关注",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/TA-Home/TA-Home",
+			"style": {
+				"navigationBarTitleText": "TA的主页",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/person-name/person-name",
+			"style": {
+				"navigationBarTitleText": "昵称",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/person-autograph/person-autograph",
+			"style": {
+				"navigationBarTitleText": "签名",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/person-role/person-role",
+			"style": {
+				"navigationBarTitleText": "角色",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/person-personInfor/person-personInfor",
+			"style": {
+				"navigationBarTitleText": "个人资料",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-NIP/user-NIP",
+			"style": {
+				"navigationBarTitleText": "NIP值",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-NIP-SignIn/user-NIP-SignIn",
+			"style": {
+				"navigationBarTitleText": "签到",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-NIP-value/user-NIP-value",
+			"style": {
+				"navigationBarTitleText": "我的NIP值",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-NIP-coupon/user-NIP-coupon",
+			"style": {
+				"navigationBarTitleText": "优惠券",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-NIP-couponPingJia/user-NIP-couponPingJia",
+			"style": {
+				"navigationBarTitleText": "评价",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-NIP-banli/user-NIP-banli",
+			"style": {
+				"navigationBarTitleText": "NIP办理",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-myFabu/user-myFabu",
+			"style": {
+				"navigationBarTitleText": "我的发布",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/myFabu-activityDetail/myFabu-activityDetail",
+			"style": {
+				"navigationBarTitleText": "活动详情",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-mySheQu/user-mySheQu",
+			"style": {
+				"navigationBarTitleText": "我的社区",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-mySheQu-Home/user-mySheQu-Home",
+			"style": {
+				"navigationBarTitleText": "社区主页",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-mySheQu-peopleNum/user-mySheQu-peopleNum",
+			"style": {
+				"navigationBarTitleText": "社区人数",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-addSheQu/user-addSheQu",
+			"style": {
+				"navigationBarTitleText": "创建社区",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-joinActivity/user-joinActivity",
+			"style": {
+				"navigationBarTitleText": "参与活动",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-collect/user-collect",
+			"style": {
+				"navigationBarTitleText": "收藏夹",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-feedback/user-feedback",
+			"style": {
+				"navigationBarTitleText": "意见反馈",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-order/user-order",
+			"style": {
+				"navigationBarTitleText": "订单信息",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-joinUs/user-joinUs",
+			"style": {
+				"navigationBarTitleText": "加入我们",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/positionDetail/positionDetail",
+			"style": {
+				"navigationBarTitleText": "职位详情",
+				"onReachBottomDistance":100
+			}
+		}
+    ],
+	"globalStyle": {
+		//"navigationStyle":"custom",
+		"navigationBarTextStyle": "black",//导航栏文字蓝色
+		"navigationBarTitleText": "校园APP",
+		"navigationBarBackgroundColor": "#fff"
+	},
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "", //模式名称
+			"path": "", //启动页面，必选
+			"query": "" //启动参数，在页面的onLoad函数里面得到
+		}]
+	}
+}

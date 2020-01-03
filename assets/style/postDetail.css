@@ -1,0 +1,18 @@
+
+/* 评论 */
+.pler-photo{width: 60rpx;height: 60rpx;}
+.pler-photo image{width: 100%;height: 100%;border-radius: 50%;}
+
+.pinglunLis .item{border-bottom: 1px solid #eee;padding: 30rpx 0;}
+.pinglunLis .item .numHF{line-height: 40rpx;height: 40rpx;padding: 0 20rpx;border-radius: 20rpx;background: #f4f4f4; color: #666;}
+.plIcon{width: 30rpx;height: 30rpx;display: block;}
+
+.fx-PlZan{height: 80rpx;position: fixed;left: 0;right: 0;bottom: 0;background: #F5F5F5;}
+.fx-PlZan .tt{width: 50%;}
+.fx-PlZan .icon{width: 32rpx;height: 32rpx;margin-right: 10rpx;}
+
+/* 分享 收藏/举报 */
+.fx-shareBtn{width: 200rpx;padding: 30rpx 0rpx;border-radius: 10rpx;background: rgba(0,0,0,0.5);position: absolute;top: 30rpx;right: 10rpx;z-index: 2;}
+.fx-shareBtn .icon{width: 28rpx;height: 28rpx;margin-right: 10rpx; }
+
+
