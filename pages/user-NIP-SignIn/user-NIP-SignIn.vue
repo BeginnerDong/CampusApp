@@ -19,7 +19,23 @@
 				</view>
 			</view>
 			
-			<sw-calendar @tapDate="tapDate"></sw-calendar>
+			<view class="sign-wrap">
+				<view class="date-wrap">
+					<view class="cur-date">2020年01月16号</view>
+					<view class="title-item-box item-box flexRowBetween" >
+						<view class="item"
+							v-for="(item, index) in ['日','一','二','三','四','五','六']" 
+							:key="index">{{item}}
+						</view>
+					</view>
+					<view class="date-item-box item-box flex">
+						<view class="item date-item" v-for="(item, index) in dateArray" :key="index">
+							<view class="dian">{{item}}</view>
+							<view class="num red fs12">+38</view>
+						</view>
+					</view>
+				</view>
+			</view>
 			
 		</view>
 		
@@ -59,7 +75,10 @@
 				year: 2020,
 				month: 1,
 				date: 3,
-				type:'today' //today-今天 pre-今天之前 next-今天之后
+				type:'today' ,//today-今天 pre-今天之前 next-今天之后
+				curDate:'',
+				dateArray:31
+				
 			}
 		},
 		onLoad() {
@@ -95,4 +114,17 @@
 	.alertShow .closeBtn{bottom: auto;left: auto;top: 0rpx;right: 0;transform: inherit}
 	.fudaiIcon{width: 376rpx; height: 381rpx; display: block;}
 	.alertShow .num{padding: 0 20rpx;color: #ffff00; font-size: 52rpx;}
+	
+	/* 日期 */
+	.date-wrap{padding: 2% 0;border-radius: 16upx;background: #fff;box-sizing: border-box;text-align: center;}
+	.cur-date{font-size: 30upx; margin-bottom: 30upx;}
+	.item-box{color: #666;font-size: 28upx;}
+	.item{width:14.2%; margin: 10upx 0;}
+	.item .dian{width:44rpx;height:44upx ;line-height:44upx;border-radius: 100upx;margin: 0 auto;}
+	.item .num{line-height:36rpx;font-size: 24upx;}
+	.item.disabled .dian{color: #999;}
+	.item.active .dian{background:#222;color: #fff;}
+	.title-item-box{background: #F5F5F5;padding: 0 2%; margin-bottom: 30upx;}
+	.date-item-box{padding: 0 2%;font-size: 24upx; flex-wrap: wrap;}
+	.date-item.on .dian{background: #222; color: #fff;}
 </style>
