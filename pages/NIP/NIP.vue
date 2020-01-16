@@ -2,7 +2,9 @@
 	<view>
 		
 		<view class="flexRowBetween indexTit borderB1  W-Fixed">
-			<view class="userPhoto" @click="Router.navigateTo({route:{path:'/pages/user/user'}})"><image src="../../static/images/the-message-img.png" mode=""></image></view>
+			<view class="userPhoto" @click="Router.navigateTo({route:{path:'/pages/user/user'}})">
+				<image :src="userInfoData.mainImg&&userInfoData.mainImg.length>0?userInfoData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+			</view>
 			<view class="fs16 color6">NIP</view>
 			<view @click="Router.navigateTo({route:{path:'/pages/seach/seach'}})"><image class="seachBtn" src="../../static/images/home-icon.png" mode=""></image></view>
 		</view>
@@ -11,24 +13,24 @@
 		<view class="pdlr4 whiteBj">
 			<view class="banner-box pdt15">
 				<swiper class="swiper-box" indicator-dots="true" autoplay="true" interval="3000" duration="1000" indicator-active-color="#222">
-					<block v-for="(item,index) in labelData" :key="index">
-						<swiper-item class="swiper-item">
-							<image :src="item" class="slide-image" />
+					<block v-for="(item,index) in sliderData" :key="index">
+						<swiper-item class="swiper-item" :data-url="item.url" @click="Router.navigateTo({route:{path:$event.currentTarget.dataset.url}})">
+							<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" class="slide-image" />
 						</swiper-item>
 					</block>
 				</swiper>
 			</view>
 		
 			<view class="indHome flex fs13 pdt15">
-				<view class="item"  @click="Router.navigateTo({route:{path:'/pages/foodLists/foodLists'}})">
+				<view class="item"  @click="Router.navigateTo({route:{path:'/pages/foodLists/foodLists?name=美食'}})">
 					<image src="../../static/images/nip-icon.png"></image>
 					<view class="tit">美食</view>
 				</view>
-				<view class="item" @click="Router.navigateTo({route:{path:'/pages/foodLists/foodLists'}})">
+				<view class="item" @click="Router.navigateTo({route:{path:'/pages/foodLists/foodLists?name=休闲'}})">
 					<image src="../../static/images/nip-icon1.png"></image>
 					<view class="tit">休闲</view>
 				</view>
-				<view class="item" @click="Router.navigateTo({route:{path:'/pages/foodLists/foodLists'}})">
+				<view class="item" @click="Router.navigateTo({route:{path:'/pages/foodLists/foodLists?name=娱乐'}})">
 					<image src="../../static/images/nip-icon2.png"></image>
 					<view class="tit">娱乐</view>
 				</view>
@@ -40,14 +42,15 @@
 		</view>
 		
 		<view class="foodLis mglr4">
-			<view class="item radius10 whiteBj" v-for="(item,index) in foodData" :key="index"  @click="Router.navigateTo({route:{path:'/pages/foodDetail/foodDetail'}})">
-				<view class="fs15 ftw">绿茉莉 2-4人下午茶套餐</view>
-				<view class="fs12 color6 pdtb5">陕西省西安市长安区韦曲街道</view>
-				<view class="price fs16 ftw">128</view>
+			<view class="item radius10 whiteBj" v-for="(item,index) in mainData" :key="index" :data-id="item.id"
+			@click="Router.navigateTo({route:{path:'/pages/foodDetail/foodDetail?id='+$event.currentTarget.dataset.id}})">
+				<view class="fs15 ftw">{{item.title}}</view>
+				<view class="fs12 color6 pdtb5">{{item.shop?item.shop.address:''}}</view>
+				<view class="price fs16 ftw">{{item.price}}</view>
 				<view class="ThreeImg flex">
-					<view class="imgs"><image src="../../static/images/nip-img.png" mode=""></image></view>
-					<view class="imgs"><image src="../../static/images/nip-img.png" mode=""></image></view>
-					<view class="imgs"><image src="../../static/images/nip-img.png" mode=""></image></view>
+					<view class="imgs" v-for="c_item in item.mainImg"><image :src="c_item.url" mode=""></image></view>
+					<!-- <view class="imgs"><image src="../../static/images/nip-img.png" mode=""></image></view>
+					<view class="imgs"><image src="../../static/images/nip-img.png" mode=""></image></view> -->
 				</view>
 			</view>
 		
@@ -105,21 +108,117 @@
 					"../../static/images/home-banner.png",
 					"../../static/images/home-banner.png"
 				],
-				foodData:[{},{},{}]
+				foodData:[{},{},{}],
+				sliderData:[],
+				mainData:[],
+				searchItem:{
+					type:1,
+					thirdapp_id:2,
+					on_shelf:1
+				},
+				userInfoData:{}
 			}
 		},
+		
+		
 		onLoad() {
 			const self = this;
+			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			self.$Utils.loadAll(['getUserInfoData','getSliderData','getMainData'], self);
 			// self.$Utils.loadAll(['getMainData'], self);
 		},
+		
+		onReachBottom() {
+			console.log('onReachBottom')
+			const self = this;
+			if (!self.isLoadAll && uni.getStorageSync('loadAllArray')) {
+				self.paginate.currentPage++;
+				self.getMainData()
+			};
+		},
+		
 		methods: {
-			getMainData() {
+			
+			getUserInfoData() {
 				const self = this;
-				console.log('852369')
 				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				self.$apis.orderGet(postData, callback);
-			}
+				postData.tokenFuncName = 'getUserToken';
+				postData.searchItem = {
+					user_no: uni.getStorageSync('user_info').user_no
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.userInfoData = res.info.data[0];
+					};
+					self.$Utils.finishFunc('getUserInfoData');
+				};
+				self.$apis.userInfoGet(postData, callback);
+			},
+			
+			getSliderData() {
+				const self = this;
+				const postData = {};
+				postData.searchItem = {
+					thirdapp_id: 2,
+				};
+				postData.getBefore = {
+					caseData: {
+						tableName: 'Label',
+						searchItem: {
+							title: ['in', ['NIP轮播']],
+						},
+						middleKey: 'parentid',
+						key: 'id',
+						condition: 'in',
+					},
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.sliderData.push.apply(self.sliderData, res.info.data)
+					}
+					console.log('self.sliderData', self.sliderData)
+					self.$Utils.finishFunc('getSliderData');
+				};
+				self.$apis.labelGet(postData, callback);
+			},
+			
+			getMainData(isNew) {
+				const self = this;
+				if (isNew) {
+					self.mainData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
+				};
+				const postData = {};
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.searchItem = self.$Utils.cloneForm(self.searchItem);
+				postData.getAfter = {
+					shop:{
+						token:uni.getStorageSync('user_token'),
+						tableName:'UserInfo',
+						middleKey:'shop_no',
+						key:'user_no',
+						searchItem:{
+							status:1
+						},
+						condition:'=',
+						info:['address']
+					}
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData.push.apply(self.mainData,res.info.data)
+					}
+			
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.productGet(postData, callback);
+			},
+			
 		}
 	};
 </script>

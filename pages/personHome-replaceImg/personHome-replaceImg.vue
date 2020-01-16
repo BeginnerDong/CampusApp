@@ -46,7 +46,7 @@
 		methods: {
 			prev(){
 				const self = this;
-				self.$router.go(-1)
+				self.$Router.back(1)
 			},
 			chooseImage(){
 				uni.chooseImage({

@@ -2,19 +2,19 @@
 	<view>
 		
 		<view class="pdlr4">
-			<view class="dialogBox">
-				<view class="item left">
-					<view class="time center fs13 color9">19-12-27 14:23</view>
+			<view class="dialogBox" v-for="(item,index) in mainData">
+				<view class="item left" v-if="item.user_no!=me">
+					<view class="time center fs13 color9">{{item.create_time}}</view>
 					<view class="infor">
-						<image class="Photo" src="../../static/images/xiaoxi-img.png" >
-						<view class="text">你好，想和你详细沟通下，现在方便吗？非的行列读后感 割发代首家里给会返利是这个和磊哥换个方式的尖括号割发代首开了个会了过节费肯定是联合国干活附近的干活附近的看更进反馈多少个一缸发动机开始估红富士康</view>
+						<image class="Photo" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" >
+						<view class="text">{{item.content}}</view>
 					</view>
 				</view>
-				<view class="item right">
-					<view class="time center fs13 color9">14:23</view>
+				<view class="item right" v-if="item.user_no==me">
+					<view class="time center fs13 color9">{{item.create_time}}</view>
 					<view class="infor">
-						<view class="text">你好，我已有1年的工作经验，现任职位会计助理，对贵公司该职位很感兴趣，希望能与你进一步沟通。海景房卡商量过了和公交卡发送到很尴尬交货更快莲富大厦个帅哥和公交卡粉色的交货更快换个飞机是</view>
-						<image class="Photo" src="../../static/images/the-message-img.png" >
+						<view class="text">{{item.content}}</view>
+						<image class="Photo" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" >
 					</view>
 				</view>
 			</view>
@@ -22,10 +22,10 @@
 		
 		<view class="fix-talkIput flexRowBetween whiteBj fs13">
 			<view class="input">
-				<input type="text" placeholder="" placeholder-class="placeholder">
+				<input type="text" v-model="submitData.content" placeholder="" placeholder-class="placeholder">
 			</view>
 			<view class="flexEnd">
-				<button class="send fs13" type="button">发送</button>
+				<button class="send fs13" type="button" @click="$Utils.stopMultiClick(addChat)">发送</button>
 			</view>
 			
 		</view>
@@ -40,25 +40,94 @@
 		data() {
 			return {
 				Router:this.$Router,
+				Utils:this.$Utils,
 				showView: false,
-				is_show:false
+				is_show:false,
+				mainData:[],
+				submitData:{
+					name:'',
+					mainImg:[],
+					content:'',
+					relation_id:''
+				},
+				me:''
 			}
 		},
-		onLoad() {
+		
+		onLoad(options) {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			self.id = options.id;
+			self.submitData.name=uni.getStorageSync('user_info').info.name;
+			self.submitData.mainImg=uni.getStorageSync('user_info').info.mainImg;
+			self.submitData.relation_id=self.id;
+			self.me = uni.getStorageSync('user_info').user_no;
+			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
 		methods: {
-			getMainData() {
+			
+			getMainData(isNew) {
 				const self = this;
-				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				var callback = function(res){
-				    console.log('getMainData', res);
-				    self.mainData.push.apply(self.mainData,res.info.data);		        
+				if (isNew) {
+					self.goodData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
 				};
-				self.$apis.orderGet(postData, callback);
-			}
+				const postData = {};
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.searchItem = {
+					thirdapp_id:2,
+					relation_id:self.id
+				};
+				postData.tokenFuncName = 'getUserToken';
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData.push.apply(self.mainData,res.info.data)
+					}
+			
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.chatGet(postData, callback);
+			},
+			
+			addChat() {
+				const self = this;
+				var nowTime = Date.parse(new Date())/1000;
+				uni.setStorageSync('canClick', false);
+				if(self.submitData.content==''){
+					uni.setStorageSync('canClick', true);
+					self.$Utils.showToast('内容不能为空', 'none', 1000);
+					return
+				};
+				const postData = {};
+				postData.data = self.$Utils.cloneForm(self.submitData);
+				postData.tokenFuncName = 'getUserToken';
+				/* postData.saveAfter = [{
+					tableName: 'Relation',
+					FuncName: 'update',
+					searchItem: {
+						id: self.id
+					},
+					data: {
+						update_time: nowTime,
+					}
+				}]; */
+				const callback = (res) => {
+					if (res.solely_code == 100000) {
+						self.submitData.content = '';
+						self.getMainData(true)
+					} else {
+						self.$Utils.showToast(res.msg, 'none', 1000)
+					};
+					uni.setStorageSync('canClick', true);	
+				};
+				self.$apis.chatAdd(postData, callback);
+			},
 		},
 	}
 </script>

@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="pdlr4">
-			<view class="fs16 ftw pdt15">呷哺呷哺(西安高新大都荟)</view>
+			<view class="fs16 ftw pdt15">{{mainData.name}}</view>
 			
 			<view class="fs12">
 				<view class="flexRowBetween shop-betn">
@@ -10,11 +10,11 @@
 				</view>
 				<view class="flexRowBetween shop-betn">
 					<image class="samll-Icon mgr5" src="../../static/images/the-store-icon1.png" mode=""></image>
-					<view class="rr avoidOverflow">丈八街道高新四路赵家坡村高新大都荟项目第J栋</view>
+					<view class="rr avoidOverflow">{{mainData.address}}</view>
 				</view>
 				<view class="flexRowBetween shop-betn">
 					<image class="samll-Icon mgr5" src="../../static/images/coupons-icon2.png" mode=""></image>
-					<view class="rr avoidOverflow">15689565623</view>
+					<view class="rr avoidOverflow">{{mainData.phone}}</view>
 				</view>
 			</view>
 			
@@ -25,21 +25,21 @@
 		<view class="pdlr4">
 			<view class="pdt15 pdb10 fs13">店铺商品</view>
 			<view class="shop_allimg pr pdb10">
-				<view class="fix_num fs12 white">共4张</view>
+				<view class="fix_num fs12 white">共{{mainData.product?mainData.product.length:0}}张</view>
 				<scroll-view scroll-x>
-					<view class="item"><image src="../../static/images/the-store-img.png" mode=""></image></view>
-					<view class="item"><image src="../../static/images/the-store-img.png" mode=""></image></view>
-					<view class="item"><image src="../../static/images/the-store-img.png" mode=""></image></view>
-					<view class="item"><image src="../../static/images/the-store-img.png" mode=""></image></view>
+					<view class="item" v-for="(item,index) in mainData.product">
+						<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" mode=""></image>
+					</view>
+					
 				</scroll-view>
 			</view>
 		</view>
 		<view class="f5H5"></view>
 		<!-- 评价 -->
 		<view class="pdlr4">
-			<view class="pdt15 ftw">评价<text class="ftn">(345)</text></view>
-			<view class="comment">
-				<view class="child" v-for="(item,inedx) in pingjiaData" :key="index">
+			<view class="pdt15 ftw">评价<text class="ftn">({{mainData.message?mainData.message.length:0}})</text></view>
+			<view class="comment" v-if="mainData.message&&mainData.message.length>0">
+				<view class="child" v-for="(item,index) in mainData.message" :key="index" v-if="index<2">
 					<view class="flexRowBetween">
 						<view class="flex">
 							<view class="photo"><image src="../../static/images/home-img1.png" mode=""></image></view>
@@ -72,7 +72,10 @@
 					</view>
 				</view>
 			</view>
-			<view class="pdtb15 flexCenter" @click="Router.navigateTo({route:{path:'/pages/shop-comment/shop-comment'}})">
+			<view class="comment" v-if="mainData.message&&mainData.message.length==0">
+				暂无评价~
+			</view>
+			<view class="pdtb15 flexCenter" v-if="mainData.message&&mainData.message.length>2" @click="Router.navigateTo({route:{path:'/pages/shop-comment/shop-comment'}})">
 				<view class="flexCenter lookAll-btn fs12">查看全部 <image class="arrowR" src="../../static/images/about-icon1.png" mode=""></image></view>
 			</view>
 		</view>
@@ -98,22 +101,57 @@
 				Router:this.$Router,
 				showView: false,
 				wx_info:{},
-				pingjiaData:[{},{}]
+				pingjiaData:[{},{}],
+				mainData:{}
 			}
 		},
 		
 		onLoad(options) {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.user_no = options.user_no;
+			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
 		methods: {
+			
 			getMainData() {
 				const self = this;
-				console.log('852369')
 				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				self.$apis.orderGet(postData, callback);
-			}
+				postData.tokenFuncName = 'getUserToken';
+				postData.searchItem = {
+					user_no: self.user_no,
+					user_type:1
+				};
+				postData.getAfter = {
+					product:{
+						tableName:'Product',
+						middleKey:'user_no',
+						key:'shop_no',
+						searchItem:{
+							status:1
+						},
+						condition:'=',
+					},
+					message:{
+						tableName:'Message',
+						middleKey:'user_no',
+						key:'relation_user',
+						searchItem:{
+							type:4,
+							status:1
+						},
+						condition:'=',
+					}
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData = res.info.data[0];
+					};
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.userInfoGet(postData, callback);
+			},
+			
 		}
 	};
 </script>

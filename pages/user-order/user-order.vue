@@ -10,43 +10,32 @@
 		
 		<view class="mglr4">
 			<view class="orderList">
-				<view class="item whiteBj radius10">
+				<view class="item whiteBj radius10" v-for="(item,index) in mainData">
 					<view class="flexRowBetween fs12">
-						<view class="color9">交易时间：2019-1-3</view>
-						<view class="red">已发货</view>
+						<view class="color9">交易时间：{{item.create_time}}</view>
+						<view class="red" v-if="item.transport_status==0">待发货</view>
+						<view class="red" v-if="item.transport_status==1">已发货</view>
+						<view class="red" v-if="item.transport_status==2">已收货</view>
 					</view>
 					<view class="coupon pdtb10 borderB1 flex">
-						<view class="ll mgr10"><image class="pic" src="../../static/images/integral-mall-img.png" mode=""></image></view>
+						<view class="ll mgr10">
+							<image class="pic" :src="item.orderItem&&item.orderItem[0]&&item.orderItem[0].snap_product&&
+							item.orderItem[0].snap_product.mainImg&&item.orderItem[0].snap_product.mainImg[0]?
+							item.orderItem[0].snap_product.mainImg[0].url:''"></image>
+						</view>
 						<view class="rr pr">
-							<view class="pdt5 avoidOverflow2">双菇蒸饺</view>
+							<view class="pdt5 avoidOverflow2">{{item.title}}</view>
 							<view class="flexRowBetween B-price">
-								<view class="red fs12">NIP:<text class="mgl5 ftw fs15">56.00</text></view>
-								<view class="color9 fs13">×1</view>
+								<view class="red fs12">NIP:<text class="mgl5 ftw fs15">{{item.unit_price}}</text></view>
+								<view class="color9 fs13">×{{item.count}}</view>
 							</view>
 						</view>
 					</view>
-					<view class="flexEnd pdt15 fs12 center borderT1">
+					<view class="flexEnd pdt15 fs12 center borderT1" v-if="item.transport_status==1">
 						<view class="B-Btn">确认收货</view>
 					</view>
 				</view>
-				<view class="item whiteBj radius10">
-					<view class="flexRowBetween fs12">
-						<view class="color9">交易时间：2019-1-3</view>
-						<view class="red">已收货</view>
-					</view>
-					<view class="coupon pdtb10 flex">
-						<view class="ll mgr10"><image class="pic" src="../../static/images/integral-mall-img.png" mode=""></image></view>
-						<view class="rr pr">
-							<view class="pdt5 avoidOverflow2">双菇蒸饺</view>
-							<view class="flexRowBetween B-price">
-								<view class="red fs12">NIP:<text class="mgl5 ftw fs15">56.00</text></view>
-								<view class="color9 fs13">×1</view>
-							</view>
-						</view>
-					</view>
-				</view>
 			</view>
-			
 		</view>
 	</view>
 </template>
@@ -60,20 +49,84 @@
 				score:'',
 				wx_info:{},
 				is_show:false,
-				curr:1
+				curr:1,
+				searchItem:{
+					type:2,
+					pay_status:1
+				},
+				mainData:[],
 			}
 		},
+		
 		onLoad() {
 			const self = this;
-			//self.$Utils.loadAll(['getMainData'], self);
+			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
+		
+		onReachBottom() {
+			console.log('onReachBottom')
+			const self = this;
+			if (!self.isLoadAll && uni.getStorageSync('loadAllArray')) {
+				self.paginate.currentPage++;
+				self.getMainData()
+			};
+		},
+		
 		methods: {
 			changeCurr(curr){
 				const self = this;
 				if(curr!=self.curr){
 					self.curr = curr
+					if(self.curr==1){
+						delete self.searchItem.transport_status
+					}else if(self.curr==2){
+						self.searchItem.transport_status = 0
+					}else if(self.curr==3){
+						self.searchItem.transport_status = 1
+					}else if(self.curr==4){
+						self.searchItem.transport_status = 2
+					};
+					self.getMainData(true)
 				}
-			}
+			},
+			
+			getMainData(isNew) {
+				const self = this;
+				if (isNew) {
+					self.mainData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
+				};
+				const postData = {};
+				postData.tokenFuncName = 'getUserToken';
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.searchItem = self.$Utils.cloneForm(self.searchItem);
+				postData.getAfter = {
+					orderItem:{
+						tableName:'OrderItem',
+						middleKey:'order_no',
+						key:'order_no',
+						searchItem:{
+							status:1
+						},
+						condition:'='
+					},
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData.push.apply(self.mainData, res.info.data);
+					}
+					console.log('self.mainData', self.mainData)
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.orderGet(postData, callback);
+			},
 		}
 	};
 </script>

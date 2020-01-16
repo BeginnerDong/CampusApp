@@ -7,7 +7,7 @@
 			</view>
 		</view>
 		<view class="submitbtn" style="margin-top: 200rpx;">
-			<button class="btn" type="button">确定</button>
+			<button class="btn" type="button" @click="$Utils.stopMultiClick(submit)">确定</button>
 		</view>
 		
 	</view>
@@ -30,24 +30,78 @@
 					{check:false,title:'专利过户'},
 					{check:false,title:'挂靠地址'},
 					{check:false,title:'执照加快'},
-				]
+				],
+				submitData:{
+					type:8,
+					title:'',
+					relation_id:'',
+					relation_table:'News',
+					
+				}
 			}
 		},
-		onLoad() {
+		
+		onLoad(options) {
 			const self = this;
+			self.submitData.relation_id = options.id;
 		},
+		
 		methods: {
+			
+			
+			submit() {
+				const self = this;
+				uni.setStorageSync('canClick', false);
+				var newObject = self.$Utils.cloneForm(self.submitData);
+				const pass = self.$Utils.checkComplete(newObject);
+				console.log('pass', pass);
+				console.log('self.submitData',self.submitData)
+				if (pass) {	
+					self.logAdd();	
+				} else {
+					uni.setStorageSync('canClick', true);
+					self.$Utils.showToast('请补全信息', 'none')
+				};
+			},
+			
+			
+			
+			logAdd() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getUserToken';
+				
+				postData.data = {};
+				postData.data = self.$Utils.cloneForm(self.submitData);
+				const callback = (data) => {				
+					if (data.solely_code == 100000) {					
+						self.$Utils.showToast('举报成功，等待后台审核', 'none', 1000)
+						setTimeout(function() {
+							uni.navigateBack({
+								delta:1
+							})
+						}, 1000);
+						
+					} else {
+						uni.setStorageSync('canClick', true);
+						self.$Utils.showToast(data.msg, 'none', 1000)
+					}	
+				};
+				self.$apis.logAdd(postData, callback);
+			},
+			
 			reportChange(i){
 				const self = this;
-				self.reportData[i].check = !self.reportData[i].check
+				self.submitData.title='';
+				self.reportData[i].check = !self.reportData[i].check;
+				for (var i = 0; i < self.reportData.length; i++) {
+					if(self.reportData[i].check){
+						self.submitData.title = self.submitData.title + self.reportData[i].title+','
+					}
+				}
+				console.log('self.submitData',self.submitData)
 			},
-			getMainData() {
-				const self = this;
-				console.log('852369')
-				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				self.$apis.orderGet(postData, callback);
-			}
+
 		}
 	};
 </script>

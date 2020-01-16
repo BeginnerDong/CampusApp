@@ -1,34 +1,19 @@
 <template>
 	<view>
 		<view class="joinActive mglr4">
-			<view class="item" @click="Router.navigateTo({route:{path:'/pages/activityDetail/activityDetail'}})">
-				<view class="pdb10">活动标题活动标题活动标题活动标题</view>
+			<view class="item" v-for="(item,index) in mainData" :data-id="item.id"
+			@click="Router.navigateTo({route:{path:'/pages/activityDetail/activityDetail?id='+$event.currentTarget.dataset.id}})">
+				<view class="pdb10">{{item.title}}</view>
 				<view class="quanCard fs15">
 					<view class="center fs22 ftw quanTit pdb15">入场券</view>
-					<view>时间：2019.12.26 18:30</view>
-					<view class="pdt10">地点：体育馆</view>
+					<view>时间：{{item.start_time}}</view>
+					<view class="pdt10">地点：{{item.address}}</view>
 				</view>
 				<view class="flexRowBetween pdt15 fs13">
 					<view>发布者：</view>
 					<view class="flexEnd">
-						<view><image class="photo" src="../../static/images/home-img.png" mode=""></image></view>
-						<view class="mgl10">雨水斗：15689568956</view>
-					</view>
-				</view>
-			</view>
-			<view class="item">
-				<view class="overdue"><image src="../../static/images/overdue.png" mode=""></image></view>
-				<view class="pdb10">活动标题活动标题活动标题活动标题</view>
-				<view class="quanCard fs15">
-					<view class="center fs22 ftw quanTit pdb15">入场券</view>
-					<view>时间：2019.12.26 18:30</view>
-					<view class="pdt10">地点：体育馆</view>
-				</view>
-				<view class="flexRowBetween pdt15 fs13">
-					<view>发布者：</view>
-					<view class="flexEnd">
-						<view><image class="photo" src="../../static/images/home-img.png" mode=""></image></view>
-						<view class="mgl10">雨水斗：15689568956</view>
+						<view><image class="photo" :src="item.headImg&&item.headImg[0]?item.headImg[0].url:''" mode=""></image></view>
+						<view class="mgl10">{{item.name}}：{{item.phone}}</view>
 					</view>
 				</view>
 			</view>
@@ -42,16 +27,76 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				score:'',
-				wx_info:{}
+				
+				searchItem:{
+					type:2,
+					report:0,
+					user_type:0
+				},
+				mainData:[]
 			}
 		},
+		
 		onLoad() {
 			const self = this;
-			//self.$Utils.loadAll(['getMainData'], self);
+			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			console.log(2323)
+			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
+		onReachBottom() {
+			console.log('onReachBottom')
+			const self = this;
+			if (!self.isLoadAll && uni.getStorageSync('loadAllArray')) {
+				self.paginate.currentPage++;
+				self.getMainData()
+			};
+		},
+		
 		methods: {
+			
+			getMainData(isNew) {
+				const self = this;
+				if (isNew) {
+					self.mainData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
+				};
+				const postData = {};
+				postData.getBefore = {
+					test: {
+						tableName: 'Log',
+						searchItem: {
+							relation_table: ['in', ['News']],
+							type:['in',[7]],
+							user_no:['in',[uni.getStorageSync('user_info').user_no]]
+						},
+						middleKey: 'id',
+						key: 'relation_id',
+						condition: 'in',
+					},
+				};
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.tokenFuncName = 'getUserToken';
+				postData.searchItem = self.$Utils.cloneForm(self.searchItem);
+				
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData.push.apply(self.mainData,res.info.data);
+						for (var i = 0; i < self.mainData.length; i++) {
+							self.mainData[i].start_time = self.$Utils.timeto(self.mainData[i].start_time*1000,'ymd')
+						}
+					}
+			
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.newsGet(postData, callback);
+			},
+			
 		}
 	};
 </script>

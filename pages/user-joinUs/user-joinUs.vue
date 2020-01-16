@@ -1,18 +1,19 @@
 <template>
 	<view>
 		<view class="positionList pdlr4">
-			<view class="item flexRowBetween pdtb15" v-for="item in positionDate" @click="Router.navigateTo({route:{path:'/pages/positionDetail/positionDetail'}})">
+			<view class="item flexRowBetween pdtb15" v-for="item in mainData" :data-id="item.id"
+			@click="Router.navigateTo({route:{path:'/pages/positionDetail/positionDetail?id='+$event.currentTarget.dataset.id}})">
 				<view class="flex ll">
 					<view>
-						<image class="Lphoto" src="../../static/images/join-us-img.png"></image>
+						<image class="Lphoto" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''"></image>
 					</view>
 					<view class="infor">
-						<view class="name">会计助理</view>
-						<view class="lable fs13 color6">克莱</view>
-						<view class="fs12 color9">西安&nbsp;|&nbsp;3年&nbsp;|&nbsp;本科</view>
+						<view class="name">{{item.title}}</view>
+						<view class="lable fs13 color6">{{item.company}}</view>
+						<view class="fs12 color9">{{item.city}}&nbsp;|&nbsp;{{item.experience}}&nbsp;|&nbsp;{{item.education}}</view>
 					</view>
 				</view>
-				<view class="rr red fs13">4K-6K</view>
+				<view class="rr red fs13">{{item.salary}}</view>
 			</view>
 		</view>	
 		
@@ -24,17 +25,65 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				score:'',
-				wx_info:{},
-				positionDate:[{},{},{}]
+				mainData:[]
 			}
 		},
+		
 		onLoad() {
 			const self = this;
-			//self.$Utils.loadAll(['getMainData'], self);
+			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			console.log(2323)
+			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
+		onReachBottom() {
+			console.log('onReachBottom')
+			const self = this;
+			if (!self.isLoadAll && uni.getStorageSync('loadAllArray')) {
+				self.paginate.currentPage++;
+				self.getMainData()
+			};
+		},
+		
 		methods: {
+			
+			getMainData(isNew) {
+				const self = this;
+				console.log(2323)
+				if (isNew) {
+					self.mainData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
+				};
+				const postData = {};
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.searchItem = {
+					thirdapp_id:2
+				};
+				postData.getBefore = {
+					article:{
+						tableName:'Label',
+						middleKey:'menu_id',
+						key:'id',
+						searchItem:{
+							title: ['in', ['加入我们']],
+						},
+						condition:'in'
+					}
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData.push.apply(self.mainData,res.info.data)
+					}
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.articleGet(postData, callback);
+			},
+			
 		}
 	};
 </script>

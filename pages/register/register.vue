@@ -4,18 +4,18 @@
 			<view class="fs18 ftw pdt30 pdb10">注册账号</view>
 			<view class="items fs13 color6">
 				<view class="item flex borderB1">
-					<input type="number" maxlength="11" value="" placeholder="手机号">
+					<input type="number" maxlength="11" v-model="submitData.phone" placeholder="手机号">
 				</view>
 				<view class="item flex borderB1 flexRowBetween">
 					<view style="width: 50%;">
-						<input type="text"  value="" placeholder="验证码">
+						<input type="text"  value="" placeholder="验证码" v-model="submitData.code">
 					</view>
 					<view class="fs14 ftw color2">获取验证码</view>
 				</view>
 			</view>
 			
 			<view class="submitbtn" style="margin-top: 240rpx;">
-				<button class="Wbtn" type="button" @click="Router.navigateTo({route:{path:'/pages/registerMsg/registerMsg'}})">确定</button>
+				<button class="Wbtn" type="button" @click="Utils.stopMultiClick(submit)">确定</button>
 			</view>
 			
 		</view>
@@ -30,24 +30,54 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				wx_info:{},
-				is_show:false
+				Utils:this.$Utils,
+				submitData:{
+					phone:'',
+					code:''
+				}
 			}
 		},
 		
 		onLoad() {
 			const self = this;
+			uni.setStorageSync('canClick',true)
 			// self.$Utils.loadAll(['getMainData'], self);
 		},
+		
 		methods: {
-			getMainData() {
+			
+			submit() {
 				const self = this;
-				console.log('852369')
-				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				self.$apis.orderGet(postData, callback);
-			}
+				uni.setStorageSync('canClick',false)
+				const postData = {
+					data:self.$Utils.cloneForm(self.submitData)					
+				}
+				/* postData.smsAuth = {						
+					phone:self.submitData.phone,						
+					code:self.submitData.smsCode,
+				}; */
+				var newObject = self.$Utils.cloneForm(self.submitData);
+				delete newObject.code;
+				if (self.$Utils.checkComplete(newObject)) {						
+					const callback = (res) => {
+						uni.setStorageSync('canClick',true)
+						if (res.solely_code == 100000) {
+							self.$Utils.showToast(res.msg, 'none');	
+							uni.setStorageSync('user_token', res.token);
+							uni.setStorageSync('user_info', res.info);
+							setTimeout(function() {
+								self.Router.redirectTo({route:{path:'/pages/registerMsg/registerMsg'}})
+							}, 1000);
+						} else {
+							self.$Utils.showToast(res.msg, 'none');
+						}
+					}
+					self.$apis.registerUser(postData, callback);
+				} else {
+					uni.setStorageSync('canClick',true);
+					self.$Utils.showToast('请输入手机号', 'none');
+				};
+			},
 		}
 	};
 </script>

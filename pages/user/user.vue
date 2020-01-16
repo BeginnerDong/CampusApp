@@ -9,13 +9,16 @@
 				</view>
 				<view class="infor pdt25 pdlr4">
 					<view class="left flex">
-						<view @click="realnameshow">
-							<image class="photo" src="../../static/images/about-img.png" mode=""></image>
+						<view v-if="mainData.check_status==2" @click="Router.navigateTo({route:{path:'/pages/personHome/personHome'}})">
+							<image class="photo" :src="mainData&&mainData.mainImg&&mainData.mainImg.length>0?mainData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+						</view>
+						<view v-if="mainData.check_status!=2" @click="realnameshow">
+							<image class="photo" :src="mainData&&mainData.mainImg&&mainData.mainImg.length>0?mainData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 						</view>
 						<view style="width: 70%;">
-							<view class="fs16 pdb10">雨果果</view>
+							<view class="fs16 pdb10">{{mainData.name}}</view>
 							<view class="flex">
-								<view class="userLable color6 fs11">学生·在读</view>
+								<view class="userLable color6 fs11">{{mainData.role}}</view>
 							</view>
 						</view>
 					</view>
@@ -35,7 +38,7 @@
 					<view class="ll flex">我的发布</view>
 					<view class="rr"><image class="arrowR" src="../../static/images/about-icon1.png" mode=""></image></view>
 				</view>
-				<view class="item flexRowBetween" @click="Router.navigateTo({route:{path:'/pages/person-followok/person-followok'}})" >
+				<view class="item flexRowBetween" @click="Router.navigateTo({route:{path:'/pages/user-myFollow/user-myFollow'}})" >
 					<view class="ll flex">我的关注</view>
 					<view class="rr"><image class="arrowR" src="../../static/images/about-icon1.png" mode=""></image></view>
 				</view>
@@ -94,22 +97,37 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				score:'',
-				wx_info:{},
 				is_show:false,
-				is_realnameshow:false
+				is_realnameshow:false,
+				mainData:{}
 			}
 		},
 		onLoad() {
 			const self = this;
-			//self.$Utils.loadAll(['getMainData'], self);
+			self.$Utils.loadAll(['getMainData'], self);
 		},
 		methods: {
 			prev(){
 				const self = this;
-				self.$router.go(-1)
+				self.$Router.back(1)
 			},
+			
+			getMainData() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getUserToken';
+				postData.searchItem = {
+					user_no: uni.getStorageSync('user_info').user_no
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData = res.info.data[0];
+					};
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.userInfoGet(postData, callback);
+			},
+			
 			realnameshow(){
 				const self = this;
 				self.is_show = !self.is_show;

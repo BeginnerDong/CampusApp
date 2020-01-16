@@ -3,8 +3,7 @@
 		
 		<view class="myRowBetween pdlr4">
 			<view class="item flexRowBetween" v-for="(item,index) in mainData" :key="index" >
-				<view class="ll flex" :data-user_no ="item.user_no"
-						@click="Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+$event.currentTarget.dataset.user_no}})">
+				<view class="ll flex" @click="Router.navigateTo({route:{path:'/pages/TA-Home/TA-Home'}})">
 					<view class="photo">
 						<image :src="item.mainImg&&item.mainImg.length>0?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 						
@@ -12,15 +11,9 @@
 					<view class="ll-tit avoidOverflow">{{item.name}}</view>
 				</view>
 				<view class="rr">
-					<view class="joinOK flexCenter fs12" v-if="item.log&&item.log.length>0" 
-					 @click="submit(index)">
+					<view class="joinOK flexCenter fs12"  @click="updateLog(index)">
 						<!-- <image class="gzIcon" src="../../static/images/jia.png" mode=""></image> -->
 						<text>取消关注</text>
-					</view>
-					<view class="joinOK flexCenter fs12" v-if="item.log&&item.log.length==0"
-					 @click="submit(index)">
-						<image class="gzIcon" src="../../static/images/jia.png" mode=""></image>
-						<text>关注</text>
 					</view>
 				</view>
 			</view>
@@ -51,11 +44,11 @@
 				is_show:false,
 				is_alertBox:false,
 				followData:[{},{},{},{}],
-				mainData:[],
 				searchItem:{
 					thirdapp_id:2,
 					user_type:0
 				},
+				mainData:[]
 			}
 		},
 		
@@ -101,11 +94,10 @@
 						searchItem: {
 							relation_table: ['in', ['User']],
 							type:['in',[5]],
-							relation_user:['in',[uni.getStorageSync('user_info').user_no]],
-							user_type:['in',0]
+							user_no:['in',[uni.getStorageSync('user_info').user_no]]
 						},
 						middleKey: 'user_no',
-						key: 'user_no',
+						key: 'relation_user',
 						condition: 'in',
 					},
 				};
@@ -130,76 +122,51 @@
 						self.mainData.push.apply(self.mainData,res.info.data);
 					
 					}
+			
 					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.userInfoGet(postData, callback);
 			},
 			
-			submit(index) {
-				const self = this;
-				uni.setStorageSync('canClick', false);	
-				if (self.mainData[index].log.length == 0) {
-					self.addLog(index)
-				} else {
-					self.updateLog(index)
-				};
-			},
-			
-			addLog(index) {
-				const self = this;
-				const postData = {};
-				postData.data = {
-					type: 5,
-					title: '关注成功',
-					relation_user: self.mainData[index].user_no,
-					relation_table:'User',
-					user_no: uni.getStorageSync('user_info').user_no,
-				};
-				postData.tokenFuncName = 'getUserToken';
-				const callback = (res) => {
-					if (res.solely_code == 100000) {
-						self.$Utils.showToast('关注成功', 'none', 1000)
-						setTimeout(function() {
-							self.getMainData(true)
-						}, 1000);
-					} else {
-						self.$Utils.showToast(res.msg, 'none', 1000)
-					};
-					uni.setStorageSync('canClick', true);	
-				};
-				self.$apis.logAdd(postData, callback);
-			},
-			
-			
 			updateLog(index) {
 				const self = this;
-			
-				const postData = {
-					searchItem: {
-						id: self.mainData[index].log[0].id
-					},
-					data: {
-						status: -self.mainData[index].log[0].status
-					}
-				};
-				postData.tokenFuncName = 'getUserToken';
-				const callback = (res) => {
-					uni.setStorageSync('canClick', true);
-					if (res.solely_code == 100000) {
-						self.userInfoData.log[0].status = -self.userInfoData.log[0].status;
-						if(self.userInfoData.log[0].status==1){
-							self.$Utils.showToast('关注成功', 'none', 1000)
-						}else{
-							self.$Utils.showToast('取消成功', 'none', 1000)
+				uni.showModal({
+					title: '提示',
+					content: '确定不再关注？',
+					showCancel:true,
+					success: function(res) {
+						if (res.confirm) {
+							const postData = {
+								searchItem: {
+									id: self.mainData[index].log[0].id
+								},
+								data: {
+									status: -self.mainData[index].log[0].status
+								}
+							};
+							postData.tokenFuncName = 'getUserToken';
+							const callback = (res) => {
+								uni.setStorageSync('canClick', true);
+								if (res.solely_code == 100000) {
+									self.mainData[index].log[0].status = -self.mainData[index].log[0].status;
+									if(self.mainData[index].log[0].status==1){
+										self.$Utils.showToast('关注成功', 'none', 1000)
+									}else{
+										self.$Utils.showToast('取消成功', 'none', 1000)
+									}
+									
+								} else {
+									self.$Utils.showToast(res.msg, 'none', 1000)
+								};
+							};
+							self.$apis.logUpdate(postData, callback);
+						} else if (res.cancel) {
+							uni.setStorageSync('canClick', true);	
+							console.log('用户点击取消');
 						}
-						setTimeout(function() {
-							self.getMainData(true)
-						}, 1000);
-					} else {
-						self.$Utils.showToast(res.msg, 'none', 1000)
-					};
-				};
-				self.$apis.logUpdate(postData, callback);
+					}
+				});
+				
 			},
 		}
 	};

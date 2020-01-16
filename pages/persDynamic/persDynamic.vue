@@ -3,25 +3,27 @@
 		<view class="pdlr4 borderB1">
 			
 			<view>
-				<textarea value="" placeholder="请输入你想说的话" />
+				<textarea value="" placeholder="请输入你想说的话" v-model="submitData.content"/>
 			</view>
 			
 			<view class="pdb15">
 				<view class="flex">
-					<view class="upBtn" @tap="chooseImage"><image src="../../static/images/release-icon.png" mode=""></image></view>
-					<view class="mgl15 color9 fs11">可上传多张图片</view>
+					<view class="upBtn" @tap="upLoadImg('mainImg')">
+						<image src="../../static/images/release-icon.png" mode=""></image>
+					</view>
+					<view class="mgl15 color9 fs11" v-if="submitData.mainImg.length==0">可上传多张图片</view>
 				</view>
 				<view class="flex" style="flex-wrap: wrap;">
-					<block v-for="(image,index) in imageList" :key="index">
+					<block v-for="(image,index) in submitData.mainImg" :key="index">
 						<view class="upImgLis">
-							<image :src="image" :data-src="image" @tap="previewImage"></image>
+							<image :src="item.url"  @tap="previewImage"></image>
 						</view>
 					</block>
 				</view>
 			</view>
 		</view>
 		<view class="submitbtn" style="margin-top: 200rpx;">
-			<button class="btn" type="button" @click="Router.navigateTo({route:{path:'/pages/index/index'}})">确定</button>
+			<button class="btn" type="button" @click="$Utils.stopMultiClick(submit)">确定</button>
 		</view>
 		
 		
@@ -33,27 +35,105 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				wx_info:{},
-				is_show:false,
-				imageList: []
+				Utils:this.$Utils,
+				submitData:{
+					name:'',
+					type :1,
+					content:'',
+					mainImg:[],
+					headImg:''
+				}
 			}
 		},
-		onUnload() {
-			this.imageList = []
-		},
+		
 		onLoad() {
 			const self = this;
+			uni.setStorageSync('canClick', true);
+			self.submitData.name=uni.getStorageSync('user_info').info.name;
+			self.submitData.headImg=uni.getStorageSync('user_info').info.mainImg;
 			// self.$Utils.loadAll(['getMainData'], self);
 		},
+		
 		methods: {
-			chooseImage: async function() {
-				uni.chooseImage({
-					success: (res) => {
-						this.imageList = this.imageList.concat(res.tempFilePaths);
-					}
-				})
+			
+			submit() {
+				const self = this;
+				
+				uni.setStorageSync('canClick', false);
+				const pass = self.$Utils.checkComplete(self.submitData);
+				console.log('pass', pass);
+				console.log('self.submitData',self.submitData)
+				if (pass) {	
+					self.newsAdd();	
+				} else {
+					uni.setStorageSync('canClick', true);
+					self.$Utils.showToast('请补全信息', 'none')
+				};
 			},
+			
+			upLoadImg(type) {
+				const self = this;	
+				if (self.submitData[type].length > 8) {
+					api.showToast('仅限9张', 'fail');
+					return;
+				};
+				wx.showLoading({
+					mask: true,
+					title: '上传中',
+				});
+				const callback = (res) => {
+					console.log('res', res)
+					if (res.solely_code == 100000) {
+						self.submitData[type].push({url:res.info.url,type:'image'})
+						console.log('type',type)
+						console.log(self.submitData)
+						wx.hideLoading()
+					} else {
+						self.$Utils.showToast('网络故障', 'none')
+					}
+				};				
+				wx.chooseImage({
+					count: 9,
+					success: function(res) {
+						console.log(res);
+						var tempFilePaths = res.tempFilePaths;
+						console.log(callback)
+						for (var i = 0; i < tempFilePaths.length; i++) {
+							self.$Utils.uploadFile(tempFilePaths[i], 'file', {
+								tokenFuncName: 'getUserToken'
+							}, callback)
+						}
+					},
+					fail: function(err) {
+						wx.hideLoading();
+					},			
+				})			
+			},
+			
+			newsAdd() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getUserToken';
+				
+				postData.data = {};
+				postData.data = self.$Utils.cloneForm(self.submitData);
+				const callback = (data) => {				
+					if (data.solely_code == 100000) {					
+						self.$Utils.showToast('发送成功', 'none', 1000)
+						setTimeout(function() {
+							uni.navigateBack({
+								delta:1
+							})
+						}, 1000);
+						
+					} else {
+						uni.setStorageSync('canClick', true);
+						self.$Utils.showToast(data.msg, 'none', 1000)
+					}	
+				};
+				self.$apis.newsAdd(postData, callback);
+			},
+			
 			previewImage: function(e) {
 				var current = e.target.dataset.src
 				uni.previewImage({
@@ -61,13 +141,8 @@
 					urls: this.imageList
 				})
 			},
-			getMainData() {
-				const self = this;
-				console.log('852369')
-				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				self.$apis.orderGet(postData, callback);
-			}
+			
+			
 		}
 	};
 </script>

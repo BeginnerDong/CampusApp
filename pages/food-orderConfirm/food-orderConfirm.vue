@@ -4,11 +4,11 @@
 		<view class="mglr4">
 			<view class="coupon pdlr4 radius10 whiteBj mgt15">
 				<view class="item pdtb15 flex">
-					<view class="ll mgr10"><image class="pic" src="../../static/images/coupons-img.png" mode=""></image></view>
+					<view class="ll mgr10"><image class="pic" :src="mainData.mainImg&&mainData.mainImg[0]?mainData.mainImg[0].url:''" mode=""></image></view>
 					<view class="rr fs11">
 						<view class="fs14 color2 flexRowBetween">
-							<view>100元代金券</view>
-							<view class="color9 fs12">￥85</view>
+							<view>{{mainData.title}}</view>
+							<view class="color9 fs12">￥{{mainData.price}}</view>
 						</view>
 						<view class="color9 pdtb5">周一至周日 | 部分可用 | 免预约 | 可叠加2张</view>
 						<view class="flex">
@@ -33,7 +33,7 @@
 				</view>
 				<view class="pdtb15 flexRowBetween">
 					<view>小计</view>
-					<view class="price fs14">85</view>
+					<view class="price fs14">{{totalScore}}</view>
 				</view>
 			</view>
 			
@@ -41,7 +41,7 @@
 				<view class="pdtb15 flexRowBetween">
 					<view>手机号码</view>
 					<view style="width: 50%;">
-						<input type="text" value="" placeholder="请输入" placeholder-class="placeholder" />
+						<input type="number" v-model="submitData.phone" placeholder="请输入" placeholder-class="placeholder" />
 					</view>
 				</view>
 			</view>
@@ -49,19 +49,19 @@
 		
 		<!-- 底部菜单按钮 -->
 		<view class="xqbotomBar flexRowBetween">
-			<view class="left fs12 color6">合计<text class="price fs16">85</text></view>
-			<view class="payBtn pubBj white"  @click="payShow">提交订单</view>
+			<view class="left fs12 color6">合计<text class="price fs16">{{totalScore}}</text></view>
+			<view class="payBtn pubBj white" @click="Utils.stopMultiClick(submit)">提交订单</view>
 		</view>
 		
 		<view class="black-bj" v-show="is_show"></view>
 		<view class="payShow whiteBj radius10 center" v-show="is_payShow">
 			<view class="closebtn fs18" @click="payShow">×</view>
-			<view class="fs18">￥10</view>
+			<view class="fs18">￥{{totalScore}}</view>
 			<view class="flexCenter pdt20">
 				<view class="time fs12 color6">请在<text class="red">19:57</text>内完成支付</view>
 			</view>
 			<view class="submitbtn" style="margin-top: 140rpx;">
-				<button class="Wbtn" type="button">立即支付</button>
+				<button class="Wbtn" type="button" @click="goPay">立即支付</button>
 			</view>
 		</view>
 			
@@ -75,18 +75,28 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				wx_info:{},
+				Utils:this.$Utils,
+				
 				is_show:false,
 				count:1,
-				is_payShow:false
+				is_payShow:false,
+				submitData:{
+					shop_no:'',
+					phone:''
+				},
+				mainData:{},
+				totalScore:0
 			}
 		},
-		onLoad() {
+		
+		onLoad(options) {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.id = options.id;
+			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
 		methods: {
+			
 			counter(type) {
 				const self = this;			
 				if (type == '+') {
@@ -98,21 +108,197 @@
 				};			
 				self.countTotalPrice();
 			},
+			
+			countTotalPrice() {
+				const self = this;
+				var nowTime = Date.parse(new Date());
+				self.totalScore = 0;
+				self.totalScore = self.mainData.price * self.count;
+				self.totalScore = parseFloat(self.totalScore).toFixed(2)
+				if(parseInt(self.userInfoData.member_time)>nowTime&&self.userInfoData.order.length==0){
+					self.totalScore = self.totalScore - parseFloat(self.mainData.price)
+				};
+			},
+			
 			payShow(){
 				const self = this;
 				self.is_show = !self.is_show;
 				self.is_payShow = !self.is_payShow;
 			},
+			
+			getUserInfoData() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getUserToken';
+				postData.searchItem = {
+					user_no: uni.getStorageSync('user_info').user_no
+				};
+				postData.getAfter = {
+					order:{
+						tableName:'Order',
+						middleKey:'user_no',
+						key:'user_no',
+						searchItem:{
+							status:1,
+							pay_status:1,
+							product_id:self.mainData.id
+						},
+						condition:'='
+					}
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.userInfoData = res.info.data[0];
+					};
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.userInfoGet(postData, callback);
+			},
+			
 			getMainData() {
 				const self = this;
-				console.log('852369')
 				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				self.$apis.orderGet(postData, callback);
-			}
+				postData.searchItem = {
+					thirdapp_id: 2,
+					id: self.id
+				};
+				 const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData = res.info.data[0];
+						self.submitData.shop_no = self.mainData.shop_no;
+						const regex = new RegExp('<img', 'gi');
+						self.mainData.content = self.mainData.content.replace(regex, `<img style="max-width: 100%;"`);
+					} else {
+						self.$Utils.showToast('没有更多了', 'none');
+					};
+					self.getUserInfoData()
+					self.countTotalPrice()
+					console.log('self.mainData', self.mainData)
+					
+				};
+				self.$apis.productGet(postData, callback);
+			},
+			
+			submit(){
+				const self = this;
+				uni.setStorageSync('canClick',false);
+				const pass = self.$Utils.checkComplete(self.submitData);
+				if(!pass){
+					uni.setStorageSync('canClick',true);
+					self.$Utils.showToast('请补全信息','none')
+				}else{
+					if(parseFloat(self.userInfoData.score)<parseFloat(self.totalScore)){
+						uni.setStorageSync('canClick',true);
+						self.$Utils.showToast('积分不足','none');
+						return
+					}
+					var data = self.$Utils.cloneForm(self.submitData)
+					var orderList = [
+						{product_id:self.mainData.id,count:self.count,type:1,data:data}
+					];
+					self.addOrder(orderList)
+				}
+			},
+			
+			addOrder(orderList) {
+				const self = this;	
+				/* if(self.orderId){
+					self.goPay()
+					return
+				}; */
+				const postData = {}; 
+				postData.orderList = self.$Utils.cloneForm(orderList);
+				postData.data = {};
+				postData.tokenFuncName = 'getUserToken';
+				const callback = (res) => {
+					if (res && res.solely_code == 100000) {
+						uni.setStorageSync('canClick', true);
+						self.orderId = res.info.id;
+						//self.goPay()
+						self.is_show = !self.is_show;
+						self.is_payShow = !self.is_payShow;
+					} else {		
+						uni.setStorageSync('canClick', true);
+						uni.showToast({
+							title: res.msg,
+							duration: 2000
+						});
+					};		
+				};
+				self.$apis.addOrder(postData, callback);
+			},
+			
+			goPay(order_id) {
+				const self = this;	
+				var nowTime = Date.parse(new Date());
+				const postData = {
+					score:{
+						price:self.totalScore
+					}
+				};
+				postData.tokenFuncName = 'getUserToken',
+				postData.searchItem = {
+					id: self.orderId
+				};	
+				if(parseInt(self.userInfoData.member_time)>nowTime&&self.userInfoData.order.length==0){
+					postData.score.price = (self.totalScore - parseFloat(self.mainData.price)).toFixed(2);
+					postData.other = {
+						price:parseFloat(self.mainData.price)
+					}
+				};
+				const callback = (res) => {
+					if (res.solely_code == 100000) {
+						uni.setStorageSync('canClick', true);
+						if (res.info) {
+							const payCallback = (payData) => {
+								console.log('payData', payData)
+								if (payData == 1) {
+									uni.showToast({
+										title: '支付成功',
+										duration: 1000,
+										success: function() {
+											
+										}
+									});
+									setTimeout(function() {
+										self.$Router.redirectTo({route:{path:'/pages/user-NIP-coupon/user-NIP-coupon'}})
+									}, 1000);
+								} else {
+									uni.setStorageSync('canClick', true);
+									uni.showToast({
+										title: '支付失败',
+										duration: 2000
+									});
+								};
+							};
+							self.$Utils.realPay(res.info, payCallback);
+						} else {
+							
+							uni.showToast({
+								title: '支付成功',
+								duration: 1000,
+								success: function() {
+									
+								}
+							});
+							setTimeout(function() {
+								self.$Router.redirectTo({route:{path:'/pages/user-NIP-coupon/user-NIP-coupon'}})
+							}, 1000);
+						};
+					} else {
+						uni.setStorageSync('canClick', true);
+						uni.showToast({
+							title: res.msg,
+							duration: 2000
+						});
+					};
+				};
+				self.$apis.pay(postData, callback);
+			},
 		}
 	};
 </script>
+
 
 <style>
 	@import "../../assets/style/foodDetail.css";

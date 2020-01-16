@@ -4,7 +4,8 @@
 		<view class="whiteBj pdlr4 pdt15 pdb15">
 			<view class="ftw">社区人数<text class="fs12 ftn">(12)</text></view>
 			<view class="flex SQPerNum pdt10">
-				<view class="photo" v-for="(item,index) in SQPerNum" :key="index" @click="Router.navigateTo({route:{path:'/pages/userHome/userHome'}})"><image src="../../static/images/xiaoxi-img.png" mode=""></image></view>
+				<view class="photo" v-for="(item,index) in SQPerNum" :key="index" :data-user_no ="item.user_no"
+						@click="Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+$event.currentTarget.dataset.user_no}})"><image src="../../static/images/xiaoxi-img.png" mode=""></image></view>
 				<view class="photo" @click="Router.navigateTo({route:{path:'/pages/user-mySheQu-peopleNum/user-mySheQu-peopleNum'}})"><image src="../../static/images/community-icon01.png" mode=""></image></view>
 			</view>
 		</view>

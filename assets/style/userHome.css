@@ -1,6 +1,6 @@
 
 
-.userHead .photo{width: 120rpx;height: 120rpx;border-radius: 50%;margin-right: 20rpx;padding: 4rpx;border:1px solid #F5F5F5}
+.userHead .photo{width: 120rpx;height: 120rpx;border-radius: 50%;margin-right: 20rpx;/* padding: 4rpx; */border:1px solid #F5F5F5}
 .userHead .arrowR{width: 18rpx;height: 32rpx;}
 .userHomeLis .item{align-items: flex-start;}
 .userHomeLis .data{width: 15%;text-align: right;}

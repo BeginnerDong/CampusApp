@@ -2,7 +2,9 @@
 	<view>
 		
 		<view class="flexRowBetween indexTit borderB1 W-Fixed">
-			<view class="userPhoto" @click="Router.navigateTo({route:{path:'/pages/user/user'}})"><image src="../../static/images/the-message-img.png" mode=""></image></view>
+			<view class="userPhoto" @click="Router.navigateTo({route:{path:'/pages/user/user'}})">
+				<image :src="userInfoData.mainImg&&userInfoData.mainImg.length>0?userInfoData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+			</view>
 			<view class="fs16 color6">消息</view>
 			<view></view>
 		</view>
@@ -19,66 +21,78 @@
 		<view class="f5H5"></view>
 		
 		<view class="zanCont" v-show="curr==1">
-			<view class="item" v-for="(item,index) in zanData" :key="index">
+			<view class="item" v-for="(item,index) in goodData" :key="index">
 				<view class="flex">
-					<view class="photo"><image src="../../static/images/home-img.png" mode=""></image></view>
+					<view class="photo">
+						<image style="border-radius: 50%;" :src="item.userinfo&&item.userinfo[0]&&item.userinfo[0].mainImg&&
+						item.userinfo[0].mainImg[0]?item.userinfo[0].mainImg[0].url:''" mode=""></image>
+					</view>
 					<view class="name mgl10">
-						<view class="fs15">竹蜻蜓</view>
-						<view class="fs10 color9">12-25 16:31</view>
+						<view class="fs15">{{item.userinfo&&item.userinfo[0]&&item.userinfo[0]?item.userinfo[0].name:''}}</view>
+						<view class="fs10 color9">{{item.create_time}}</view>
 					</view>
 				</view>
-				<view class="pdtb10">赞了这条活动</view>
+				<view class="pdtb10">赞了这条{{item.news&&item.news[0]&&item.news[0].type==1?'动态':(item.news&&item.news[0]&&item.news[0].type==2?'活动':'社区文章')}}</view>
 				<view class="cont f5bj flex">
-					<view class="pic"><image src="../../static/images/the-message-img1.png" mode=""></image></view>
+					<view class="pic" v-if="item.news&&item.news[0]&&item.news[0].mainImg
+					&&item.news[0].mainImg.length>0">
+					<image  :src="item.news&&item.news[0]&&item.news[0].mainImg&&
+					item.news[0].mainImg[0]?item.news[0].mainImg[0].url:''" mode=""></image>
+					</view>
 					<view class="rr">
-						<view class="tit fs13 avoidOverflow">标题标题标题标题标题标题标题标题</view>
-						<view class="text avoidOverflow2 fs12 color6">双菇还记得老汉还说加工费几点过来价格付款落地生根加工费回户加工费点了结果火锅店机构管理很反感华海景房</view>
+						<view class="tit fs13 avoidOverflow">{{item.news&&item.news[0]&&item.news[0]?item.news[0].title:''}}</view>
+						<view class="text avoidOverflow2 fs12 color6">{{item.news&&item.news[0]&&item.news[0]?item.news[0].content:''}}</view>
 					</view>
 				</view>
 			</view>
 		</view>
 		
 		<view class="zanCont" v-show="curr==2">
-			<view class="item" v-for="(item,index) in zanData" :key="index">
+			<view class="item" v-for="(item,index) in replyData" :key="index">
 				<view class="flex">
-					<view class="photo"><image src="../../static/images/home-img.png" mode=""></image></view>
+					<view class="photo"><image style="border-radius: 50%;" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" mode=""></image></view>
 					<view class="name mgl10">
-						<view class="fs15">竹蜻蜓</view>
-						<view class="fs10 color9">12-31 11:31</view>
+						<view class="fs15">{{item.title}}</view>
+						<view class="fs10 color9">{{item.create_time}}</view>
 					</view>
 				</view>
-				<view class="pdtb10">真心不错，服务态度也很好，已经推荐给朋友，很愉快的一次购物</view>
+				<view class="pdtb10">{{item.content}}</view>
 				<view class="cont f5bj flex">
-					<view class="pic"><image src="../../static/images/the-message-img1.png" mode=""></image></view>
+					<view class="pic" v-if="item.news&&item.news[0]&&item.news[0].mainImg
+					&&item.news[0].mainImg.length>0">
+					<image :src="item.news&&item.news[0]&&item.news[0].mainImg&&
+					item.news[0].mainImg[0]?item.news[0].mainImg[0].url:''" mode=""></image>
+					</view>
 					<view class="rr">
-						<view class="tit fs13 avoidOverflow">标题标题标题标题标题标题标题标题</view>
-						<view class="text avoidOverflow2 fs12 color6">双菇还记得老汉还说加工费几点过来价格付款落地生根加工费回户加工费点了结果火锅店机构管理很反感华海景房</view>
+						<view class="tit fs13 avoidOverflow">{{item.news&&item.news[0]&&item.news[0]?item.news[0].title:''}}</view>
+						<view class="text avoidOverflow2 fs12 color6">{{item.news&&item.news[0]&&item.news[0]?item.news[0].content:''}}</view>
 					</view>
 				</view>
 			</view>
 		</view>
 		
 		<view class="sixinCont" v-show="curr==3">
-			<view class="item flex"  v-for="(item,index) in sixinData" :key="index" @click="Router.navigateTo({route:{path:'/pages/userHome-tidings/userHome-tidings'}})">
+			<view class="item flex"  v-for="(item,index) in messageData" :key="index" :data-id="item.id"
+			@click="Router.navigateTo({route:{path:'/pages/userHome-tidings/userHome-tidings?id='+$event.currentTarget.dataset.id}})">
 				<view class="ll">
-					<image src="../../static/images/home-img.png" mode=""></image>
+					<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 				</view>
 				<view class="rr">
 					<view class="flexRowBetween pdb5">
-						<view class="fs15">竹蜻蜓</view>
-						<view class="fs10 color9">12-31</view>
+						<view class="fs15">{{item.name}}</view>
+						<view class="fs10 color9">{{item.update_time}}</view>
 					</view>
-					<view class="fs12 color6 avoidOverflow">国际法大使馆和公交卡粉红色的刚回来看好厉害公交卡</view>
+					<view class="fs12 color6 avoidOverflow">{{item.last_chat?item.last_chat.content:""}}</view>
 				</view>
 			</view>
 		</view>
 		
 		<view class="dialogBox pdlr4 f5bj" v-show="curr==4" >
-			<view class="item left">
-				<view class="time center fs13 color9">19-12-27 14:23</view>
+			<view class="item left" v-for="item in systemData">
+				<view class="time center fs13 color9">{{item.create_time}}</view>
 				<view class="infor">
-					<image class="Photo" src="../../static/images/xiaoxi-img.png" >
-					<view class="text">你好，想和你详细沟通下，现在方便吗？非的行列读后感 割发代首家里给会返利是这个和磊哥换个方式的尖括号割发代首开了个会了过节费肯定是联合国干活附近的干活附近的看更进反馈多少个一缸发动机开始估红富士康</view>
+					<image class="Photo" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" >
+					<view class="text">{{item.content}}</view>
 				</view>
 			</view>
 		</view>
@@ -133,28 +147,199 @@
 				is_show:false,
 				curr:1,
 				zanData:[{},{},{},{}],
-				sixinData:[{},{},{},{}]
+				sixinData:[{},{},{},{}],
+				goodData:[],
+				systemData:[],
+				replyData:[],
+				messageData:[],
+				userInfoData:{}
 			}
 		},
 		
 		onLoad() {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			self.$Utils.loadAll(['getGoodData','getUserInfoData'], self);
 		},
+		
 		methods: {
+			
+			getUserInfoData() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getUserToken';
+				postData.searchItem = {
+					user_no: uni.getStorageSync('user_info').user_no
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.userInfoData = res.info.data[0];
+					};
+					self.$Utils.finishFunc('getUserInfoData');
+				};
+				self.$apis.userInfoGet(postData, callback);
+			},
+			
 			changeCurr(curr){
 				const self = this;
 				if(curr!=self.curr){
-					self.curr = curr
+					self.curr = curr;
+					if(self.curr==1){
+						self.getGoodData(true)
+					}else if(self.curr==2){
+						self.getReplyData(true)
+					}else if(self.curr==3){
+						self.getMessageData(true)
+					}else if(self.curr==4){
+						self.getSystemData(true)
+					}
 				}
 			},
-			getMainData() {
+			
+			getGoodData(isNew) {
 				const self = this;
-				console.log('852369')
+				if (isNew) {
+					self.goodData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
+				};
 				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				self.$apis.orderGet(postData, callback);
-			}
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.searchItem = {
+					type:1,
+					relation_user:uni.getStorageSync('user_info').user_no,
+					user_type:0,
+					relation_table:'News',
+					
+				};
+				postData.tokenFuncName = 'getUserToken';
+				postData.getAfter = {
+					news:{
+						tableName:'News',
+						middleKey:'relation_id',
+						key:'id',
+						searchItem:{
+							status:1
+						},
+						condition:'='
+					},
+					userinfo:{
+						tableName:'UserInfo',
+						middleKey:'relation_user',
+						key:'user_no',
+						searchItem:{
+							status:1
+						},
+						condition:'='
+					}
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.goodData.push.apply(self.goodData,res.info.data)
+					}
+			
+					self.$Utils.finishFunc('getGoodData');
+				};
+				self.$apis.logGet(postData, callback);
+			},
+			
+			getReplyData(isNew) {
+				const self = this;
+				if (isNew) {
+					self.replyData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
+				};
+				const postData = {};
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.searchItem = {
+					type:2,
+					relation_user:uni.getStorageSync('user_info').user_no,
+					user_type:0,
+					relation_table:'News',
+					passage1:['in',['']]
+				};
+				postData.tokenFuncName = 'getUserToken';
+				postData.getAfter = {
+					news:{
+						tableName:'News',
+						middleKey:'relation_id',
+						key:'id',
+						searchItem:{
+							status:1
+						},
+						condition:'='
+					},
+					
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.replyData.push.apply(self.replyData,res.info.data)
+					}		
+					self.$Utils.finishFunc('getReplyData');
+				};
+				self.$apis.messageGet(postData, callback);
+			},
+			
+			
+			getMessageData(isNew) {
+				const self = this;
+				if (isNew) {
+					self.messageData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
+				};
+				const postData = {};
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.tokenFuncName = 'getUserToken';
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.messageData.push.apply(self.messageData,res.info.data)
+					}		
+					self.$Utils.finishFunc('getMessageData');
+				};
+				self.$apis.getChatList(postData, callback);
+			},
+			
+			getSystemData(isNew) {
+				const self = this;
+				if (isNew) {
+					self.systemData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
+				};
+				const postData = {};
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.searchItem = {
+					type:1,
+					user_no:uni.getStorageSync('user_info').user_no,
+				};
+				postData.tokenFuncName = 'getUserToken';
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.systemData.push.apply(self.systemData,res.info.data)
+					}
+					self.$Utils.finishFunc('getSystemData');
+				};
+				self.$apis.messageGet(postData, callback);
+			},
+			
 		}
 	};
 </script>

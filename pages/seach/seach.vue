@@ -5,11 +5,12 @@
 			<view class="flex rr" style="width: 85%;">
 				<button class="seachBtn" type="button"></button>
 				<view class="input">
-					<input type="text" name="" value="" placeholder="活动" placeholder-class="placeholder" />
+					<input type="text" name=""  v-model="keywords" placeholder="活动" placeholder-class="placeholder" />
 				</view>
 				<view class="delt flex"><text>×</text></view>
 			</view>
-			<view class="Rseach fs15" @click="Router.navigateTo({route:{path:'/pages/seachDetail/seachDetail'}})">搜索</view>
+			<view class="Rseach fs15" 
+			@click="search">搜索</view>
 		</view>
 		<view class="pdlr4 borderB1">
 			<view class="fs15 pdt20 pdb15 ftw">热门搜索</view>
@@ -34,7 +35,7 @@
 			<view class="fs13 color6 pdb20 borderB1">确定清空搜索记录吗？</view>
 			<view class="flex tip-button">
 				<view class="item"  @click="popupShow">取消</view>
-				<view class="item pubColor">确定</view>
+				<view class="item pubColor" @click="clearHistory()">确定</view>
 			</view>
 		</view>
 		
@@ -50,29 +51,49 @@
 				wx_info:{},
 				is_show:false,
 				hotLabel:['活动','社区','论坛'],
-				historyDate:['乌苏','活动','校园'],
-				is_popupShow:false
+				historyDate:[],
+				is_popupShow:false,
+				keywords:''
 			}
 		},
 		
 		onLoad(options) {
 			const self = this;
+			console.log(uni.getStorageSync('historyDate'))
+			if(uni.getStorageSync('historyDate')){
+				self.historyDate = uni.getStorageSync('historyDate')
+			};
+			console.log(self.historyDate)
 			// self.$Utils.loadAll(['getMainData'], self);
 		},
+		
 		methods: {
+			
 			popupShow(){
 				const self=this;
 				self.is_popupShow = !self.is_popupShow;
 				self.is_show = !self.is_show;
 				
 			},
-			getMainData() {
+			
+			search(){
 				const self = this;
-				console.log('852369')
-				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				self.$apis.orderGet(postData, callback);
-			}
+				if(self.keywords!=''){
+					self.Router.navigateTo({route:{path:'/pages/seachDetail/seachDetail?keywords='+self.keywords}});
+					self.historyDate.push(self.keywords);
+					uni.setStorageSync('historyDate',self.historyDate);
+					self.keywords = '';
+				}else{
+					return
+				}
+			},
+			
+			clearHistory(){
+				const self = this;
+				self.historyDate = [];
+				uni.removeStorageSync('historyDate');
+			},
+			
 		}
 	};
 </script>

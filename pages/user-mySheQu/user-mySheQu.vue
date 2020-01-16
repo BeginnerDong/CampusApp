@@ -2,10 +2,13 @@
 	<view>
 		
 		<view class="myRowBetween pdlr4">
-			<view class="item flexRowBetween" v-for="(item,index) in followData" :key="index"  @click="Router.navigateTo({route:{path:'/pages/user-mySheQu-Home/user-mySheQu-Home'}})">
+			<view class="item flexRowBetween" v-for="(item,index) in mainData" :key="index"  
+			@click="Router.navigateTo({route:{path:'/pages/user-mySheQu-Home/user-mySheQu-Home'}})">
 				<view class="ll flex">
-					<view class="photo"><image src="../../static/images/xiaoxi-img.png" mode=""></image></view>
-					<view class="ll-tit avoidOverflow">考研社区</view>
+					<view class="photo">
+						<image :src="item.mainImg&&item.mainImg.length>0?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+					</view>
+					<view class="ll-tit avoidOverflow">{{item.title}}</view>
 				</view>
 				<view class="rr">
 					<image class="arrowR" src="../../static/images/about-icon1.png" mode=""></image>
@@ -21,24 +24,75 @@
 		data() {
 			return {
 				Router:this.$Router,
-				showView: false,
-				score:'',
-				wx_info:{},
-				is_show:false,
-				is_alertBox:false,
-				followData:[{},{},{},{}]
+				
+				searchItem:{
+					thirdapp_id:2,
+					user_type:0
+				},
+				mainData:[]
 			}
 		},
+		
 		onLoad() {
 			const self = this;
-			//self.$Utils.loadAll(['getMainData'], self);
+			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			console.log(2323)
+			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
+		onReachBottom() {
+			console.log('onReachBottom')
+			const self = this;
+			if (!self.isLoadAll && uni.getStorageSync('loadAllArray')) {
+				self.paginate.currentPage++;
+				self.getMainData()
+			};
+		},
+		
 		methods: {
-			alertBoxShow(){
+			
+			getMainData(isNew) {
 				const self = this;
-				self.is_show = !self.is_show;
-				self.is_alertBox = !self.is_alertBox
-			}
+				if (isNew) {
+					self.mainData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
+				};
+				const postData = {};
+				postData.getBefore = {
+					test: {
+						tableName: 'Log',
+						searchItem: {
+							relation_table: ['in', ['Community']],
+							type:['in',[6]],
+							user_no:['in',[uni.getStorageSync('user_info').user_no]]
+						},
+						middleKey: 'id',
+						key: 'relation_id',
+						condition: 'in',
+					},
+				};
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.tokenFuncName = 'getUserToken';
+				postData.searchItem = self.$Utils.cloneForm(self.searchItem);
+				
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData.push.apply(self.mainData,res.info.data);
+						for (var i = 0; i < self.mainData.length; i++) {
+							self.mainData[i].start_time = self.$Utils.timeto(self.mainData[i].start_time*1000,'ymd')
+						}
+					}
+			
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.communityGet(postData, callback);
+			},
+			
 		}
 	};
 </script>

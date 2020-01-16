@@ -1,6 +1,14 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页",
+				"onReachBottomDistance":100,
+				"navigationStyle": "custom"
+			}
+		},
+		{
 			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "登录",//设置页面标题文字
@@ -22,14 +30,7 @@
 				"onReachBottomDistance":100
 			}
 		},
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "首页",
-				"onReachBottomDistance":100,
-				"navigationStyle": "custom"
-			}
-		},
+		
 		{
 			"path": "pages/postDetails/postDetails",
 			"style": {
@@ -157,7 +158,7 @@
 		{
 			"path": "pages/foodLists/foodLists",
 			"style": {
-				"navigationBarTitleText": "美食",
+				"navigationBarTitleText": "",
 				"onReachBottomDistance":100
 			}
 		},
@@ -360,6 +361,13 @@
 			"path": "pages/user-myFabu/user-myFabu",
 			"style": {
 				"navigationBarTitleText": "我的发布",
+				"onReachBottomDistance":100
+			}
+		},
+		{
+			"path": "pages/user-myFollow/user-myFollow",
+			"style": {
+				"navigationBarTitleText": "我的关注",
 				"onReachBottomDistance":100
 			}
 		},

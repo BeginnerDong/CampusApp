@@ -3,11 +3,11 @@
 		
 		<!-- 职位招聘 -->
 		<view class="mglr4 pdt20 pdb15">
-			<view class="fs18 flexRowBetween mgb15">会计助理</view>
+			<view class="fs18 flexRowBetween mgb15">{{mainData.title}}</view>
 			<view class="flex fs13">
-				<view class="red">4k-6k</view>/西安/1-3年&nbsp;/&nbsp;学历不限
+				<view class="red">{{mainData.salary}}</view>/{{mainData.city}}/{{mainData.experience}}&nbsp;/&nbsp;{{mainData.education}}
 			</view>
-			<view class="fs12 color6 mgt5">职位诱惑：年底分红13薪</view>
+			<view class="fs12 color6 mgt5">{{mainData.description}}</view>
 		</view>
 		<view class="f5H5"></view>
 		
@@ -15,15 +15,15 @@
 		<view class="pdlr4 compyCont">
 			<view class="pdt15 pdb10 flexRowBetween">
 				<view class="ll">
-					<view class="ftn pdb5">创天互娱成都分公司</view>
-					<p class="fs12 color6">不需要融资&nbsp;/&nbsp;50-100人&nbsp;/&nbsp;有戏</p>
+					<view class="ftn pdb5">{{mainData.company}}</view>
+					<p class="fs12 color6">{{mainData.finance}}&nbsp;/&nbsp;{{mainData.scale}}&nbsp;/&nbsp;{{mainData.industry}}</p>
 				</view>
 				<view class="rr flexEnd">
-					<image class="compyLogo" src="../../static/images/join-us-img.png" />
+					<image class="compyLogo" :src="mainData.mainImg&&mainData.mainImg[0]?mainData.mainImg[0].url:''" />
 				</view>
 			</view>
 			<view class="pdb15 adrss">
-				<view class="flex adrssTit fs13"><image class="adrsIcon mgr5" src="../../static/images/join-us-icon1.png"/>西安市雁塔区中投国际A座1802室</view>
+				<view class="flex adrssTit fs13"><image class="adrsIcon mgr5" src="../../static/images/join-us-icon1.png"/>{{mainData.address}}</view>
 			</view>
 		</view>
 		<view class="f5H5"></view>
@@ -31,15 +31,8 @@
 		<!-- 职位描述 -->
 		<view class="mglr4 pdtb20">
 			<view class="fs16 pdb15 ftw">职位描述</view>
-			<view class="fs13">职位概述：</view>
-			<view class="xqInfor fs12 color6">
-				<view>良好的职业道德，强烈的责任岗，会计初级职称，能处理对账、开票、销售回款、账龄分析等业务，能独立制作销售周报、月报工作。</view>
-			</view>
-			
-			<view class="fs13 pdt15 pdt5">任职要求：</view>
-			<view class="xqInfor fs12 color6">
-				<view>1、良好的职业道德，强烈的责任感，会计初级职称。</view>
-				<view>2、能处理好对账、开票、销售回款、账龄分析等业务，能独立制作销售周报、月报工作。</view>
+			<view class="content ql-editor" style="padding:0;"
+			v-html="mainData.content">
 			</view>
 		</view>
 		<view class="f5H5"></view>
@@ -64,24 +57,37 @@
 				showView: false,
 				score:'',
 				wx_info:{},
-				positionDate:[{},{},{}]
+				positionDate:[{},{},{}],
+				mainData:{}
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.id = options.id;
+			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
 		methods: {
+			
 			getMainData() {
 				const self = this;
 				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				var callback = function(res){
-				    console.log('getMainData', res);
-				    self.mainData.push.apply(self.mainData,res.info.data);		        
+				postData.searchItem = {
+					thirdapp_id: 2,
+					id: self.id
 				};
-				self.$apis.orderGet(postData, callback);
-			}
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData = res.info.data[0];
+						const regex = new RegExp('<img', 'gi');
+						self.mainData.content = self.mainData.content.replace(regex, `<img style="max-width: 100%;"`);
+					}
+					console.log('self.mainData', self.mainData)
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.articleGet(postData, callback);
+			},
+			
 		},
 	}
 </script>

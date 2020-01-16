@@ -17,6 +17,8 @@ export default {
 		};
 		http.HTTP(allParams);
 	},
+	
+	
 
 	registerSuper(param, callback) {
 
@@ -30,7 +32,99 @@ export default {
 		};
 		http.HTTP(allParams);
 	},
-
+	
+	getChatList(param, callback) {
+	
+		var allParams = {
+			url: 'Project/Solely/getChatList',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	getChatID(param, callback) {
+	
+		var allParams = {
+			url: 'Project/Solely/getChatID',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	
+	
+	searchAll(param, callback) {
+	
+		var allParams = {
+			url: 'Project/Solely/searchAll',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	registerUser(param, callback) {
+	
+		var allParams = {
+			url: 'Project/Solely/registerUser',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	registerShop(param, callback) {
+	
+		var allParams = {
+			url: 'Project/Solely/registerShop',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	loginByUser(param, callback) {
+	
+		var allParams = {
+			url: 'Func/Common/loginByUser',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	loginByShop(param, callback) {
+	
+		var allParams = {
+			url: 'Func/Common/loginByShop',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
 
 	bindShop(param, callback) {
 
@@ -44,6 +138,21 @@ export default {
 		};
 		http.HTTP(allParams);
 	},
+	
+	getUnfollow(param, callback) {
+	
+		var allParams = {
+			url: 'Project/Solely/getUnfollow',
+			type: 'post',
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	
 
 	monthFlow(param, callback) {
 
@@ -136,12 +245,194 @@ export default {
 		};
 		http.HTTP(allParams);
 	},
+	
+	chatGet(param, callback) {
+		var allParams = {
+			url: 'Common/Chat/get',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	chatAdd(param, callback) {
+		var allParams = {
+			url: 'Common/Chat/add',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	messageGet(param, callback) {
+		var allParams = {
+			url: 'Common/Message/get',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	messageAdd(param, callback) {
+		var allParams = {
+			url: 'Common/Message/add',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
 
 	labelGet(param, callback) {
 		var allParams = {
 			url: 'Common/Label/get',
 			type: 'post',
 			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	logGet(param, callback) {
+		var allParams = {
+			url: 'Common/Log/get',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	logAdd(param, callback) {
+		var allParams = {
+			url: 'Common/Log/add',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	logUpdate(param, callback) {
+		var allParams = {
+			url: 'Common/Log/update',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	newsGet(param, callback) {
+		var allParams = {
+			url: 'Common/News/get',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	newsUpdate(param, callback) {
+		var allParams = {
+			url: 'Common/News/update',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	newsAdd(param, callback) {
+		var allParams = {
+			url: 'Common/News/add',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	communityAdd(param, callback) {
+		var allParams = {
+			url: 'Common/Community/add',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	communityUpdate(param, callback) {
+		var allParams = {
+			url: 'Common/Community/update',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	communityGet(param, callback) {
+		var allParams = {
+			url: 'Common/Community/get',
+			type: 'post',
+			noToken: true,
+			data: param,
+			sCallback: function(data) {
+				callback && callback(data);
+			}
+		};
+		http.HTTP(allParams);
+	},
+	
+	getNews(param, callback) {
+	
+		var allParams = {
+			url: 'Project/Solely/getNews',
+			type: 'post',
 			data: param,
 			sCallback: function(data) {
 				callback && callback(data);

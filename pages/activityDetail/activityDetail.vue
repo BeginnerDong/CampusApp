@@ -3,37 +3,38 @@
 		
 		<view class="comment mglr4 activeBox">
 			<view class="child">
-				<image class="FX-icon" src="../../static/images/activity-icon1.png" mode=""></image>
+				<image v-if="mainData.signMe.length>0" class="FX-icon" src="../../static/images/activity-icon1.png" mode=""></image>
 				<view class="flexRowBetween">
+					
 					<view class="flex">
-						<view class="photo"><image src="../../static/images/home-img1.png" mode=""></image></view>
+						<view class="photo">
+							<image :src="mainData.headImg&&mainData.headImg[0]?mainData.headImg[0].url:''" mode=""></image>
+						</view>
 						<view class="name">
-							<view class="fs12">小白</view>
-							<view class="fs10 color6">2019.12.25 16:31</view>
+							<view class="fs12">{{mainData.name}}</view>
+							<view class="fs10 color6">{{mainData.create_time}}</view>
 						</view>
 					</view>
 					<view class="flexEnd">
 						<view class="gzBtn fs12 center white color6Bj">关注</view>
 					</view>
 				</view>
-				<view class="ftw pdt10 pdb5">参观大唐芙蓉园</view>
-				<view class="fs12 color6">真材细做，货真价实-信远斋桂花酸梅汤和是加客服的说法联合国就过来发的是两个号复健科单身公害了规划设计法海跟is干活换个飞机多少个扩大复合弓鹤骨鸡肤大好时光</view>
+				<view class="ftw pdt10 pdb5">{{mainData.title}}</view>
+				<view class="fs12 color6">{{mainData.content}}</view>
 				<view class="imgbox">
-					<view class="img lisThree">
-						<image src="../../static/images/the-order-img.png" mode=""></image>
-					</view>
-					<view class="img lisThree">
-						<image src="../../static/images/the-order-img.png" mode=""></image>
+					
+					<view class="img" v-for="(item,index) in mainData.mainImg" :class="mainData.mainImg.length==1?'lisOne':(mainData.mainImg.length==2?'lisTwo':'lisThree')">
+						<image :src="item.url" mode="aspectFill"></image>
 					</view>
 				</view>
 				<view class="label pdt15 flexEnd fs13">
-					<view class="lis flex">
-						<image src="../../static/images/activity-icon2.png" mode=""></image>
+					<view class="lis flex"  @click="clickCollect()">
+						<image :src="mainData.collectMe.length>0&&mainData.collectMe[0].status==1?'../../static/images/activity-icon3.png':'../../static/images/activity-icon2.png'" mode=""></image>
 						<view>收藏</view>
 					</view>
-					<view class="lis flex">
-						<image src="../../static/images/home-icon6.png" mode=""></image>
-						<view>1562</view>
+					<view class="lis flex" @click="clickGood()">
+						<image :src="mainData.goodMe.length>0&&mainData.goodMe[0].status==1?'../../static/images/home-icon6.png':'../../static/images/home-icon5.png'" mode=""></image>
+						<view>{{mainData.good?mainData.good.count:0}}</view>
 					</view>
 				</view>
 			</view>
@@ -42,9 +43,7 @@
 		<view class="pdlr4 pdb10">
 			<view class="ftw pdt15 pdb10">参与条件</view>
 			<view class="fs12 color6 xqInfor">
-				<view>1、回复健康的撒花四氯化硅鹤骨鸡肤商户管理挂号费世界观和规划局分是价格付款苏广加了加工费老岁接个了加工费克鲁赛德就过来监管科廊坊市寄过来</view>
-				<view>2、挂号费了撒谎过份了和估计富商大贾和更进反馈单身公害挂号费就开始干活规划局分开始的话购房人几十个热干活</view>
-				<view>3、刚发的广告费九十点了光和热和鬼斧神工和公交卡</view>
+				{{mainData.condition}}
 			</view>
 		</view>
 		<view class="f5H5"></view>
@@ -52,41 +51,41 @@
 		<view class="pdlr4">
 			<view class="flexRowBetween pdtb15 borderB1">
 				<view class="fs14">开始时间</view>
-				<view class="fs13">2019年12月12日8点</view>
+				<view class="fs13">{{mainData.start_time}}</view>
 			</view>
 			<view class="flexRowBetween pdtb15">
 				<view class="fs14">活动地址</view>
-				<view class="fs13">西安市长安区韦曲街道</view>
+				<view class="fs13">{{mainData.address}}</view>
 			</view>
 		</view>
 		<view class="f5H5"></view>
 		
 		<view class="pdtb25 mglr4">
-			<view class="submitbtn">
-				<button class="btn" type="button"  @click="alertBoxShow">报名参加</button>
+			<view class="submitbtn" v-if="mainData.signMe.length==0">
+				<button class="btn" type="button"  @click="$Utils.stopMultiClick(signUp)">报名参加</button>
 			</view>
-			<view class="center fs13 color6 pdtb15">报名成功，可以在我的-参加活动中查看入场券</view>
+			<view class="center fs13 color6 pdtb15" v-if="mainData.signMe.length>0">报名成功，可以在我的-参加活动中查看入场券</view>
 		</view>
 		
 		
 		<!-- 报名提示弹框 -->
 		<view class="black-bj" v-show="is_show"></view>
-		<view class="alertBox center pdt20 radius10 whiteBj" v-show="is_alertBox">
+		<!-- <view class="alertBox center pdt20 radius10 whiteBj" v-show="is_alertBox">
 			<view>提示：</view>
 			<view class="pdt10 pdb20 color6 fs13">确定参加此次活动？</view>
 			<view class="flexRowBetween selt seltBtn">
 				<view class="half" @click="alertBoxShow">取消</view>
 				<view class="half" @click="signUpOKShow">确定</view>
 			</view>
-		</view>
+		</view> -->
 		
 		<view class="signUpOK radius10 whiteBj" v-show="is_signUpOK">
 			<view class="closeBtn" @click="Router.redirectTo({route:{path:'/pages/activity/activity'}})">×</view>
 			<view class="center pdb20">报名成功！</view>
 			<view class="quanCard fs12">
 				<view class="center fs16 quanTit pdb10">入场券</view>
-				<view class="">时间：2019.12.26 18:30</view>
-				<view>地点：体育馆</view>
+				<view class="">时间：{{mainData.start_time}}</view>
+				<view>地点：{{mainData.address}}</view>
 			</view>
 		</view>
 	</view>
@@ -101,32 +100,303 @@
 				wx_info:{},
 				is_show:false,
 				is_alertBox:false,
-				is_signUpOK:false
-				
+				is_signUpOK:false,
+				mainData:{}
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.id = options.id;
+			self.$Utils.loadAll(['getMainData'], self);
 		},
 		methods: {
+			
 			alertBoxShow(){
 				const self = this;
 				self.is_show = !self.is_show;
 				self.is_alertBox = !self.is_alertBox
 			},
+			
 			signUpOKShow(){
 				const self = this;
 				self.is_alertBox = !self.is_alertBox
 				self.is_signUpOK = !self.is_signUpOK
 			},
+			
 			getMainData() {
 				const self = this;
-				console.log('852369')
 				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
-				self.$apis.orderGet(postData, callback);
-			}
+				postData.tokenFuncName = 'getUserToken';
+				postData.searchItem = {
+					thirdapp_id:2,
+					report:0,
+					user_type:0,
+					id:self.id
+				};
+				postData.getAfter = {
+					goodMe: {
+						tableName: 'Log',
+						searchItem: {
+							status:['in',[1,-1]],
+							type:1,
+							user_no:wx.getStorageSync('user_info').user_no
+						},
+						middleKey: 'id',
+						key: 'relation_id',
+						condition: 'in',
+					},
+					good: {
+						tableName: 'Log',
+						searchItem: {
+							status:1,
+							type:1,
+						},
+						middleKey: 'id',
+						key: 'relation_id',
+						condition: 'in',
+						compute:{
+						  count:[
+						    'count',
+						    'count',
+						    {
+						      status:1,type:1
+						    }
+						  ]
+						},
+					},
+					
+					collect: {
+						tableName: 'Log',
+						searchItem: {
+							status:1,
+							type:2,
+						},
+						middleKey: 'id',
+						key: 'relation_id',
+						condition: 'in',
+						compute:{
+						  count:[
+						    'count',
+						    'count',
+						    {
+						      status:1,type:2
+						    }
+						  ]
+						},
+					},
+					collectMe: {
+						tableName: 'Log',
+						searchItem: {
+							status:['in',[1,-1]],
+							type:2,
+							user_no:wx.getStorageSync('user_info').user_no
+						},
+						middleKey: 'id',
+						key: 'relation_id',
+						condition: 'in',
+					},
+					signMe: {
+						tableName: 'Log',
+						searchItem: {
+							status:['in',[1,-1]],
+							type:7,
+							user_no:wx.getStorageSync('user_info').user_no
+						},
+						middleKey: 'id',
+						key: 'relation_id',
+						condition: 'in',
+					},
+					
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData = res.info.data[0];
+						self.mainData.start_time = self.$Utils.timeto(self.mainData.start_time*1000,'ymd')
+					}
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.newsGet(postData, callback);
+			},
+			
+			
+			
+			clickGood() {
+				const self = this;
+				uni.setStorageSync('canClick', false);	
+				if (self.mainData.goodMe.length == 0) {
+					self.addGoodLog()
+				} else {
+					self.updateGoodLog()
+				};
+			},
+			
+			addGoodLog(index) {
+				const self = this;
+				const postData = {};
+				postData.data = {
+					type: 1,
+					title: '点赞成功',
+					relation_id: self.mainData.id,
+					relation_table:'News',
+					user_no: uni.getStorageSync('user_info').user_no,
+					relation_user:self.mainData.user_no
+				};
+				postData.tokenFuncName = 'getUserToken';
+				const callback = (res) => {
+					if (res.solely_code == 100000) {
+						self.mainData.goodMe.push({
+							status: 1,
+							id: res.info.id
+						});
+						self.mainData.good.count = self.mainData.good.count+1
+						//self.$Utils.showToast('已收藏', 'none', 1000)
+					} else {
+						self.$Utils.showToast('收藏失败', 'none', 1000)
+					};
+					uni.setStorageSync('canClick', true);	
+				};
+				self.$apis.logAdd(postData, callback);
+			},
+			
+			signUp() {
+				const self = this;
+				uni.setStorageSync('canClick', false);	
+				uni.showModal({
+					title: '提示',
+					content: '确定参加此次活动？',
+					showCancel:true,
+					success: function(res) {
+						if (res.confirm) {
+							const postData = {};
+							postData.data = {
+								type: 7,
+								title: '活动报名',
+								relation_id: self.mainData.id,
+								relation_table:'News',
+								user_no: uni.getStorageSync('user_info').user_no,
+								relation_user:self.mainData.user_no
+							};
+							postData.tokenFuncName = 'getUserToken';
+							const callback = (res) => {
+								if (res.solely_code == 100000) {
+									self.is_show = !self.is_show;
+									self.is_signUpOK = !self.is_signUpOK
+									//self.$Utils.showToast('已收藏', 'none', 1000)
+								} else {
+									self.$Utils.showToast(res.msg, 'none', 1000)
+								};
+								uni.setStorageSync('canClick', true);	
+							};
+							self.$apis.logAdd(postData, callback);
+						} else if (res.cancel) {
+							uni.setStorageSync('canClick', true);	
+							console.log('用户点击取消');
+						}
+					}
+				});
+				
+			},
+			
+			
+			updateGoodLog() {
+				const self = this;
+			
+				const postData = {
+					searchItem: {
+						id: self.mainData.goodMe[0].id
+						
+					},
+					data: {
+						status: -self.mainData.goodMe[0].status
+					}
+				};
+				postData.tokenFuncName = 'getUserToken';
+				const callback = (res) => {
+					uni.setStorageSync('canClick', true);
+					if (res.solely_code == 100000) {
+						self.mainData.goodMe[0].status = -self.mainData.goodMe[0].status;
+						if(self.mainData.goodMe[0].status==1){
+							self.mainData.good.count = self.mainData.good.count+1
+							//self.$Utils.showToast('已收藏', 'none', 1000)
+						}else{
+							self.mainData.good.count = self.mainData.good.count-1
+							self.$Utils.showToast('取消成功', 'none', 1000)
+						}
+					} else {
+						self.$Utils.showToast(res.msg, 'none', 1000)
+					};
+				};
+				self.$apis.logUpdate(postData, callback);
+			},
+			
+			clickCollect(index) {
+				const self = this;
+				uni.setStorageSync('canClick', false);	
+				if (self.mainData.collectMe.length == 0) {
+					self.addCollectLog(index)
+				} else {
+					self.updateCollectLog(index)
+				};
+			},
+			
+			addCollectLog(index) {
+				const self = this;
+				const postData = {};
+				postData.data = {
+					type: 2,
+					title: '收藏成功',
+					relation_id: self.mainData.id,
+					relation_table:'News',
+					user_no: uni.getStorageSync('user_info').user_no,
+				};
+				postData.tokenFuncName = 'getUserToken';
+				const callback = (res) => {
+					if (res.solely_code == 100000) {
+						self.mainData.collectMe.push({
+							status: 1,
+							id: res.info.id
+						});
+						self.mainData.collect.count = self.mainData.collect.count+1
+						//self.$Utils.showToast('已收藏', 'none', 1000)
+					} else {
+						self.$Utils.showToast('收藏失败', 'none', 1000)
+					};
+					uni.setStorageSync('canClick', true);	
+				};
+				self.$apis.logAdd(postData, callback);
+			},
+			
+			
+			updateCollectLog(index) {
+				const self = this;
+			
+				const postData = {
+					searchItem: {
+						id: self.mainData.collectMe[0].id
+						
+					},
+					data: {
+						status: -self.mainData.collectMe[0].status
+					}
+				};
+				postData.tokenFuncName = 'getUserToken';
+				const callback = (res) => {
+					uni.setStorageSync('canClick', true);
+					if (res.solely_code == 100000) {
+						self.mainData.collectMe[0].status = -self.mainData.collectMe[0].status;
+						if(self.mainData.collectMe[0].status==1){
+							self.mainData.collect.count = self.mainData.collect.count+1
+							//self.$Utils.showToast('已收藏', 'none', 1000)
+						}else{
+							self.mainData.collect.count = self.mainData.collect.count-1
+							self.$Utils.showToast('取消成功', 'none', 1000)
+						}
+					} else {
+						self.$Utils.showToast(res.msg, 'none', 1000)
+					};
+				};
+				self.$apis.logUpdate(postData, callback);
+			},
 		}
 	};
 </script>
