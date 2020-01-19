@@ -1,7 +1,7 @@
 <template>
 	<view>
 		
-		<view class="nipCard mglr4">
+		<view class="nipCard mglr4" v-if="mainData.length>0">
 			<view class="item radius10 boxShaow" v-for="(item,index) in mainData">
 				<view class=""><image class="topBaner" 
 				:src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" mode=""></image>
@@ -18,6 +18,9 @@
 					<view class="chongBtn"  @click="paywayShow">充值</view>
 				</view>
 			</view> -->
+		</view>
+		<view v-else>
+			<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 		</view>
 		
 		<view class="black-bj" v-show="is_show"></view>

@@ -20,6 +20,10 @@ input{font-size: 26rpx;}
 
 .radsBtnH50{border-radius: 30rpx;line-height: 50rpx;padding: 0 20rpx;box-sizing: border-box;color: #fff;background-image: linear-gradient(to right, #4f4f4f,#222);}
 
+/* 暂无数据 */
+.noDataBox{margin: 200rpx auto;}
+.noDataBox image{width: 288rpx; height: 230rpx; display: block;margin: 0 auto;}
+
 /* 关注按钮 */
 .gzBtn{width: 90rpx;line-height: 50rpx;border-radius: 30rpx;}
 

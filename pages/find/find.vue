@@ -20,116 +20,133 @@
 		<view class="f5H5"></view>
 		
 		<view class="comment mglr4" v-show="curr==1">
-			<view class="child" v-for="(item,index) in mainData" :key="index">
-				<view class="flexRowBetween">
-					<view class="flex">
-						<view class="photo" :data-user_no ="item.user_no"
-						@click="Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+$event.currentTarget.dataset.user_no}})">
-							<image :src="item.headImg&&item.headImg[0]?item.headImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+			<view v-if="mainData.length>0">
+				<view class="child" v-for="(item,index) in mainData" :key="index">
+					<view class="flexRowBetween">
+						<view class="flex">
+							<view class="photo" :data-user_no ="item.user_no"
+							@click="Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+$event.currentTarget.dataset.user_no}})">
+								<image :src="item.headImg&&item.headImg[0]?item.headImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+							</view>
+							<view class="name">
+								<view class="fs12">{{item.name}}</view>
+								<view class="fs10 color6">{{item.create_time}}</view>
+							</view>
 						</view>
-						<view class="name">
-							<view class="fs12">{{item.name}}</view>
-							<view class="fs10 color6">{{item.create_time}}</view>
+						<view class="pr" v-if="item.type==3">
+							<view class="flexEnd" v-if="userInfoData.check_status==2" @click="shareBtnShow(index)">
+								<view class="dian"></view>
+								<view class="dian"></view>
+								<view class="dian"></view>
+							</view>
+							
+							<view class="flexEnd" v-if="userInfoData.check_status!=2" @click="realnameshow">
+								<view class="dian"></view>
+								<view class="dian"></view>
+								<view class="dian"></view>
+							</view>
+							<view class="fx-shareBtn fs11 white" v-if="willId==item.id">
+								<view class="flexCenter pdb10" @click="clickCollect(index)">
+									<image class="icon" :src="item.collectMe.length>0&&item.collectMe[0].status==1?'../../static/images/home-icon9.png':'../../static/images/home-icon7.png'" mode=""></image>
+									<text>收藏</text>
+								</view>
+								<view class="flexCenter" @click="Router.navigateTo({route:{path:'/pages/report/report?id='+willId}})">
+									<image class="icon" src="../../static/images/home-icon8.png" mode=""></image>
+									<text>举报</text>
+								</view>
+							</view>
 						</view>
 					</view>
-					<view class="pr" v-if="item.type==3">
-						<view class="flexEnd" v-if="userInfoData.check_status==2" @click="shareBtnShow(index)">
-							<view class="dian"></view>
-							<view class="dian"></view>
-							<view class="dian"></view>
-						</view>
+					<view class="" :data-id="item.id"
+					@click="Router.navigateTo({route:{path:'/pages/postDetails-Two/postDetails-Two?id='+$event.currentTarget.dataset.id}})">
 						
-						<view class="flexEnd" v-if="userInfoData.check_status!=2" @click="realnameshow">
-							<view class="dian"></view>
-							<view class="dian"></view>
-							<view class="dian"></view>
-						</view>
-						<view class="fx-shareBtn fs11 white" v-if="willId==item.id">
-							<view class="flexCenter pdb10" @click="clickCollect(index)">
-								<image class="icon" :src="item.collectMe.length>0&&item.collectMe[0].status==1?'../../static/images/home-icon9.png':'../../static/images/home-icon7.png'" mode=""></image>
-								<text>收藏</text>
-							</view>
-							<view class="flexCenter" @click="Router.navigateTo({route:{path:'/pages/report/report?id='+willId}})">
-								<image class="icon" src="../../static/images/home-icon8.png" mode=""></image>
-								<text>举报</text>
+						<view class="fs12 pdt10">{{item.content}}</view>
+						<view class="imgbox" >
+							<view v-for="(c_item,c_index) in item.mainImg" :class="item.mainImg.length==1?'lisOne':(item.mainImg.length==2?'lisTwo':'lisThree')">
+								<image :src="c_item.url" mode="aspectFill" @click="previewImage(index,c_index)"></image>
 							</view>
 						</view>
 					</view>
-				</view>
-				<view class="" :data-id="item.id"
-				@click="Router.navigateTo({route:{path:'/pages/postDetails-Two/postDetails-Two?id='+$event.currentTarget.dataset.id}})">
-					
-					<view class="fs12 pdt10">{{item.content}}</view>
-					<view class="imgbox" >
-						<view v-for="(c_item,c_index) in item.mainImg" :class="item.mainImg.length==1?'lisOne':(item.mainImg.length==2?'lisTwo':'lisThree')">
-							<image :src="c_item.url" mode="aspectFill" @click="previewImage(index,c_index)"></image>
+					<view class="label pdt15 flexEnd fs13">
+						<view class="lis flex" v-if="item.type==3">
+							<image src="../../static/images/home-icon4.png" mode=""></image>
+							<view>{{item.share?item.share.count:0}}</view>
+						</view>
+						<view class="lis flex" v-if="item.type!=2">
+							<image src="../../static/images/home-icon3.png" mode=""></image>
+							<view>{{item.comment?item.comment.count:0}}</view>
+						</view>
+						<view class="lis flex" v-if="userInfoData.check_status==2" @click="clickGood(index)">
+							<image :src="item.goodMe.length>0&&item.goodMe[0].status==1?'../../static/images/home-icon6.png':'../../static/images/home-icon5.png'" mode=""></image>
+							<view>{{item.good?item.good.count:0}}</view>
+						</view>
+						<view class="lis flex" v-if="userInfoData.check_status!=2" @click="realnameshow">
+							<image :src="item.goodMe.length>0&&item.goodMe[0].status==1?'../../static/images/home-icon6.png':'../../static/images/home-icon5.png'" mode=""></image>
+							<view>{{item.good?item.good.count:0}}</view>
 						</view>
 					</view>
 				</view>
-				<view class="label pdt15 flexEnd fs13">
-					<view class="lis flex" v-if="item.type==3">
-						<image src="../../static/images/home-icon4.png" mode=""></image>
-						<view>{{item.share?item.share.count:0}}</view>
-					</view>
-					<view class="lis flex" v-if="item.type!=2">
-						<image src="../../static/images/home-icon3.png" mode=""></image>
-						<view>{{item.comment?item.comment.count:0}}</view>
-					</view>
-					<view class="lis flex" v-if="userInfoData.check_status==2" @click="clickGood(index)">
-						<image :src="item.goodMe.length>0&&item.goodMe[0].status==1?'../../static/images/home-icon6.png':'../../static/images/home-icon5.png'" mode=""></image>
-						<view>{{item.good?item.good.count:0}}</view>
-					</view>
-					<view class="lis flex" v-if="userInfoData.check_status!=2" @click="realnameshow">
-						<image :src="item.goodMe.length>0&&item.goodMe[0].status==1?'../../static/images/home-icon6.png':'../../static/images/home-icon5.png'" mode=""></image>
-						<view>{{item.good?item.good.count:0}}</view>
-					</view>
-				</view>
+			</view>
+			<view v-else>
+				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 			</view>
 		</view>
 		
 		<view class="myRowBetween pdlr4" v-show="curr==2">
-			<view class="item flexRowBetween" v-for="(item,index) in hasAddData" :key="index" >
-				<view class="ll flex" :data-id="item.id" @click="Router.navigateTo({route:{path:'/pages/communityHome/communityHome?id='+$event.currentTarget.dataset.id}})">
-					<view class="photo">
-						<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+			<view v-if="hasAddData.length>0">
+				<view class="item flexRowBetween" v-for="(item,index) in hasAddData" :key="index" >
+					<view class="ll flex" :data-id="item.id" @click="Router.navigateTo({route:{path:'/pages/communityHome/communityHome?id='+$event.currentTarget.dataset.id}})">
+						<view class="photo">
+							<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+						</view>
+						<view class="ll-tit">
+							<view class="fs14">{{item.title}}</view>
+							<view class="fs12 color9 mgt5 avoidOverflow">{{item.description}}</view>
+						</view>
 					</view>
-					<view class="ll-tit">
-						<view class="fs14">{{item.title}}</view>
-						<view class="fs12 color9 mgt5 avoidOverflow">{{item.description}}</view>
-					</view>
-				</view>
-				<view class="rr">
-					<view class="joinOK flexCenter color9 fs12">
-						<image class="okIcon" src="../../static/images/xiaoxi-icon.png" mode=""></image>
-						<text>已加入</text>
+					<view class="rr">
+						<view class="joinOK flexCenter color9 fs12">
+							<image class="okIcon" src="../../static/images/xiaoxi-icon.png" mode=""></image>
+							<text>已加入</text>
+						</view>
 					</view>
 				</view>
 			</view>
+			<view v-else>
+				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
+			</view>
 		</view>
+		
 		<view class="myRowBetween pdlr4" v-show="curr==3">
-			<view class="item flexRowBetween" v-for="(item,index) in noAddData" :key="index">
-				<view class="ll flex" :data-id="item.id" 
-				@click="Router.navigateTo({route:{path:'/pages/communityHome/communityHome?id='+$event.currentTarget.dataset.id}})">
-					<view class="photo">
-						<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+			<view v-if="noAddData.length>0" >
+				<view class="item flexRowBetween" v-for="(item,index) in noAddData" :key="index">
+					<view class="ll flex" :data-id="item.id" 
+					@click="Router.navigateTo({route:{path:'/pages/communityHome/communityHome?id='+$event.currentTarget.dataset.id}})">
+						<view class="photo">
+							<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+						</view>
+						<view class="ll-tit">
+							<view class="fs14">{{item.title}}</view>
+							<view class="fs12 color9 mgt5 avoidOverflow">{{item.description}}</view>
+						</view>
 					</view>
-					<view class="ll-tit">
-						<view class="fs14">{{item.title}}</view>
-						<view class="fs12 color9 mgt5 avoidOverflow">{{item.description}}</view>
+					<view class="rr" v-if="userInfoData.check_status==2">
+						<view class="joinOK color9 fs12"  @click="joinCommunity(index)">
+							<text>加入</text>
+						</view>
 					</view>
-				</view>
-				<view class="rr" v-if="userInfoData.check_status==2">
-					<view class="joinOK color9 fs12"  @click="joinCommunity(index)">
-						<text>加入</text>
-					</view>
-				</view>
-				<view class="rr" v-if="userInfoData.check_status!=2" @click="realnameshow">
-					<view class="joinOK color9 fs12">
-						<text>加入</text>
+					<view class="rr" v-if="userInfoData.check_status!=2" @click="realnameshow">
+						<view class="joinOK color9 fs12">
+							<text>加入</text>
+						</view>
 					</view>
 				</view>
 			</view>
-		</view>
+			<view v-else>
+				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
+			</view>
+		</view>	
+		
 		
 		<!-- 加入提示弹框 -->
 		<view class="black-bj" v-show="is_show"></view>

@@ -7,7 +7,7 @@
 		</view>
 		
 		<view class="mglr4">
-			<view class="CouponCard" v-show="num==1">
+			<view class="CouponCard" v-show="num==1" v-if="mainData.length>0">
 				<view class="item"  v-for="(item,index) in mainData" :key="index">
 					<view class="quanIcon">
 						<image src="../../static/images/dianziquan-icon1.png" mode=""></image>
@@ -33,7 +33,7 @@
 				</view>
 			</view>
 		
-			<view class="CouponCard" v-show="num==2">
+			<view class="CouponCard" v-show="num==2" v-if="mainData.length>0">
 				<view class="radius10 whiteBj" v-for="(item,index) in mainData" :key="index">
 					<view class="item">
 						<view class="quanIcon"><image src="../../static/images/dianziquan-icon1.png" mode=""></image></view>
@@ -60,7 +60,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="radius10 whiteBj mgt15 canTing"  v-show="num==3">
+			<view class="radius10 whiteBj mgt15 canTing"  v-show="num==3" v-if="mainData.length>0">
 				<view class="item pr"  v-for="(item,index) in mainData" :key="index">
 					<!-- <view class="quanIcon">
 						<image src="../../static/images/dianziquan-icon1.png" mode=""></image>
@@ -80,6 +80,10 @@
 					</view>
 					<view class="color6 fs12 pjtex">{{item.message&&item.message[0]?item.message[0].description:''}}</view>
 				</view>
+			</view>
+			
+			<view v-else>
+				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 			</view>
 			
 		</view>

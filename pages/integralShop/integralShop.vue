@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="proLis flexRowBetween mglr4 pdt15">
+		<view class="proLis flexRowBetween mglr4 pdt15" v-if="mainData.length>0">
 			<view class="item-lis boxShaow" v-for="(item,index) in mainData" :key="index" :data-id="item.id"
 			@click="Router.navigateTo({route:{path:'/pages/integralShop-detail/integralShop-detail?id='+$event.currentTarget.dataset.id}})">
 				<view class="pic">
@@ -15,6 +15,9 @@
 					
 				</view>
 			</view>
+		</view>
+		<view v-else>
+			<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 		</view>
 	</view>
 	

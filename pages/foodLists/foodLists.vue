@@ -1,7 +1,7 @@
 <template>
 	<view>
 		
-		<view class="foodLis mglr4">
+		<view class="foodLis mglr4" v-if="mainData.length>0">
 			<view class="item radius10 whiteBj" v-for="(item,index) in mainData" :key="index"  :data-id="item.id"
 			@click="Router.navigateTo({route:{path:'/pages/food-orderConfirm/food-orderConfirm?id='+$event.currentTarget.dataset.id}})">
 				<view class="fs15 ftw">{{item.title}}</view>
@@ -12,7 +12,9 @@
 				</view>
 			</view>
 		</view>
-		
+		<view v-else>
+			<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
+		</view>
 		
 	</view>
 </template>

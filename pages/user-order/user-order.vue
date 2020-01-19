@@ -9,7 +9,7 @@
 		<view style="height: 82rpx;"></view>
 		
 		<view class="mglr4">
-			<view class="orderList">
+			<view class="orderList" v-if="mainData.length>0">
 				<view class="item whiteBj radius10" v-for="(item,index) in mainData">
 					<view class="flexRowBetween fs12">
 						<view class="color9">交易时间：{{item.create_time}}</view>
@@ -35,6 +35,9 @@
 						<view class="B-Btn">确认收货</view>
 					</view>
 				</view>
+			</view>
+			<view v-else>
+				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 			</view>
 		</view>
 	</view>

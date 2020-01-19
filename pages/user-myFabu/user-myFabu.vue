@@ -10,7 +10,7 @@
 		
 		<view class="mglr4">
 			<!-- 动态 -->
-			<view class="comment" v-show="curr==1">
+			<view class="comment" v-show="curr==1" v-if="mainData.length>0">
 				<view class="child" v-for="(item,index) in mainData" :key="index">
 					<view class="fs12" @click="toDetail(item.type,item.id)">{{item.content}}</view>
 					<view class="imgbox">
@@ -33,7 +33,7 @@
 			</view>	
 			
 			<!-- 活动 -->
-			<view class="comment activeBox" v-show="curr==2" >
+			<view class="comment activeBox" v-show="curr==2"  v-if="mainData.length>0">
 				<view class="child pr oh"  v-for="(item,index) in mainData" :key="index">
 					<view @click="Router.navigateTo({route:{path:'/pages/myFabu-activityDetail/myFabu-activityDetail'}})">
 						<view class="ftw pdb5" @click="toDetail(item.type,item.id)">{{item.title}}</view>
@@ -62,7 +62,7 @@
 			</view>
 			
 			<!-- 社区 -->
-			<view class="comment" v-show="curr==3">
+			<view class="comment" v-show="curr==3" v-if="mainData.length>0">
 				<view class="child" v-for="(item,index) in mainData" :key="index">
 					<view class="fs12" @click="toDetail(item.type,item.id)">{{item.content}}</view>
 					<view class="imgbox">
@@ -89,7 +89,7 @@
 			</view>	
 			
 			<!-- 评论 -->
-			<view class="zanCont" v-show="curr==4">
+			<view class="zanCont" v-show="curr==4" v-if="mainData.length>0">
 				<view class="item" v-for="(item,index) in mainData" :key="index">
 					<view class="pdb10 fs13">{{item.content}}</view>
 					<view class="cont f5bj flex">
@@ -105,6 +105,11 @@
 					</view>
 				</view>
 			</view>
+			
+			<view v-else>
+				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
+			</view>
+			
 		</view>
 	</view>
 </template>

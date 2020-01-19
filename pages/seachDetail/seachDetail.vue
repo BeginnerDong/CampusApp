@@ -1,7 +1,7 @@
 <template>
 	<view>
 		
-		<view class="comment mglr4 mgt15">
+		<view class="comment mglr4 mgt15" v-if="mainData.length>0">
 			<view class="" style="border-bottom: 1px solid #eee;padding: 15px 0;"  v-if="item.on_shelf&&item.on_shelf==1" v-for="(item,index) in mainData"   :data-id="item.id"
 				@click="Router.navigateTo({route:{path:'/pages/integralShop-detail/integralShop-detail?id='+$event.currentTarget.dataset.id}})">
 				<view class="item radius10 whiteBj">
@@ -103,6 +103,9 @@
 				<view class="center color9 mgb10" @click="realnameshow">下次验证</view>
 				
 			</view>
+		</view>
+		<view v-else>
+			<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 		</view>
 		
 	</view>

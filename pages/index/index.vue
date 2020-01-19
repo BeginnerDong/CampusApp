@@ -31,8 +31,7 @@
 			</swiper>
 		</view>
 		
-		<view class="comment mglr4 mgt15">
-			
+		<view class="comment mglr4 mgt15" v-if="mainData.length>0">
 			<view class="child" v-for="(item,index) in mainData" :key="index">
 				<image v-if="item.signMe.length>0" class="FX-icon" src="../../static/images/activity-icon1.png" mode=""></image>
 				<view class="flexRowBetween">
@@ -110,6 +109,9 @@
 					</view>
 				</view>
 			</view>
+		</view>
+		<view v-else>
+			<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 		</view>
 		
 		

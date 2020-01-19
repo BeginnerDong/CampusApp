@@ -1,7 +1,7 @@
 <template>
 	<view>
 		
-		<view class="myRowBetween pdlr4">
+		<view class="myRowBetween pdlr4" v-if="mainData.length>0">
 			<view class="item flexRowBetween" v-for="(item,index) in mainData" :key="index" >
 				<view class="ll flex" @click="Router.navigateTo({route:{path:'/pages/TA-Home/TA-Home'}})">
 					<view class="photo">
@@ -17,6 +17,9 @@
 					</view>
 				</view>
 			</view>
+		</view>
+		<view v-else>
+			<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 		</view>
 		
 		<!-- 加入提示弹框 -->

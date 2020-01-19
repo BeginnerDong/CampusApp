@@ -1,7 +1,7 @@
 <template>
 	<view>
 		
-		<view class="myRowBetween pdlr4">
+		<view class="myRowBetween pdlr4" v-if="mainData.length>0">
 			<view class="item flexRowBetween" v-for="(item,index) in mainData" :key="index"  :data-id="item.id"
 			@click="Router.navigateTo({route:{path:'/pages/user-mySheQu-Home/user-mySheQu-Home?id='+$event.currentTarget.dataset.id}})">
 				<view class="ll flex">
@@ -14,6 +14,9 @@
 					<image class="arrowR" src="../../static/images/about-icon1.png" mode=""></image>
 				</view>
 			</view>
+		</view>
+		<view v-else>
+			<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 		</view>
 		
 	</view>

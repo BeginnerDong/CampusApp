@@ -48,7 +48,7 @@
 		
 		<view class="fabubtn" v-if="userInfoData.check_status==2"  @click="Router.navigateTo({route:{path:'/pages/activityFaBu/activityFaBu'}})"><image class="icon" src="../../static/images/home-icon1.png" mode=""></image></view>
 		<view class="fabubtn" v-if="userInfoData.check_status!=2" @click="realnameshow"><image class="icon" src="../../static/images/home-icon1.png" mode=""></image></view>
-		<view class="comment mglr4 mgt15 activeBox">
+		<view class="comment mglr4 mgt15 activeBox" v-if="mainData.length>0" >
 			<view class="child pr oh" v-for="(item,index) in mainData">
 				<image v-if="item.enrollMe.length>0" class="FX-icon" src="../../static/images/activity-icon1.png" mode=""></image>
 				<view class="flexRowBetween">
@@ -99,6 +99,10 @@
 				</view>
 			</view>
 		</view>
+		<view v-else>
+			<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
+		</view>
+		
 		<view class="realnameshow whiteBj radius10 pdb25" v-if="is_realnameshow">
 			<view class="closebtn" style="z-index: 2;" @click="realnameshow">×</view>
 			<view>

@@ -13,7 +13,7 @@
 		</view>
 		
 		
-		<view class="mglr4 userHomeLis mgt15">
+		<view class="mglr4 userHomeLis mgt15" v-if="newsData.length>0">
 			<view class="item flexRowBetween" v-for="(item,index) in newsData" :key="index">
 				<view class="data">
 					<view class="year">{{Utils.substr(item.menu,0,4)}}</view>
@@ -30,11 +30,12 @@
 							<view class="fs12 color6 avoidOverflow2">{{c_item.content}}</view>
 						</view>
 					</view>
-					
 				</view>
 			</view>
 		</view>
-		
+		<view v-else>
+			<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
+		</view>
 		
 	</view>
 </template>

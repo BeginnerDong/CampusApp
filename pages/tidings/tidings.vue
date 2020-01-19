@@ -19,84 +19,102 @@
 		<view class="pdtb25"></view>
 		<view class="pdtb20"></view>
 		<view class="f5H5"></view>
-		
-		<view class="zanCont" v-show="curr==1">
-			<view class="item" v-for="(item,index) in goodData" :key="index">
-				<view class="flex">
-					<view class="photo">
-						<image style="border-radius: 50%;" :src="item.userinfo&&item.userinfo[0]&&item.userinfo[0].mainImg&&
-						item.userinfo[0].mainImg[0]?item.userinfo[0].mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+		<view v-show="curr==1">
+			<view class="zanCont" v-if="goodData.length>0">
+				<view class="item" v-for="(item,index) in goodData" :key="index">
+					<view class="flex">
+						<view class="photo">
+							<image style="border-radius: 50%;" :src="item.userinfo&&item.userinfo[0]&&item.userinfo[0].mainImg&&
+							item.userinfo[0].mainImg[0]?item.userinfo[0].mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+						</view>
+						<view class="name mgl10">
+							<view class="fs15">{{item.userinfo&&item.userinfo[0]&&item.userinfo[0]?item.userinfo[0].name:''}}</view>
+							<view class="fs10 color9">{{item.create_time}}</view>
+						</view>
 					</view>
-					<view class="name mgl10">
-						<view class="fs15">{{item.userinfo&&item.userinfo[0]&&item.userinfo[0]?item.userinfo[0].name:''}}</view>
-						<view class="fs10 color9">{{item.create_time}}</view>
+					<view class="pdtb10">赞了这条{{item.news&&item.news[0]&&item.news[0].type==1?'动态':(item.news&&item.news[0]&&item.news[0].type==2?'活动':'社区文章')}}</view>
+					<view class="cont f5bj flex" @click="toDetail(item.type,item.news[0].id)">
+						<view class="pic" v-if="item.news&&item.news[0]&&item.news[0].mainImg
+						&&item.news[0].mainImg.length>0">
+						<image  :src="item.news&&item.news[0]&&item.news[0].mainImg&&
+						item.news[0].mainImg[0]?item.news[0].mainImg[0].url:''" mode=""></image>
+						</view>
+						<view class="rr">
+							<view class="tit fs13 avoidOverflow">{{item.news&&item.news[0]&&item.news[0]?item.news[0].title:''}}</view>
+							<view class="text avoidOverflow2 fs12 color6">{{item.news&&item.news[0]&&item.news[0]?item.news[0].content:''}}</view>
+						</view>
 					</view>
 				</view>
-				<view class="pdtb10">赞了这条{{item.news&&item.news[0]&&item.news[0].type==1?'动态':(item.news&&item.news[0]&&item.news[0].type==2?'活动':'社区文章')}}</view>
-				<view class="cont f5bj flex" @click="toDetail(item.type,item.news[0].id)">
-					<view class="pic" v-if="item.news&&item.news[0]&&item.news[0].mainImg
-					&&item.news[0].mainImg.length>0">
-					<image  :src="item.news&&item.news[0]&&item.news[0].mainImg&&
-					item.news[0].mainImg[0]?item.news[0].mainImg[0].url:''" mode=""></image>
+			</view>
+			<view v-else>
+				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
+			</view>
+		</view>
+		
+		<view v-show="curr==2">
+			<view class="zanCont" v-if="replyData.length>0">
+				<view class="item" v-for="(item,index) in replyData" :key="index">
+					<view class="flex">
+						<view class="photo"><image style="border-radius: 50%;" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image></view>
+						<view class="name mgl10">
+							<view class="fs15">{{item.title}}</view>
+							<view class="fs10 color9">{{item.create_time}}</view>
+						</view>
+					</view>
+					<view class="pdtb10" >{{item.content}}</view>
+					<view class="cont f5bj flex" @click="toDetail(item.type,item.news[0].id)">
+						<view class="pic" v-if="item.news&&item.news[0]&&item.news[0].mainImg
+						&&item.news[0].mainImg.length>0">
+						<image :src="item.news&&item.news[0]&&item.news[0].mainImg&&
+						item.news[0].mainImg[0]?item.news[0].mainImg[0].url:''" mode=""></image>
+						</view>
+						<view class="rr">
+							<view class="tit fs13 avoidOverflow">{{item.news&&item.news[0]&&item.news[0]?item.news[0].title:''}}</view>
+							<view class="text avoidOverflow2 fs12 color6">{{item.news&&item.news[0]&&item.news[0]?item.news[0].content:''}}</view>
+						</view>
+					</view>
+				</view>
+			</view>
+			<view v-else>
+				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
+			</view>
+		</view>
+		
+		<view v-show="curr==3">
+			<view class="sixinCont" v-if="messageData.length>0">
+				<view class="item flex"  v-for="(item,index) in messageData" :key="index" :data-id="item.id"
+				@click="Router.navigateTo({route:{path:'/pages/userHome-tidings/userHome-tidings?id='+$event.currentTarget.dataset.id}})">
+					<view class="ll">
+						<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 					</view>
 					<view class="rr">
-						<view class="tit fs13 avoidOverflow">{{item.news&&item.news[0]&&item.news[0]?item.news[0].title:''}}</view>
-						<view class="text avoidOverflow2 fs12 color6">{{item.news&&item.news[0]&&item.news[0]?item.news[0].content:''}}</view>
+						<view class="flexRowBetween pdb5">
+							<view class="fs15">{{item.name}}</view>
+							<view class="fs10 color9">{{item.update_time}}</view>
+						</view>
+						<view class="fs12 color6 avoidOverflow">{{item.last_chat?item.last_chat.content:""}}</view>
 					</view>
 				</view>
 			</view>
-		</view>
-		
-		<view class="zanCont" v-show="curr==2">
-			<view class="item" v-for="(item,index) in replyData" :key="index">
-				<view class="flex">
-					<view class="photo"><image style="border-radius: 50%;" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image></view>
-					<view class="name mgl10">
-						<view class="fs15">{{item.title}}</view>
-						<view class="fs10 color9">{{item.create_time}}</view>
-					</view>
-				</view>
-				<view class="pdtb10" >{{item.content}}</view>
-				<view class="cont f5bj flex" @click="toDetail(item.type,item.news[0].id)">
-					<view class="pic" v-if="item.news&&item.news[0]&&item.news[0].mainImg
-					&&item.news[0].mainImg.length>0">
-					<image :src="item.news&&item.news[0]&&item.news[0].mainImg&&
-					item.news[0].mainImg[0]?item.news[0].mainImg[0].url:''" mode=""></image>
-					</view>
-					<view class="rr">
-						<view class="tit fs13 avoidOverflow">{{item.news&&item.news[0]&&item.news[0]?item.news[0].title:''}}</view>
-						<view class="text avoidOverflow2 fs12 color6">{{item.news&&item.news[0]&&item.news[0]?item.news[0].content:''}}</view>
-					</view>
-				</view>
+			<view v-else>
+				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 			</view>
 		</view>
 		
-		<view class="sixinCont" v-show="curr==3">
-			<view class="item flex"  v-for="(item,index) in messageData" :key="index" :data-id="item.id"
-			@click="Router.navigateTo({route:{path:'/pages/userHome-tidings/userHome-tidings?id='+$event.currentTarget.dataset.id}})">
-				<view class="ll">
-					<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
-				</view>
-				<view class="rr">
-					<view class="flexRowBetween pdb5">
-						<view class="fs15">{{item.name}}</view>
-						<view class="fs10 color9">{{item.update_time}}</view>
+		<view v-show="curr==4">
+			<view class="dialogBox pdlr4 f5bj" v-if="systemData.length>0" >
+				<view class="item left" v-for="item in systemData">
+					<view class="time center fs13 color9">{{item.create_time}}</view>
+					<view class="infor">
+						<image class="Photo" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" >
+						<view class="text">{{item.content}}</view>
 					</view>
-					<view class="fs12 color6 avoidOverflow">{{item.last_chat?item.last_chat.content:""}}</view>
 				</view>
 			</view>
-		</view>
-		
-		<view class="dialogBox pdlr4 f5bj" v-show="curr==4" >
-			<view class="item left" v-for="item in systemData">
-				<view class="time center fs13 color9">{{item.create_time}}</view>
-				<view class="infor">
-					<image class="Photo" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" >
-					<view class="text">{{item.content}}</view>
-				</view>
+			<view v-else>
+				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 			</view>
 		</view>
-		
 		
 		
 		

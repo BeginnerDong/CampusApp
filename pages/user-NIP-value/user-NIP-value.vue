@@ -14,7 +14,7 @@
 		</view>
 		
 		<view class="">
-			<view class="myRowBetween mglr4" v-show="num==1">
+			<view class="myRowBetween mglr4" v-show="num==1" v-if="mainData.length>0">
 				<view class="item flexRowBetween" v-for="(item,index) in mainData" :key="index">
 					<view class="ll">
 						<view class="fs26">购买{{item.order&&item.order[0]?item.order[0].title:''}}</view>
@@ -23,7 +23,7 @@
 					<view class="rr">{{item.count}}</view>
 				</view>
 			</view>
-			<view class="myRowBetween mglr4" v-show="num==2">
+			<view class="myRowBetween mglr4" v-show="num==2" v-if="mainData.length>0">
 				<view class="item flexRowBetween" v-for="(item,index) in mainData" :key="index">
 					<view class="ll">
 						<view class="fs26">{{item.trade_info}}</view>
@@ -32,7 +32,11 @@
 					<view class="rr">{{item.count}}</view>
 				</view>
 			</view>
+			<view v-else>
+				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
+			</view>
 		</view>
+		
 		
 		
 	</view>

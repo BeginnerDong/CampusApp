@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="joinActive mglr4">
+		<view class="joinActive mglr4" v-if="mainData.length>0">
 			<view class="item" v-for="(item,index) in mainData" :data-id="item.id"
 			@click="Router.navigateTo({route:{path:'/pages/activityDetail/activityDetail?id='+$event.currentTarget.dataset.id}})">
 				<view class="pdb10">{{item.title}}</view>
@@ -17,6 +17,9 @@
 					</view>
 				</view>
 			</view>
+		</view>
+		<view v-else>
+			<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 		</view>
 		
 	</view>

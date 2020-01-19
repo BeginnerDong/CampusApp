@@ -45,7 +45,7 @@
 		<view class="f5H5"></view>
 		<view class="pdlr4">
 			<view class="pdt15 ftw">评论</view>
-			<view class="pinglunLis">
+			<view class="pinglunLis" v-if="mainData.length>0">
 				<view class="item" v-for="(item,index) in mainData" :key="index">
 					<view class="flex">
 						<view class="pler-photo">
@@ -69,17 +69,28 @@
 					</view>
 				</view>
 			</view>
-		</view>
-		<view class="fx-PlZan pdlr4 flexRowBetween fs12 color6" style="bottom: 80rpx;">
-			<view class="flexRowBetween" style="width: 100%;">
-				<input v-model="submitData.content" placeholder="请输入..." style="width: 80%;background: #fff;"/>
-				<button @click="addMessage()">发送</button>
+			<view v-else>
+				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 			</view>
 		</view>
-		<view class="fx-PlZan pdlr4 flexRowBetween fs12 color6" style="bottom: 160rpx;" v-if="submitDataTwo.passage1!=''">
+		<view class="fx-PlZan pdlr4 fs12 color6 borderB1" style="bottom: 80rpx;">
 			<view class="flexRowBetween" style="width: 100%;">
-				<input v-model="submitDataTwo.content" placeholder="请输入回复..." style="width: 80%;background: #fff;"/>
-				<button @click="addMessageTwo()">发送</button>
+				<view class="input" style="width: 85%;">
+					<input v-model="submitDataTwo.content" placeholder="请输入回复..." />
+				</view>
+				<view class="rrBtn">
+					<button @click="addMessage()">发送</button>
+				</view>
+			</view>
+		</view>
+		<view class="fx-PlZan pdlr4 fs12 color6 borderB1" style="bottom: 160rpx;" v-if="submitDataTwo.passage1!=''">
+			<view class="flexRowBetween" style="width: 100%;">
+				<view class="input" style="width: 85%;">
+					<input v-model="submitDataTwo.content" placeholder="请输入回复..."/>
+				</view>
+				<view class="rrBtn">
+					<button  @click="addMessageTwo()">发送</button>
+				</view>
 			</view>
 		</view>
 		<view class="fx-PlZan pdlr4 flexRowBetween fs12 color6">
@@ -384,4 +395,9 @@
 	.comment .child{border-bottom: 0;}
 	.fx-shareBtn{width: 200rpx;padding: 30rpx 0rpx;border-radius: 10rpx;background: rgba(0,0,0,0.5);position: absolute;top: 30rpx;right: 10rpx;z-index: 2;}
 	.fx-shareBtn .icon{width: 28rpx;height: 28rpx;margin-right: 10rpx; }
+	
+	.fx-PlZan .input{width: 85%;}
+	.fx-PlZan .input input{width: 100%;background: #fff;line-height: 50rpx;height: 50rpx;border-radius: 8rpx; display: block;box-sizing: border-box;padding: 0 20rpx;font-size: 26rpx;}
+	.fx-PlZan .rrBtn{width: 12%;}
+	.fx-PlZan .rrBtn button{font-size: 26rpx;width: 100%;height: 50rpx;line-height: 50rpx;text-align: center;background: #222; color: #fff;}
 </style>

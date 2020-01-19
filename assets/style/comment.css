@@ -25,7 +25,7 @@
 	/* 已报名图标 */
 	.FX-icon{position: absolute;top: 0;left: 0;width: 80rpx;height: 83rpx;z-index: 1;}
 	
-	.zongheShow{padding: 20rpx 6%;position: relative;z-index: 60;border-top: 1px solid #eee;max-height: 500rpx;overflow-y: auto;}
+	.zongheShow{padding: 20rpx 6%;position: fixed;left: 0;right: 0;z-index: 60;border-top: 1px solid #eee;max-height: 500rpx;overflow-y: auto;}
 	.zongheShow .item{padding: 20rpx 0; color: #666;}
 	.zongheShow .item .selIcon{width: 26rpx; height: 19rpx; display: block; display: none;}
 	.zongheShow .item.on{color: #222;font-weight: bold;}

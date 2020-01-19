@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="positionList pdlr4">
+		<view class="positionList pdlr4" v-if="mainData.length>0">
 			<view class="item flexRowBetween pdtb15" v-for="item in mainData" :data-id="item.id"
 			@click="Router.navigateTo({route:{path:'/pages/positionDetail/positionDetail?id='+$event.currentTarget.dataset.id}})">
 				<view class="flex ll">
@@ -16,6 +16,9 @@
 				<view class="rr red fs13">{{item.salary}}</view>
 			</view>
 		</view>	
+		<view v-else>
+			<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
+		</view>
 		
 	</view>
 </template>
