@@ -15,12 +15,12 @@
 		<view class="pdlr4 borderB1">
 			<view class="fs15 pdt20 pdb15 ftw">热门搜索</view>
 			<view class="hotLabel center fs13 flex ">
-				<view class="item" v-for="(item,index) in hotLabel" :key="index">{{item}}</view>
+				<view class="item" v-for="(item,index) in hotLabel" @click="clickSearch(item)" :key="index">{{item}}</view>
 			</view>
 			
 			<view class="fs15 pdt20 pdb10 ftw">历史记录</view>
 			<view class="historyDate  center fs13 flex">
-				<view class="item" v-for="(item,index) in historyDate" :key="index">{{item}}</view>
+				<view class="item" v-for="(item,index) in historyDate" @click="clickSearch(item)" :key="index">{{item}}</view>
 			</view>
 		</view>
 		
@@ -76,6 +76,11 @@
 				
 			},
 			
+			clickSearch(item){
+				const self = this;
+				self.Router.navigateTo({route:{path:'/pages/seachDetail/seachDetail?keywords='+item}});
+			},
+			
 			search(){
 				const self = this;
 				if(self.keywords!=''){
@@ -92,6 +97,8 @@
 				const self = this;
 				self.historyDate = [];
 				uni.removeStorageSync('historyDate');
+				self.is_popupShow = !self.is_popupShow;
+				self.is_show = !self.is_show;
 			},
 			
 		}

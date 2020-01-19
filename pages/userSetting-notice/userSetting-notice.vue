@@ -2,11 +2,11 @@
 	<view>
 		
 		<view class="dialogBox pdlr4 f5bj">
-			<view class="item left">
-				<view class="time center fs13 color9">19-12-27 14:23</view>
+			<view class="item left" v-for="item in mainData">
+				<view class="time center fs13 color9">{{item.create_time}}</view>
 				<view class="infor">
-					<image class="Photo" src="../../static/images/xiaoxi-img.png" >
-					<view class="text">你好，想和你详细沟通下，现在方便吗？非的行列读后感 割发代首家里给会返利是这个和磊哥换个方式的尖括号割发代首开了个会了过节费肯定是联合国干活附近的干活附近的看更进反馈多少个一缸发动机开始估红富士康</view>
+					<image class="Photo" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" >
+					<view class="text">{{item.content}}</view>
 				</view>
 			</view>
 		</view>
@@ -21,14 +21,56 @@
 				Router:this.$Router,
 				showView: false,
 				score:'',
-				wx_info:{}
+				wx_info:{},
+				mainData:[]
 			}
 		},
+		
 		onLoad() {
 			const self = this;
-			//self.$Utils.loadAll(['getMainData'], self);
+			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			console.log(2323)
+			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
+		onReachBottom() {
+			console.log('onReachBottom')
+			const self = this;
+			if (!self.isLoadAll && uni.getStorageSync('loadAllArray')) {
+				self.paginate.currentPage++;
+				self.getMainData()
+			};
+		},
+		
 		methods: {
+			
+			getMainData(isNew) {
+				const self = this;
+				if (isNew) {
+					self.systemData = [];
+					self.paginate = {
+						count: 0,
+						currentPage: 1,
+						is_page: true,
+						pagesize: 10
+					}
+				};
+				const postData = {};
+				postData.paginate = self.$Utils.cloneForm(self.paginate);
+				postData.searchItem = {
+					type:1,
+					user_no:uni.getStorageSync('user_info').user_no,
+				};
+				postData.tokenFuncName = 'getUserToken';
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData.push.apply(self.mainData,res.info.data)
+					}
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.messageGet(postData, callback);
+			},
+			
 		}
 	};
 </script>

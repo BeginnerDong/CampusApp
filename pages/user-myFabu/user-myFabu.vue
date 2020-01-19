@@ -64,13 +64,13 @@
 			<!-- 社区 -->
 			<view class="comment" v-show="curr==3">
 				<view class="child" v-for="(item,index) in mainData" :key="index">
-					<view class="fs12" @click="toDetail(item.type,item.id)">{{mainData.content}}</view>
+					<view class="fs12" @click="toDetail(item.type,item.id)">{{item.content}}</view>
 					<view class="imgbox">
 						<view v-for="(c_item,c_index) in item.mainImg" :class="item.mainImg&&item.mainImg.length==1?'lisOne':(item.mainImg&&item.mainImg.length==2?'lisTwo':'lisThree')">
 							<image :src="c_item.url" mode="aspectFill" @click="previewImage(index,c_index)"></image>
 						</view>
 					</view>
-					<view class="fs12 color6 pdt10">{{mainData.create_time}}</view>
+					<view class="fs12 color6 pdt10">{{item.create_time}}</view>
 					<view class="label pdt15 flexEnd fs13">
 						<view class="lis flex">
 							<image src="../../static/images/home-icon4.png" mode=""></image>

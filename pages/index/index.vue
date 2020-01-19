@@ -206,6 +206,11 @@
 			};
 		},
 		
+		onShow() {
+			const self = this;
+			self.willId = -1;
+		},
+		
 		methods: {
 			
 			test() {

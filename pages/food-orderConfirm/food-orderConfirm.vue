@@ -49,7 +49,7 @@
 		
 		<!-- 底部菜单按钮 -->
 		<view class="xqbotomBar flexRowBetween">
-			<view class="left fs12 color6">合计<text class="price fs16">{{totalScore}}</text></view>
+			<view class="left fs12 color6">合计<text class="price fs16">{{totalScore}}<span style="font-size: 12px;" v-if="isFree">(会员免单一份)</span></text></view>
 			<view class="payBtn pubBj white" @click="Utils.stopMultiClick(submit)">提交订单</view>
 		</view>
 		
@@ -85,7 +85,8 @@
 					phone:''
 				},
 				mainData:{},
-				totalScore:0
+				totalScore:0,
+				isFree:false
 			}
 		},
 		
@@ -115,8 +116,9 @@
 				self.totalScore = 0;
 				self.totalScore = self.mainData.price * self.count;
 				self.totalScore = parseFloat(self.totalScore).toFixed(2)
-				if(parseInt(self.userInfoData.member_time)>nowTime&&self.userInfoData.order.length==0){
-					self.totalScore = self.totalScore - parseFloat(self.mainData.price)
+				if(parseInt(self.userInfoData.member_time)	>nowTime&&self.userInfoData.order.length==0){
+					self.totalScore = self.totalScore - parseFloat(self.mainData.price);
+					self.isFree = true
 				};
 			},
 			
@@ -141,7 +143,8 @@
 						searchItem:{
 							status:1,
 							pay_status:1,
-							product_id:self.mainData.id
+							product_id:self.mainData.id,
+							free:1
 						},
 						condition:'='
 					}
@@ -150,6 +153,7 @@
 					if (res.info.data.length > 0) {
 						self.userInfoData = res.info.data[0];
 					};
+					self.countTotalPrice()
 					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.userInfoGet(postData, callback);
@@ -172,7 +176,7 @@
 						self.$Utils.showToast('没有更多了', 'none');
 					};
 					self.getUserInfoData()
-					self.countTotalPrice()
+					
 					console.log('self.mainData', self.mainData)
 					
 				};
@@ -181,6 +185,7 @@
 			
 			submit(){
 				const self = this;
+				var nowTime = Date.parse(new Date());
 				uni.setStorageSync('canClick',false);
 				const pass = self.$Utils.checkComplete(self.submitData);
 				if(!pass){
@@ -192,7 +197,10 @@
 						self.$Utils.showToast('积分不足','none');
 						return
 					}
-					var data = self.$Utils.cloneForm(self.submitData)
+					var data = self.$Utils.cloneForm(self.submitData);
+					if(parseInt(self.userInfoData.member_time)>nowTime&&self.userInfoData.order.length==0){
+						data.free = 1
+					};
 					var orderList = [
 						{product_id:self.mainData.id,count:self.count,type:1,data:data}
 					];
@@ -241,7 +249,7 @@
 					id: self.orderId
 				};	
 				if(parseInt(self.userInfoData.member_time)>nowTime&&self.userInfoData.order.length==0){
-					postData.score.price = (self.totalScore - parseFloat(self.mainData.price)).toFixed(2);
+					
 					postData.other = {
 						price:parseFloat(self.mainData.price)
 					}

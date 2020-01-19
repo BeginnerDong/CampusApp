@@ -78,7 +78,8 @@
 			"style": {
 				"navigationBarTitleText": "活动",
 				"onReachBottomDistance":100,
-				"navigationStyle": "custom"
+				"navigationStyle": "custom",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
@@ -115,7 +116,8 @@
 			"path": "pages/userHome-tidings/userHome-tidings",
 			"style": {
 				"navigationBarTitleText": "私信",
-				"onReachBottomDistance":100
+				"onReachBottomDistance":100,
+				"enablePullDownRefresh": true
 			}
 		},
 		{

@@ -25,7 +25,7 @@
 				<view class="flex">
 					<view class="photo">
 						<image style="border-radius: 50%;" :src="item.userinfo&&item.userinfo[0]&&item.userinfo[0].mainImg&&
-						item.userinfo[0].mainImg[0]?item.userinfo[0].mainImg[0].url:''" mode=""></image>
+						item.userinfo[0].mainImg[0]?item.userinfo[0].mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 					</view>
 					<view class="name mgl10">
 						<view class="fs15">{{item.userinfo&&item.userinfo[0]&&item.userinfo[0]?item.userinfo[0].name:''}}</view>
@@ -33,7 +33,7 @@
 					</view>
 				</view>
 				<view class="pdtb10">赞了这条{{item.news&&item.news[0]&&item.news[0].type==1?'动态':(item.news&&item.news[0]&&item.news[0].type==2?'活动':'社区文章')}}</view>
-				<view class="cont f5bj flex">
+				<view class="cont f5bj flex" @click="toDetail(item.type,item.news[0].id)">
 					<view class="pic" v-if="item.news&&item.news[0]&&item.news[0].mainImg
 					&&item.news[0].mainImg.length>0">
 					<image  :src="item.news&&item.news[0]&&item.news[0].mainImg&&
@@ -50,14 +50,14 @@
 		<view class="zanCont" v-show="curr==2">
 			<view class="item" v-for="(item,index) in replyData" :key="index">
 				<view class="flex">
-					<view class="photo"><image style="border-radius: 50%;" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" mode=""></image></view>
+					<view class="photo"><image style="border-radius: 50%;" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image></view>
 					<view class="name mgl10">
 						<view class="fs15">{{item.title}}</view>
 						<view class="fs10 color9">{{item.create_time}}</view>
 					</view>
 				</view>
-				<view class="pdtb10">{{item.content}}</view>
-				<view class="cont f5bj flex">
+				<view class="pdtb10" >{{item.content}}</view>
+				<view class="cont f5bj flex" @click="toDetail(item.type,item.news[0].id)">
 					<view class="pic" v-if="item.news&&item.news[0]&&item.news[0].mainImg
 					&&item.news[0].mainImg.length>0">
 					<image :src="item.news&&item.news[0]&&item.news[0].mainImg&&
@@ -91,7 +91,7 @@
 			<view class="item left" v-for="item in systemData">
 				<view class="time center fs13 color9">{{item.create_time}}</view>
 				<view class="infor">
-					<image class="Photo" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" >
+					<image class="Photo" :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" >
 					<view class="text">{{item.content}}</view>
 				</view>
 			</view>
@@ -163,6 +163,17 @@
 		},
 		
 		methods: {
+			
+			toDetail(type,id){
+				const self = this;
+				console.log(type)
+				console.log(id)
+				if(type==2){
+					self.Router.navigateTo({route:{path:'/pages/activityDetail/activityDetail?id='+id}})
+				}else{
+					self.Router.navigateTo({route:{path:'/pages/postDetails-Two/postDetails-Two?id='+id}})
+				}
+			},
 			
 			getUserInfoData() {
 				const self = this;

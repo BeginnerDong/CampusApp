@@ -3,14 +3,15 @@
 		<view class="mglr4 radius10 whiteBj mgt15 canTing">
 			<view class="flex">
 				<view class="pic">
-					<image src="../../static/images/coupons-img.png" mode=""></image>
+					<image :src="mainData.shop&&mainData.shop[0]&&mainData.shop[0].mainImg
+					&&mainData.shop[0].mainImg[0]?mainData.shop[0].mainImg[0].url:''" mode=""></image>
 				</view>
 				<view class="infor mgl10  fs12 color6" style="width: 70%;">
-					<view class="fs14 color2 ftw">绿茉莉</view>
-					<view class="flex" style="flex-wrap: wrap;">
+					<view class="fs14 color2 ftw">{{mainData.shop&&mainData.shop[0]?mainData.shop[0].name:''}}</view>
+					<!-- <view class="flex" style="flex-wrap: wrap;">
 						<view class="lable">甜点</view>
-					</view>
-					<view class="adrs mgt15">南稍门 5.1km</view>
+					</view> -->
+					<view class="adrs mgt15">{{mainData.shop&&mainData.shop[0]?mainData.shop[0].address:''}}</view>
 				</view>
 			</view>
 		</view>
@@ -19,28 +20,26 @@
 			<view class="pdtb15 flex borderB1">
 				<view class="mgr10 fs13">总体</view>
 				<view class="starBox mgr5">
-					<image src="../../static/images/the-store-icon4.png" mode=""></image>
-					<image src="../../static/images/the-store-icon5.png" mode=""></image>
-					<image src="../../static/images/the-store-icon5.png" mode=""></image>
-					<image src="../../static/images/the-store-icon5.png" mode=""></image>
-					<image src="../../static/images/the-store-icon5.png" mode=""></image>
+					<image v-for="item in stars" @click="select(item)"
+					:src="item<=submitData.score?'../../static/images/the-store-icon4.png':'../../static/images/the-store-icon5.png'" mode=""></image>
 				</view>
 			</view>
 			<view class="borderB1 mgb15">
-				<textarea class="fs12 " style="height: 240rpx;" value="" placeholder="说几句,让更多小伙伴了解我" />
+				<textarea class="fs12 " style="height: 240rpx;" v-model="submitData.description" placeholder="说几句,让更多小伙伴了解我" />
 			</view>
-			<view class="oh">
-				<block v-for="(image,index) in imageList" :key="index">
+			<view class="oh" style="display: flex;">
+				<block v-for="(image,index) in submitData.bannerImg" :key="index">
 					<view class="picRow">
-						<image :src="image" :data-src="image" @tap="previewImage"></image>
+						<image :src="item.url"></image>
 					</view>
 				</block>
-				<view class="picRow" @tap="chooseImage"><image src="../../static/images/release-icon.png" mode=""></image></view>
+				<view class="picRow" @click="upLoadImg('bannerImg')" v-if="submitData.bannerImg&&submitData.bannerImg.length<3">
+					<image src="../../static/images/release-icon.png" mode=""></image></view>
 			</view>
 		</view>
 		
 		<view class="submitbtn" style="margin-top: 100rpx;">
-			<view class="btn">发表</view>
+			<view class="btn" @click="Utils.stopMultiClick(submit)">发表</view>
 		</view>
 		
 		
@@ -52,44 +51,184 @@
 		data() {
 			return {
 				Router:this.$Router,
+				Utils:this.$Utils,
 				showView: false,
 				wx_info:{},
 				is_show:false,
-				imageList: []
+				normalSrc: '../../static/images/details-icon.png',
+				selectedSrc: '../../static/images/details-icon1.png',
+				halfSrc: '../../static/images/details-icon1-a.png',
+				submitData: {
+					order_no: '',
+					relation_id: '',
+					score: 0,
+					description: '',
+					type:4,
+					mainImg:[],
+					relation_user:'',
+					bannerImg:[]
+				},
+				stars: [1, 2, 3, 4, 5],
+				mainData:{}
 			}
 		},
-		onUnload() {
-			this.imageList = []
-		},
+		
 		onLoad(options) {
 			const self = this;
-			// self.$Utils.loadAll(['getMainData'], self);
+			self.id = options.id;
+			self.$Utils.loadAll(['getMainData'], self)
+			self.submitData.title = uni.getStorageSync('user_info').info.name;
+			self.submitData.mainImg = uni.getStorageSync('user_info').info.mainImg
 		},
+		
 		methods: {
-			chooseImage: async function() {
-				uni.chooseImage({
-					success: (res) => {
-						this.imageList = this.imageList.concat(res.tempFilePaths);
-					}
-				})
-			},
-			previewImage: function(e) {
-				var current = e.target.dataset.src
-				uni.previewImage({
-					current: current,
-					urls: this.imageList
-				})
-			},
+			
+			
+			  upLoadImg(type) {
+			  	const self = this;	
+			  	if (self.submitData[type].length > 2) {
+			  		api.showToast('仅限3张', 'fail');
+			  		return;
+			  	};
+			  	uni.showLoading({
+			  		mask: true,
+			  		title: '上传中',
+			  	});
+			  	const callback = (res) => {
+			  		console.log('res', res)
+			  		if (res.solely_code == 100000) {
+			  			self.submitData[type].push({url:res.info.url,type:'image'})
+			  			console.log('type',type)
+			  			console.log(self.submitData)
+			  			uni.hideLoading()
+			  		} else {
+			  			self.$Utils.showToast('网络故障', 'none')
+			  		}
+			  	};				
+			  	uni.chooseImage({
+			  		count: 3,
+			  		success: function(res) {
+			  			console.log(res);
+			  			var tempFilePaths = res.tempFilePaths;
+			  			console.log(callback)
+			  			for (var i = 0; i < tempFilePaths.length; i++) {
+			  				self.$Utils.uploadFile(tempFilePaths[i], 'file', {
+			  					tokenFuncName: 'getUserToken'
+			  				}, callback)
+			  			}
+			  		},
+			  		fail: function(err) {
+			  			uni.hideLoading();
+			  		},			
+			  	})			
+			  },
+			
+			  select(key) {
+				const self = this;
+				self.submitData.score = key
+			    console.log("得" + key + "分")
+			  },
+			
+					
 			getMainData() {
 				const self = this;
-				console.log('852369')
 				const postData = {};
-				postData.tokenFuncName = 'getProjectToken';
+				postData.tokenFuncName = 'getUserToken';
+				postData.searchItem = {
+					id:self.id
+				};
+				postData.getAfter = {
+					orderItem:{
+						tableName:'OrderItem',
+						middleKey:'order_no',
+						key:'order_no',
+						searchItem:{
+							status:1
+						},
+						condition:'='
+					},
+					shop:{
+						token:uni.getStorageSync('user_token'),
+						tableName:'UserInfo',
+						middleKey:'shop_no',
+						key:'user_no',
+						searchItem:{
+							status:1
+						},
+						condition:'=',
+					}
+				};
+				const callback = (res) => {
+					if (res.solely_code == 100000 && res.info.data[0]) {
+						self.mainData = res.info.data[0];
+						self.submitData.order_no = self.mainData.order_no;
+						
+						self.submitData.relation_id = self.mainData.product_id
+						self.submitData.relation_user = self.mainData.shop_no
+					} else {
+						self.$Utils.showToast(res.msg, 'none')
+					};
+					self.$Utils.finishFunc('getMainData');
+					
+				};
 				self.$apis.orderGet(postData, callback);
-			}
+			},
+			
+			submit() {
+				const self = this;
+				uni.setStorageSync('canClick', false);
+				var newObject = self.$Utils.cloneForm(self.submitData);
+				delete newObject.bannerImg;
+				const pass = self.$Utils.checkComplete(newObject);
+				console.log('pass', pass);
+				console.log('self.submitData', self.submitData)
+				if (pass) {
+					self.messageAdd();
+				} else {
+					uni.setStorageSync('canClick', true);
+					self.$Utils.showToast('请补全信息', 'none')
+				};
+			},
+			
+			messageAdd() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getUserToken';
+				
+				postData.data = {};
+				postData.data = self.$Utils.cloneForm(self.submitData);
+				postData.saveAfter = [{
+				  tableName:'Order',
+				  FuncName:'update',
+				  searchItem:{
+				    id:self.id
+				  },
+				  data:{
+				    isremark:1,
+				  }
+				}];
+				const callback = (data) => {
+			
+					if (data.solely_code == 100000) {
+			
+						self.$Utils.showToast('评价成功', 'none')
+						setTimeout(function() {
+							uni.navigateBack({
+								delta: 1
+							})
+						}, 1000);
+					} else {
+						uni.setStorageSync('canClick', true);
+						self.$Utils.showToast(data.msg, 'none', 1000)
+					}
+			
+				};
+				self.$apis.messageAdd(postData, callback);
+			},
 		}
 	};
 </script>
+
 
 <style>
 	@import "../../assets/style/star.css";

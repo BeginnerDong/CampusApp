@@ -55,27 +55,30 @@
 						</view>
 					</view>
 					<view class="flexEnd pdtb15 mglr4 fs12 center">
-						<view class="B-Btn" 
-						@click="Router.navigateTo({route:{path:'/pages/user-NIP-couponPingJia/user-NIP-couponPingJia'}})" >去评价</view>
+						<view class="B-Btn" :data-id="item.id" 
+						@click="Router.navigateTo({route:{path:'/pages/user-NIP-couponPingJia/user-NIP-couponPingJia?id='+$event.currentTarget.dataset.id}})">去评价</view>
 					</view>
 				</view>
 			</view>
 			<view class="radius10 whiteBj mgt15 canTing"  v-show="num==3">
 				<view class="item pr"  v-for="(item,index) in mainData" :key="index">
-					<view class="quanIcon"><image src="../../static/images/dianziquan-icon1.png" mode=""></image></view>
+					<!-- <view class="quanIcon">
+						<image src="../../static/images/dianziquan-icon1.png" mode=""></image>
+					</view> -->
 					<view class="flex">
 						<view class="pic">
-							<image src="../../static/images/coupons-img.png" mode=""></image>
+							<image :src="item.shop&&item.shop[0]&&item.shop[0].mainImg
+							&&item.shop[0].mainImg[0]?item.shop[0].mainImg[0].url:''" mode=""></image>
 						</view>
 						<view class="infor mgl10  fs12 color6" style="width: 70%;">
-							<view class="fs14 color2 ftw">绿茉莉</view>
-							<view class="flex" style="flex-wrap: wrap;">
+							<view class="fs14 color2 ftw">{{item.shop&&item.shop[0]?item.shop[0].name:''}}</view>
+							<!-- <view class="flex" style="flex-wrap: wrap;">
 								<view class="lable">甜点</view>
-							</view>
-							<view class="adrs mgt15">南稍门 5.1km</view>
+							</view> -->
+							<view class="adrs mgt15">{{item.shop&&item.shop[0]?item.shop[0].address:''}}</view>
 						</view>
 					</view>
-					<view class="color6 fs12 pjtex">发货人时间看了发货人后尽快孵化基地扣三分费塑料发黄发个低功耗供货方炬发VR和我恢复大师</view>
+					<view class="color6 fs12 pjtex">{{item.message&&item.message[0]?item.message[0].description:''}}</view>
 				</view>
 			</view>
 			
@@ -114,9 +117,13 @@
 		onLoad() {
 			const self = this;
 			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
-			self.$Utils.loadAll(['getMainData'], self);
+			
 		},
 		
+		onShow() {
+			const self = this;
+			self.getMainData(true)
+		},
 		
 		onReachBottom() {
 			console.log('onReachBottom')
@@ -135,14 +142,17 @@
 					self.num = num
 					if(self.num==1){
 						self.searchItem.transport_status =0;
+						self.searchItem.isremark =0;
 					}else if(self.num==2){
 						self.searchItem.transport_status =2;
+						self.searchItem.isremark =0;
 					}else if(self.num==3){
-						
+						self.searchItem.transport_status =2;
+						self.searchItem.isremark =1;
 					};
-					if(self.num!=3){
-						self.getMainData(true)
-					}
+					
+					self.getMainData(true)
+					
 				}
 			},
 			
@@ -179,6 +189,25 @@
 						tableName:'OrderItem',
 						middleKey:'order_no',
 						key:'order_no',
+						searchItem:{
+							status:1
+						},
+						condition:'='
+					},
+					message:{
+						tableName:'Message',
+						middleKey:'order_no',
+						key:'order_no',
+						searchItem:{
+							status:1
+						},
+						condition:'='
+					},
+					shop:{
+						token:uni.getStorageSync('user_token'),
+						tableName:'UserInfo',
+						middleKey:'shop_no',
+						key:'user_no',
 						searchItem:{
 							status:1
 						},

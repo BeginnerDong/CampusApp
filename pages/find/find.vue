@@ -32,8 +32,8 @@
 							<view class="fs10 color6">{{item.create_time}}</view>
 						</view>
 					</view>
-					<view class="pr">
-						<view class="flexEnd" v-if="userInfoData.check_status==2" @click="shareBtnShow">
+					<view class="pr" v-if="item.type==3">
+						<view class="flexEnd" v-if="userInfoData.check_status==2" @click="shareBtnShow(index)">
 							<view class="dian"></view>
 							<view class="dian"></view>
 							<view class="dian"></view>
@@ -44,12 +44,12 @@
 							<view class="dian"></view>
 							<view class="dian"></view>
 						</view>
-						<view class="fx-shareBtn fs11 white" v-show="is_shareBtnShow">
-							<view class="flexCenter pdb10" @click="like">
-								<image class="icon" :src="is_like==true?'../../static/images/home-icon9.png':'../../static/images/home-icon7.png'" mode=""></image>
+						<view class="fx-shareBtn fs11 white" v-if="willId==item.id">
+							<view class="flexCenter pdb10" @click="clickCollect(index)">
+								<image class="icon" :src="item.collectMe.length>0&&item.collectMe[0].status==1?'../../static/images/home-icon9.png':'../../static/images/home-icon7.png'" mode=""></image>
 								<text>收藏</text>
 							</view>
-							<view class="flexCenter" @click="Router.navigateTo({route:{path:'/pages/report/report'}})">
+							<view class="flexCenter" @click="Router.navigateTo({route:{path:'/pages/report/report?id='+willId}})">
 								<image class="icon" src="../../static/images/home-icon8.png" mode=""></image>
 								<text>举报</text>
 							</view>
@@ -196,7 +196,8 @@
 				mainData:[],
 				hasAddData:[],
 				noAddData:[],
-				userInfoData:{}
+				userInfoData:{},
+				willId:-1
 			}
 		},
 		
@@ -254,9 +255,14 @@
 				}
 			},
 			
-			shareBtnShow(){
+			
+			shareBtnShow(index){
 				const self = this;
-				self.is_shareBtnShow = !self.is_shareBtnShow
+				if(self.mainData[index].id==self.willId){
+					self.willId = -1;
+					return
+				};
+				self.willId = self.mainData[index].id;
 			},
 			
 			like(){
@@ -581,6 +587,7 @@
 				} else {
 					self.updateCollectLog(index)
 				};
+				self.willId = -1;
 			},
 			
 			addCollectLog(index) {

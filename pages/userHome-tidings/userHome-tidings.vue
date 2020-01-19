@@ -50,7 +50,11 @@
 					content:'',
 					relation_id:''
 				},
-				me:''
+				me:'',
+				searchItem:{
+					thirdapp_id:2,
+					
+				}
 			}
 		},
 		
@@ -58,6 +62,8 @@
 			const self = this;
 			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
 			self.id = options.id;
+			self.searchItem.relation_id = self.id;
+			self.paginate.last_page = true;
 			self.submitData.name=uni.getStorageSync('user_info').info.name;
 			self.submitData.mainImg=uni.getStorageSync('user_info').info.mainImg;
 			self.submitData.relation_id=self.id;
@@ -65,12 +71,35 @@
 			self.$Utils.loadAll(['getMainData'], self);
 		},
 		
+		onReachBottom() {
+			console.log('onReachBottom')
+			const self = this;
+			if (!self.isLoadAll && uni.getStorageSync('loadAllArray')) {
+				delete self.paginate.last_page;
+				self.paginate.currentPage++;
+				self.getMainData()
+			};
+		},
+		
+		onPullDownRefresh() {
+			const self = this;
+			console.log('refresh');
+			delete self.paginate.last_page;
+			//self.paginate = self.page;
+			console.log('self.paginate',self.paginate)
+			self.paginate.currentPage--;
+			console.log('self.paginate',self.paginate)
+			self.getMainData(true);
+			
+			console.log('self.paginate',self.paginate)
+		},
+		
 		methods: {
 			
 			getMainData(isNew) {
 				const self = this;
 				if (isNew) {
-					self.goodData = [];
+					self.mainData = [];
 					self.paginate = {
 						count: 0,
 						currentPage: 1,
@@ -80,16 +109,20 @@
 				};
 				const postData = {};
 				postData.paginate = self.$Utils.cloneForm(self.paginate);
-				postData.searchItem = {
-					thirdapp_id:2,
-					relation_id:self.id
-				};
+				postData.searchItem = self.$Utils.cloneForm(self.searchItem);
+				
 				postData.tokenFuncName = 'getUserToken';
+				postData.order = {
+					create_time:'asc'
+				};
 				const callback = (res) => {
 					if (res.info.data.length > 0) {
 						self.mainData.push.apply(self.mainData,res.info.data)
 					}
-			
+					uni.stopPullDownRefresh();
+					if(postData.paginate.last_page){
+						self.paginate.currentPage = res.info.page;
+					}
 					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.chatGet(postData, callback);

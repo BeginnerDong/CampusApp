@@ -15,9 +15,9 @@
 							<view class="fs10 color6">{{mainData.create_time}}</view>
 						</view>
 					</view>
-					<view class="flexEnd">
+					<!-- <view class="flexEnd">
 						<view class="gzBtn fs12 center white color6Bj">关注</view>
-					</view>
+					</view> -->
 				</view>
 				<view class="ftw pdt10 pdb5">{{mainData.title}}</view>
 				<view class="fs12 color6">{{mainData.content}}</view>

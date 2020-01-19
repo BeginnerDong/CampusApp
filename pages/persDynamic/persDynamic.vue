@@ -60,7 +60,9 @@
 				const self = this;
 				
 				uni.setStorageSync('canClick', false);
-				const pass = self.$Utils.checkComplete(self.submitData);
+				var newObject = self.$Utils.cloneForm(self.submitData);
+				delete newObject.mainImg;
+				const pass = self.$Utils.checkComplete(newObject);
 				console.log('pass', pass);
 				console.log('self.submitData',self.submitData)
 				if (pass) {	

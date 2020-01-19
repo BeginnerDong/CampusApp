@@ -2,8 +2,8 @@
 	<view>
 		
 		<view class="myRowBetween pdlr4">
-			<view class="item flexRowBetween" v-for="(item,index) in mainData" :key="index"  
-			@click="Router.navigateTo({route:{path:'/pages/user-mySheQu-Home/user-mySheQu-Home'}})">
+			<view class="item flexRowBetween" v-for="(item,index) in mainData" :key="index"  :data-id="item.id"
+			@click="Router.navigateTo({route:{path:'/pages/user-mySheQu-Home/user-mySheQu-Home?id='+$event.currentTarget.dataset.id}})">
 				<view class="ll flex">
 					<view class="photo">
 						<image :src="item.mainImg&&item.mainImg.length>0?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>

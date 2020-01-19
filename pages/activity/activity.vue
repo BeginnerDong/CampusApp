@@ -198,6 +198,19 @@
 			};
 		},
 		
+		onPullDownRefresh() {
+			const self = this;
+			console.log('refresh');
+			self.searchItem={
+				thirdapp_id:2,
+				report:0,
+				type:2,
+				user_type:0
+			};
+			self.order = {};
+			self.getMainData(true)	
+		},
+		
 		methods: {
 			
 			getUserInfoData() {
@@ -314,7 +327,7 @@
 					if (res.info.data.length > 0) {
 						self.mainData.push.apply(self.mainData,res.info.data)
 					}
-			
+					uni.stopPullDownRefresh();
 					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.newsGet(postData, callback);

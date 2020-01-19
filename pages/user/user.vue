@@ -26,7 +26,13 @@
 			</view>
 			
 			<view class="myRowBetween fs13 mglr4 mgt25 boxShaow radius10 whiteBj">
-				<view class="item flexRowBetween" @click="Router.navigateTo({route:{path:'/pages/user-realname/user-realname'}})" >
+				<view class="item flexRowBetween" v-if="mainData.check_status==2"
+				@click="showToast()" >
+					<view class="ll flex">实名认证</view>
+					<view class="rr"><image class="arrowR" src="../../static/images/about-icon1.png" mode=""></image></view>
+				</view>
+				<view class="item flexRowBetween" v-if="mainData.check_status!=2"
+				@click="Router.navigateTo({route:{path:'/pages/user-realname/user-realname'}})" >
 					<view class="ll flex">实名认证</view>
 					<view class="rr"><image class="arrowR" src="../../static/images/about-icon1.png" mode=""></image></view>
 				</view>
@@ -132,7 +138,12 @@
 				const self = this;
 				self.is_show = !self.is_show;
 				self.is_realnameshow = !self.is_realnameshow
-			}
+			},
+			
+			showToast(){
+				const self = this;
+				self.$Utils.showToast('实名认证已通过', 'none', 1000)
+			},
 		}
 	};
 </script>

@@ -18,7 +18,7 @@
 						<view class="flex">
 							<view class="photo" :data-user_no ="item.user_no"
 						@click="Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+$event.currentTarget.dataset.user_no}})">
-								<image :src="item.headImg&&item.headImg[0]?item.headImg[0].url:''" mode=""></image>
+								<image :src="item.headImg&&item.headImg[0]?item.headImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 							</view>
 							<view class="name">
 								<view class="fs12">{{item.name}}</view>
