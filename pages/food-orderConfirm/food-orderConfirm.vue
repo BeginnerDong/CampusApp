@@ -192,11 +192,11 @@
 					uni.setStorageSync('canClick',true);
 					self.$Utils.showToast('请补全信息','none')
 				}else{
-					if(parseFloat(self.userInfoData.score)<parseFloat(self.totalScore)){
+					/* if(parseFloat(self.userInfoData.score)<parseFloat(self.totalScore)){
 						uni.setStorageSync('canClick',true);
 						self.$Utils.showToast('积分不足','none');
 						return
-					}
+					} */
 					var data = self.$Utils.cloneForm(self.submitData);
 					if(parseInt(self.userInfoData.member_time)>nowTime&&self.userInfoData.order.length==0){
 						data.free = 1
@@ -240,7 +240,7 @@
 				const self = this;	
 				var nowTime = Date.parse(new Date());
 				const postData = {
-					score:{
+					wxPay:{
 						price:self.totalScore
 					}
 				};
@@ -258,7 +258,17 @@
 					if (res.solely_code == 100000) {
 						uni.setStorageSync('canClick', true);
 						if (res.info) {
-							const payCallback = (payData) => {
+							uni.requestPayment({
+							    provider: 'alipay',
+							    orderInfo: res.info, //微信、支付宝订单数据
+							    success: function (res) {
+							        console.log('success:' + JSON.stringify(res));
+							    },
+							    fail: function (err) {
+							        console.log('fail:' + JSON.stringify(err));
+							    }
+							});
+							/* const payCallback = (payData) => {
 								console.log('payData', payData)
 								if (payData == 1) {
 									uni.showToast({
@@ -279,7 +289,7 @@
 									});
 								};
 							};
-							self.$Utils.realPay(res.info, payCallback);
+							self.$Utils.realPay(res.info, payCallback); */
 						} else {
 							
 							uni.showToast({
