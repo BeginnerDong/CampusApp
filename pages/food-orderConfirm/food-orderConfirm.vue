@@ -258,15 +258,35 @@
 					if (res.solely_code == 100000) {
 						uni.setStorageSync('canClick', true);
 						if (res.info) {
+							var str=res.info.package
+							var arr=str.split("=")[1]
+							//胜利ar as1	=arr.toUpperCase()
+							//console.log(as1)
+							var obj={
+								appid:res.info.appid,      //id 应用id
+								partnerid:'1573719401',              //商户号 
+								prepayid:arr,                         //预支付
+								package:'Sign=WXPay',
+								noncestr:res.info.nonceStr,
+								timestamp:res.info.timeStamp,   //时间戳
+								sign:res.info.paySign
+							}
+							
+							var orderInfo=JSON.stringify(obj)
+							console.log(res.info)
 							uni.requestPayment({
-							    provider: 'alipay',
-							    orderInfo: res.info, //微信、支付宝订单数据
+								
+							    provider: 'wxpay',
+							    orderInfo:orderInfo, //微信、支付宝订单数据
 							    success: function (res) {
 							        console.log('success:' + JSON.stringify(res));
 							    },
 							    fail: function (err) {
 							        console.log('fail:' + JSON.stringify(err));
-							    }
+							    },
+								complete: function (err) {
+								    console.log('fail:' + JSON.stringify(err));
+								},
 							});
 							/* const payCallback = (payData) => {
 								console.log('payData', payData)
