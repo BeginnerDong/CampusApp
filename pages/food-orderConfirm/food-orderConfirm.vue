@@ -269,11 +269,11 @@
 								package:'Sign=WXPay',
 								noncestr:res.info.nonceStr,
 								timestamp:res.info.timeStamp,   //时间戳
-								sign:res.info.paySign
+								sign:res.info.paySign.substring(0,30)
 							}
 							
-							//var orderInfo=JSON.stringify(obj);
-							var orderInfo = obj;
+							var orderInfo = JSON.stringify(obj);
+							//var orderInfo = obj;
 							console.log('orderInfo',orderInfo);
 							console.log(res.info);
 							uni.requestPayment({

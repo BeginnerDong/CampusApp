@@ -53,12 +53,11 @@
             /* ios打包配置 */
             "sdkConfigs" : {
                 "payment" : {
-                    "alipay" : {},
                     "weixin" : {
                         "appid" : "wx7d61c32ff19567e9",
                         "UniversalLinks" : "https://demo.dcloud.net.cn/ulink/"
                     },
-                    "appleiap" : {}
+                    "alipay" : {}
                 },
                 "share" : {}
             }
