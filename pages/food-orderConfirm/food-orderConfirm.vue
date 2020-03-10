@@ -263,7 +263,7 @@
 							//胜利ar as1	=arr.toUpperCase()
 							//console.log(as1)
 							var obj={
-								appid:res.info.appid,      //id 应用id
+								appid:res.info.appId,      //id 应用id
 								partnerid:'1573719401',              //商户号 
 								prepayid:arr,                         //预支付
 								package:'Sign=WXPay',
@@ -272,8 +272,10 @@
 								sign:res.info.paySign
 							}
 							
-							var orderInfo=JSON.stringify(obj)
-							console.log(res.info)
+							//var orderInfo=JSON.stringify(obj);
+							var orderInfo = obj;
+							console.log('orderInfo',orderInfo);
+							console.log(res.info);
 							uni.requestPayment({
 								
 							    provider: 'wxpay',
