@@ -28,7 +28,7 @@
 			<view class="closebtn" @click="paywayShow">×</view>
 			<view class="flexColumn center pdb25">
 				<view class="center ftw fs18 mgb15">￥{{chooseCard.price}}</view>
-				<view class="time color6 fs12">请在<text class="red">19:57</text>内完成支付</view>
+				<!-- <view class="time color6 fs12">请在<text class="red">19:57</text>内完成支付</view> -->
 			</view>
 			<view class="flexRowBetween" @click="seltPayway('1')">
 				<view class="ll"><image class="payIcon" src="../../static/images/nipbanli-icon4.png" mode=""></image></view>

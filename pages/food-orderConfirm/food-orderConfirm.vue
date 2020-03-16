@@ -54,15 +54,30 @@
 		</view>
 		
 		<view class="black-bj" v-show="is_show"></view>
-		<view class="payShow whiteBj radius10 center" v-show="is_payShow">
-			<view class="closebtn fs18" @click="payShow">×</view>
-			<view class="fs18">￥{{totalScore}}</view>
-			<view class="flexCenter pdt20">
-				<view class="time fs12 color6">请在<text class="red">19:57</text>内完成支付</view>
+		<view class="paywayShow whiteBj" v-show="is_paywayShow">
+			<view class="closebtn" @click="paywayShow">×</view>
+			<view class="flexColumn center pdb25">
+				<view class="center ftw fs18 mgb15">￥{{totalScore}}</view>
+				<!-- <view class="time color6 fs12">请在<text class="red">19:57</text>内完成支付</view> -->
 			</view>
-			<view class="submitbtn" style="margin-top: 140rpx;">
-				<button class="Wbtn" type="button" @click="goPay">立即支付</button>
+			<view class="flexRowBetween" @click="seltPayway('1')">
+				<view class="ll"><image class="payIcon" src="../../static/images/nipbanli-icon4.png" mode=""></image></view>
+				<view class="Rselt flexRowBetween">
+					<view class="">支付宝支付</view>
+					<view><image class="seltIcon" :src="currPay==1?'../../static/images/nipbanli-icon.png':'../../static/images/nipbanli-icon1.png'" mode=""></image></view>
+				</view>
 			</view>
+			<view class="flexRowBetween" @click="seltPayway('2')">
+				<view class="ll"><image class="payIcon" src="../../static/images/nipbanli-icon3.png" mode=""></image></view>
+				<view class="Rselt flexRowBetween">
+					<view class="">微信支付</view>
+					<view><image class="seltIcon" :src="currPay==2?'../../static/images/nipbanli-icon.png':'../../static/images/nipbanli-icon1.png'" mode=""></image></view>
+				</view>
+			</view>
+			<view class="submitbtn mgt30">
+				<button class="btn" type="button" @click="goPay">立即支付</button>
+			</view>
+			
 		</view>
 			
 		
@@ -79,14 +94,15 @@
 				
 				is_show:false,
 				count:1,
-				is_payShow:false,
+				is_paywayShow:false,
 				submitData:{
 					shop_no:'',
 					phone:''
 				},
 				mainData:{},
 				totalScore:0,
-				isFree:false
+				isFree:false,
+				currPay:1,
 			}
 		},
 		
@@ -97,6 +113,13 @@
 		},
 		
 		methods: {
+			
+			seltPayway(currPay){
+				const self = this
+				if(currPay!=self.currPay){
+					self.currPay = currPay
+				}
+			},
 			
 			counter(type) {
 				const self = this;			
@@ -122,10 +145,10 @@
 				};
 			},
 			
-			payShow(){
+			paywayShow(){
 				const self = this;
 				self.is_show = !self.is_show;
-				self.is_payShow = !self.is_payShow;
+				self.is_paywayShow = !self.is_paywayShow;
 			},
 			
 			getUserInfoData() {
@@ -224,7 +247,7 @@
 						self.orderId = res.info.id;
 						//self.goPay()
 						self.is_show = !self.is_show;
-						self.is_payShow = !self.is_payShow;
+						self.is_paywayShow = !self.is_paywayShow;
 					} else {		
 						uni.setStorageSync('canClick', true);
 						uni.showToast({
@@ -239,9 +262,17 @@
 			goPay(order_id) {
 				const self = this;	
 				var nowTime = Date.parse(new Date());
-				const postData = {
-					wxPay:{
+				var postData = {};
+				postData = {
+					aliPay:{
 						price:self.totalScore
+					}
+				};
+				if(self.currPay==2){
+					postData = {
+						wxPay:{
+							price:self.totalScore
+						}
 					}
 				};
 				postData.tokenFuncName = 'getUserToken',
@@ -258,33 +289,50 @@
 					if (res.solely_code == 100000) {
 						uni.setStorageSync('canClick', true);
 						if (res.info) {
-							var str=res.info.package
-							var arr=str.split("=")[1]
-							//胜利ar as1	=arr.toUpperCase()
-							//console.log(as1)
-							var obj={
-								appid:res.info.appId,      //id 应用id
-								partnerid:'1573719401',              //商户号 
-								prepayid:arr,                         //预支付
-								package:'Sign=WXPay',
-								noncestr:res.info.nonceStr,
-								timestamp:res.info.timeStamp,   //时间戳
-								sign:res.info.paySign.substring(0,30)
+							if(res.info.package){
+								var str=res.info.package
+								var arr=str.split("=")[1]
+								//胜利ar as1	=arr.toUpperCase()
+								//console.log(as1)
+								var obj={
+									appid:res.info.appId,      //id 应用id
+									partnerid:'1573719401',              //商户号 
+									prepayid:arr,                         //预支付
+									package:'Sign=WXPay',
+									noncestr:res.info.nonceStr,
+									timestamp:res.info.timeStamp,   //时间戳
+									sign:res.info.paySign.substring(0,30)
+								}
+								var orderInfo = JSON.stringify(obj);
+							}else{
+								var orderInfo = res.info
 							}
 							
-							var orderInfo = JSON.stringify(obj);
-							//var orderInfo = obj;
-							console.log('orderInfo',orderInfo);
 							console.log(res.info);
 							uni.requestPayment({
 								
-							    provider: 'wxpay',
+							    provider: self.currPay==1?'alipay':'wxpay',
 							    orderInfo:orderInfo, //微信、支付宝订单数据
 							    success: function (res) {
 							        console.log('success:' + JSON.stringify(res));
+									uni.showToast({
+										title: '支付成功',
+										duration: 1000,
+										success: function() {
+											
+										}
+									});
+									setTimeout(function() {
+										self.$Router.redirectTo({route:{path:'/pages/user-NIP-coupon/user-NIP-coupon'}})
+									}, 1000);
 							    },
 							    fail: function (err) {
 							        console.log('fail:' + JSON.stringify(err));
+									uni.setStorageSync('canClick', true);
+									uni.showToast({
+										title: '支付失败',
+										duration: 2000
+									});
 							    },
 								complete: function (err) {
 								    console.log('fail:' + JSON.stringify(err));
@@ -346,4 +394,10 @@
 	
 	page{padding-bottom:150rpx;background: #F5F5F5;}
 	input{width: 100%; line-height: 48rpx;display: block;box-sizing: border-box;font-size: 26rpx; color: #666;text-align: right;}
+	.paywayShow{position: fixed;left: 0;right: 0;bottom: 0;padding: 40rpx 4% 80rpx 4%;z-index: 45;box-sizing: border-box;}
+	.paywayShow .time{padding: 0 30rpx;line-height: 50rpx;background: #F5F5F5;border-radius: 20rpx;}
+	.paywayShow .ll{width: 10%;}
+	.paywayShow .Rselt{width: 90%;padding: 30rpx 0;border-bottom: 1px solid #eee;}
+	.payIcon{width: 40rpx;height: 40rpx;display: block;}
+	
 </style>

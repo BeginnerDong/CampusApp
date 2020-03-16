@@ -15,7 +15,8 @@
             "delay" : 0
         },
         "modules" : {
-            "Payment" : {}
+            "Payment" : {},
+            "OAuth" : {}
         },
         /* 模块配置 */
         "distribute" : {
@@ -59,7 +60,15 @@
                     },
                     "alipay" : {}
                 },
-                "share" : {}
+                "share" : {},
+                "ad" : null,
+                "oauth" : {
+                    "weixin" : {
+                        "appid" : "wx7d61c32ff19567e9",
+                        "appsecret" : "891bb09cca06f77c13ba9ff2ad4fa502",
+                        "UniversalLinks" : "https://demo.dcloud.net.cn/ulink/"
+                    }
+                }
             }
         }
     },
