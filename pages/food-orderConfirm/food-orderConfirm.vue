@@ -140,7 +140,7 @@
 				self.totalScore = self.mainData.price * self.count;
 				self.totalScore = parseFloat(self.totalScore).toFixed(2)
 				if(parseInt(self.userInfoData.member_time)	>nowTime&&self.userInfoData.order.length==0){
-					self.totalScore = self.totalScore - parseFloat(self.mainData.price);
+					self.totalScore = parseFloat(self.totalScore - parseFloat(self.mainData.price)).toFixed(2);
 					self.isFree = true
 				};
 			},

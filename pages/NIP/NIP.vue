@@ -1,13 +1,14 @@
 <template>
 	<view>
 		
-		<view class="flexRowBetween indexTit borderB1  W-Fixed">
+		<view class="flexRowBetween indexTit borderB1  W-Fixed" style="padding-top: 44px;">
 			<view class="userPhoto" @click="Router.navigateTo({route:{path:'/pages/user/user'}})">
 				<image :src="userInfoData.mainImg&&userInfoData.mainImg.length>0?userInfoData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 			</view>
 			<view class="fs16 color6">NIP</view>
 			<view @click="Router.navigateTo({route:{path:'/pages/seach/seach'}})"><image class="seachBtn" src="../../static/images/home-icon.png" mode=""></image></view>
 		</view>
+		<view style="height: 44px;background-color: #fff;"></view>
 		<view class="pdtb25"></view>
 		
 		<view class="pdlr4 whiteBj">

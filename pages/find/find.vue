@@ -1,22 +1,22 @@
 <template>
 	<view>
-		
-		<view class="flexRowBetween indexTit borderB1 W-Fixed">
-			<view class="userPhoto" @click="Router.navigateTo({route:{path:'/pages/user/user'}})">
-				<image :src="userInfoData.mainImg&&userInfoData.mainImg.length>0?userInfoData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+		<view   style="padding-top: 44px;" class="W-Fixed">
+			<view class="flexRowBetween indexTit borderB1">
+				<view class="userPhoto" @click="Router.navigateTo({route:{path:'/pages/user/user'}})">
+					<image :src="userInfoData.mainImg&&userInfoData.mainImg.length>0?userInfoData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+				</view>
+				<view class="fs16 color6">发现</view>
+				<view @click="Router.navigateTo({route:{path:'/pages/seach/seach'}})"><image class="seachBtn" src="../../static/images/home-icon.png" mode=""></image></view>
 			</view>
-			<view class="fs16 color6">发现</view>
-			<view @click="Router.navigateTo({route:{path:'/pages/seach/seach'}})"><image class="seachBtn" src="../../static/images/home-icon.png" mode=""></image></view>
+			
+			<view class="orderNav flexRowBetween whiteBj color6   borderB1">
+				<view class="tt flexCenter" :class="curr==1?'on':''" @click="changeCurr('1')">社区</view>
+				<view class="tt flexCenter" :class="curr==2?'on':''" @click="changeCurr('2')">已加入</view>
+				<view class="tt flexCenter" :class="curr==3?'on':''" @click="changeCurr('3')">更多</view>
+			</view>
 		</view>
-		
-		<view class="orderNav flexRowBetween whiteBj color6  W-Fixed borderB1" style="top: 98rpx;">
-			<view class="tt flexCenter" :class="curr==1?'on':''" @click="changeCurr('1')">社区</view>
-			<view class="tt flexCenter" :class="curr==2?'on':''" @click="changeCurr('2')">已加入</view>
-			<view class="tt flexCenter" :class="curr==3?'on':''" @click="changeCurr('3')">更多</view>
-		</view>
-		
+		<view style="height: 83px;background-color: #f5f5f5;"></view>
 		<view class="pdtb25"></view>
-		<view class="pdtb20"></view>
 		<view class="f5H5"></view>
 		
 		<view class="comment mglr4" v-show="curr==1">
@@ -62,7 +62,7 @@
 						
 						<view class="fs12 pdt10">{{item.content}}</view>
 						<view class="imgbox" >
-							<view v-for="(c_item,c_index) in item.mainImg" :class="item.mainImg.length==1?'lisOne':(item.mainImg.length==2?'lisTwo':'lisThree')">
+							<view class="img" v-for="(c_item,c_index) in item.mainImg" :class="item.mainImg.length==1?'lisOne':(item.mainImg.length==2?'lisTwo':'lisThree')">
 								<image :src="c_item.url" mode="aspectFill" @click="previewImage(index,c_index)"></image>
 							</view>
 						</view>

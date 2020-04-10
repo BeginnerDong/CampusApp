@@ -73,10 +73,10 @@
 				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 			</view>
 		</view>
-		<view class="fx-PlZan pdlr4 fs12 color6 borderB1" style="bottom: 80rpx;">
+		<view class="fx-PlZan pdlr4 fs12 color6 borderB1" style="bottom: 160rpx;" v-if="submitDataTwo.passage1==''">
 			<view class="flexRowBetween" style="width: 100%;">
 				<view class="input" style="width: 85%;">
-					<input v-model="submitDataTwo.content" placeholder="请输入回复..." />
+					<input v-model="submitData.content" placeholder="请输入回复..." />
 				</view>
 				<view class="rrBtn">
 					<button @click="addMessage()">发送</button>
@@ -89,7 +89,7 @@
 					<input v-model="submitDataTwo.content" placeholder="请输入回复..."/>
 				</view>
 				<view class="rrBtn">
-					<button  @click="addMessageTwo()">发送</button>
+					<button  @click="addMessageTwo()">发送1</button>
 				</view>
 			</view>
 		</view>

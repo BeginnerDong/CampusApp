@@ -33,6 +33,7 @@ export default {
 		uni.request({
 			url: config.baseUrl + obj.url, //仅为示例，并非真实接口地址。
 			data: obj.data,		
+			sslVerify:false,
 			method:obj.type,
 			header:custom_header,
 			success: (res) => {

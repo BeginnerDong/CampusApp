@@ -39,7 +39,7 @@
 				<view class="item flexRowBetween">
 					<view class="ll">电话：</view>
 					<view class="rr">
-						<input type="number" v-model="submitData.phone" placeholder="请输入联系方式" placeholder-class="placeholder" />
+						<input type="number" maxlength="11" v-model="submitData.phone" placeholder="请输入联系方式" placeholder-class="placeholder" />
 					</view>
 				</view>
 				<view class="item flexRowBetween">

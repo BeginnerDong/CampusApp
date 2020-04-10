@@ -10,16 +10,16 @@
 			</view>
 			
 			<view class="item">
-				<view class="flex">
-					<view class="upBtn" @tap="upLoadImg('mainImg')"><image src="../../static/images/release-icon.png" mode=""></image></view>
-					<view class="mgl15 color9 fs11">可上传多张图片</view>
-				</view>
 				<view class="flex" style="flex-wrap: wrap;">
-					<block v-for="(image,index) in submitData.mainImg" :key="index">
-						<view class="upImgLis">
+					<block v-for="(item,index) in submitData.mainImg" :key="index">
+						<view class="upBtn">
 							<image :src="item.url"  @tap="previewImage"></image>
 						</view>
 					</block>
+					<view class="upBtn" @tap="upLoadImg('mainImg')">
+						<image src="../../static/images/release-icon.png" mode=""></image>
+					</view>
+					<view class="mgl15 color9 fs11">可上传多张图片</view>
 				</view>
 			</view>
 			<view class="item flexRowBetween">
@@ -51,7 +51,7 @@
 			</view>
 			<view class="item flexRowBetween">
 				<view class="ll">联系方式</view>
-				<view class="rr"><input type="text" v-model="submitData.phone" placeholder="请输入" placeholder-class="placeholder" /></view>
+				<view class="rr"><input type="number" maxlength="11" v-model="submitData.phone" placeholder="请输入" placeholder-class="placeholder" /></view>
 			</view>
 			<view class="item flexRowBetween">
 				<view class="ll">活动位置</view>
@@ -217,6 +217,8 @@
 				uni.setStorageSync('canClick', false);
 				var newObject = self.$Utils.cloneForm(self.submitData);
 				delete newObject.mainImg;
+				delete newObject.headImg;
+				delete newObject.name;
 				const pass = self.$Utils.checkComplete(newObject);
 				console.log('pass', pass);
 				console.log('self.submitData',self.submitData)

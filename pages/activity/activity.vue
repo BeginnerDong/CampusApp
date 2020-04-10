@@ -1,22 +1,24 @@
 <template>
 	<view>
-		
-		<view class="flexRowBetween indexTit borderB1 whiteBj W-Fixed">
-			<view class="userPhoto" @click="Router.navigateTo({route:{path:'/pages/user/user'}})">
-				<image :src="userInfoData.mainImg&&userInfoData.mainImg.length>0?userInfoData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+		<view style="padding-top: 44px;" class="W-Fixed">
+			<view class="flexRowBetween indexTit borderB1 whiteBj " >
+				<view class="userPhoto" @click="Router.navigateTo({route:{path:'/pages/user/user'}})">
+					<image :src="userInfoData.mainImg&&userInfoData.mainImg.length>0?userInfoData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+				</view>
+				<view class="fs16 color6 flexRowBetween">活动</view>
+				<view @click="Router.navigateTo({route:{path:'/pages/seach/seach'}})"><image class="seachBtn" src="../../static/images/home-icon.png" mode=""></image></view>
 			</view>
-			<view class="fs16 color6 flexRowBetween">活动</view>
-			<view @click="Router.navigateTo({route:{path:'/pages/seach/seach'}})"><image class="seachBtn" src="../../static/images/home-icon.png" mode=""></image></view>
+			<view class="orderNav flexRowBetween whiteBj color6  borderB1">
+				<view class="tt flexCenter" :class="is_zongheShow==true?'on':''" @click="zongheShow">城市<image class="arrowB" src="../../static/images/activity-icon.png" mode=""></image></view>
+				<view class="tt flexCenter" :class="is_timeShow==true?'on':''" @click="timeShow">时间<image class="arrowB" src="../../static/images/activity-icon.png" mode=""></image></view>
+				<view class="tt flexCenter" :class="is_screenShow==true?'on':''"  @click="screenShow">筛选<image class="arrowB" src="../../static/images/activity-icon.png" mode=""></image></view>
+			</view>
 		</view>
 		
+		<view style="height: 83px;background-color: #f5f5f5;"></view>
 		
-		<view class="orderNav flexRowBetween whiteBj color6 W-Fixed borderB1" style="top: 98rpx;">
-			<view class="tt flexCenter" :class="is_zongheShow==true?'on':''" @click="zongheShow">城市<image class="arrowB" src="../../static/images/activity-icon.png" mode=""></image></view>
-			<view class="tt flexCenter" :class="is_timeShow==true?'on':''" @click="timeShow">时间<image class="arrowB" src="../../static/images/activity-icon.png" mode=""></image></view>
-			<view class="tt flexCenter" :class="is_screenShow==true?'on':''"  @click="screenShow">筛选<image class="arrowB" src="../../static/images/activity-icon.png" mode=""></image></view>
-		</view>
+		
 		<view class="pdtb25"></view>
-		<view class="pdtb20"></view>
 		
 		<view class="black-bj" v-if="is_show"></view>
 		<!-- 城市 -->
@@ -72,7 +74,7 @@
 				{{item.content}}
 				</view>
 				<view class="imgbox" style="padding-top: 20rpx;">
-					<view v-for="(c_item,c_index) in item.mainImg" :class="item.mainImg.length==1?'lisOne':(item.mainImg.length==2?'lisTwo':'lisThree')">
+					<view class="img" v-for="(c_item,c_index) in item.mainImg" :class="item.mainImg.length==1?'lisOne':(item.mainImg.length==2?'lisTwo':'lisThree')">
 						<image :src="c_item.url" mode="aspectFill" @click="previewImage(index,c_index)"></image>
 					</view>
 				</view>

@@ -3,7 +3,8 @@
 		
 		<view class="myRowBetween pdlr4" v-if="mainData.length>0">
 			<view class="item flexRowBetween" v-for="(item,index) in mainData" :key="index" >
-				<view class="ll flex" @click="Router.navigateTo({route:{path:'/pages/TA-Home/TA-Home'}})">
+				<view class="ll flex" :data-user_no ="item.user_no"
+						@click="Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+$event.currentTarget.dataset.user_no}})">
 					<view class="photo">
 						<image :src="item.mainImg&&item.mainImg.length>0?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 						

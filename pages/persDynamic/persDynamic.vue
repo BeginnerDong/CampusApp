@@ -7,19 +7,19 @@
 			</view>
 			
 			<view class="pdb15">
-				<view class="flex">
-					<view class="upBtn" @tap="upLoadImg('mainImg')">
-						<image src="../../static/images/release-icon.png" mode=""></image>
-					</view>
-					<view class="mgl15 color9 fs11" v-if="submitData.mainImg.length==0">可上传多张图片</view>
-				</view>
+				
 				<view class="flex" style="flex-wrap: wrap;">
-					<block v-for="(image,index) in submitData.mainImg" :key="index">
+					<block v-for="(item,index) in submitData.mainImg" :key="index">
 						<view class="upImgLis">
 							<image :src="item.url"  @tap="previewImage"></image>
 						</view>
 					</block>
+					<view class="upImgLis" @tap="upLoadImg('mainImg')">
+						<image src="../../static/images/release-icon.png" mode=""></image>
+					</view>
+					<view class="mgl15 color9 fs11" v-if="submitData.mainImg.length==0">可上传多张图片</view>
 				</view>
+
 			</view>
 		</view>
 		<view class="submitbtn" style="margin-top: 200rpx;">
@@ -62,6 +62,8 @@
 				uni.setStorageSync('canClick', false);
 				var newObject = self.$Utils.cloneForm(self.submitData);
 				delete newObject.mainImg;
+				delete newObject.headImg;
+				delete newObject.name;
 				const pass = self.$Utils.checkComplete(newObject);
 				console.log('pass', pass);
 				console.log('self.submitData',self.submitData)
@@ -92,6 +94,7 @@
 						wx.hideLoading()
 					} else {
 						self.$Utils.showToast('网络故障', 'none')
+						wx.hideLoading()
 					}
 				};				
 				wx.chooseImage({

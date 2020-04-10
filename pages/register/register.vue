@@ -10,7 +10,9 @@
 					<view style="width: 50%;">
 						<input type="text"  value="" placeholder="验证码" v-model="submitData.code">
 					</view>
-					<view class="fs14 ftw color2">获取验证码</view>
+				
+					<view class="fs14 ftw color2" @click="sendCode()" v-if="!hasSend">{{text}}</view>
+					<view class="fs14 ftw color2"  v-else>{{text}}</view>
 				</view>
 			</view>
 			
@@ -34,7 +36,10 @@
 				submitData:{
 					phone:'',
 					code:''
-				}
+				},
+				currentTime:61,
+				text:'获取验证码',
+				hasSend:false,
 			}
 		},
 		
@@ -46,18 +51,68 @@
 		
 		methods: {
 			
+			sendCode(){
+				var self = this;
+				console.log(111)
+				if(self.hasSend){
+					return;
+				};
+				var phone = self.submitData.phone;
+				
+				if (phone.trim().length != 11 || !/^1[3|4|5|6|7|8|9]\d{9}$/.test(phone)) {
+					self.$Utils.showToast('请输入正确的手机号', 'none', 1000)
+					
+					return;
+				}
+				var postData = {
+					data:{
+						phone:self.submitData.phone,
+						type:1
+					}
+				};
+				var callback = function(res){
+					if(res.solely_code==100000){
+						uni.setStorageSync('canClick',true);
+						uni.hideLoading();
+						self.hasSend = true;
+						var interval = setInterval(function() {
+							self.currentTime--; //每执行一次让倒计时秒数减一
+						
+							self.text=self.currentTime + 's';//按钮文字变成倒计时对应秒数
+							
+							//如果当秒数小于等于0时 停止计时器 且按钮文字变成重新发送 且按钮变成可用状态 倒计时的秒数也要恢复成默认秒数 即让获取验证码的按钮恢复到初始化状态只改变按钮文字
+							if (self.currentTime <= 0) {
+								clearInterval(interval)
+								
+								self.hasSend = false;
+								self.text='重新发送';
+								self.currentTime= 61;
+								
+							}
+							
+						}, 1000);
+					}else{
+						uni.hideLoading();
+						self.$Utils.showToast('发送失败', 'none', 1000)
+					};
+				};
+				self.$apis.codeGet(postData, callback);
+			},
+			
 			submit() {
 				const self = this;
 				uni.setStorageSync('canClick',false)
 				const postData = {
-					data:self.$Utils.cloneForm(self.submitData)					
+					data:{
+						phone:self.submitData.phone
+					}					
 				}
-				/* postData.smsAuth = {						
+				postData.smsAuth = {						
 					phone:self.submitData.phone,						
-					code:self.submitData.smsCode,
-				}; */
+					code:self.submitData.code,
+				};
 				var newObject = self.$Utils.cloneForm(self.submitData);
-				delete newObject.code;
+				
 				if (self.$Utils.checkComplete(newObject)) {						
 					const callback = (res) => {
 						uni.setStorageSync('canClick',true)
@@ -75,7 +130,7 @@
 					self.$apis.registerUser(postData, callback);
 				} else {
 					uni.setStorageSync('canClick',true);
-					self.$Utils.showToast('请输入手机号', 'none');
+					self.$Utils.showToast('请补全信息', 'none');
 				};
 			},
 		}

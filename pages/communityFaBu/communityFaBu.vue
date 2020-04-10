@@ -7,13 +7,13 @@
 			</view>
 			
 			<view class="pdlr4 mgb15 borderB1">
-				<view class="flex">
-					<block v-for="(image,index) in submitData.mainImg" :key="index">
+				<view class="flex" style="flex-wrap: wrap;">
+					<block v-for="(item,index) in submitData.mainImg" :key="index">
 						<view class="upImgLis">
 							<image :src="item.url"  @tap="previewImage"></image>
 						</view>
 					</block>
-					<view class="upBtn" @tap="upLoadImg('mainImg')">
+					<view class="upImgLis" @tap="upLoadImg('mainImg')">
 						<image src="../../static/images/release-icon.png" mode=""></image>
 					</view>
 					
@@ -54,7 +54,10 @@
 					name:'',
 					type :3,
 					content:'',
-					mainImg:[],
+					mainImg:[{url:'../../static/images/release-icon.png'},
+					{url:'../../static/images/release-icon.png'},
+					{url:'../../static/images/release-icon.png'},
+					{url:'../../static/images/release-icon.png'},],
 					headImg:'',
 					community_id:'',
 					behavior:''

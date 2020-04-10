@@ -1,23 +1,25 @@
 <template>
 	<view>
-		
-		<view class="flexRowBetween indexTit borderB1 W-Fixed">
-			<view class="userPhoto" @click="Router.navigateTo({route:{path:'/pages/user/user'}})">
-				<image :src="userInfoData.mainImg&&userInfoData.mainImg.length>0?userInfoData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+		<view style="padding-top: 44px;" class="W-Fixed">
+			<view class="flexRowBetween indexTit borderB1">
+				<view class="userPhoto" @click="Router.navigateTo({route:{path:'/pages/user/user'}})">
+					<image :src="userInfoData.mainImg&&userInfoData.mainImg.length>0?userInfoData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
+				</view>
+				<view class="fs16 color6">消息</view>
+				<view></view>
 			</view>
-			<view class="fs16 color6">消息</view>
-			<view></view>
+			
+			<view class="orderNav flexRowBetween whiteBj color6  borderB1" style="top: 98rpx;">
+				<view class="tt flexCenter" :class="curr==1?'on':''" @click="changeCurr('1')">赞</view>
+				<view class="tt flexCenter" :class="curr==2?'on':''" @click="changeCurr('2')">评论</view>
+				<view class="tt flexCenter" :class="curr==3?'on':''" @click="changeCurr('3')">私信</view>
+				<view class="tt flexCenter" :class="curr==4?'on':''" @click="changeCurr('4')">系统</view>
+			</view>
 		</view>
-		
-		<view class="orderNav flexRowBetween whiteBj color6 W-Fixed borderB1" style="top: 98rpx;">
-			<view class="tt flexCenter" :class="curr==1?'on':''" @click="changeCurr('1')">赞</view>
-			<view class="tt flexCenter" :class="curr==2?'on':''" @click="changeCurr('2')">评论</view>
-			<view class="tt flexCenter" :class="curr==3?'on':''" @click="changeCurr('3')">私信</view>
-			<view class="tt flexCenter" :class="curr==4?'on':''" @click="changeCurr('4')">系统</view>
-		</view>
+		<view style="height: 83px;background-color: #f5f5f5;"></view>
 		
 		<view class="pdtb25"></view>
-		<view class="pdtb20"></view>
+		
 		<view class="f5H5"></view>
 		<view v-show="curr==1">
 			<view class="zanCont" v-if="goodData.length>0">

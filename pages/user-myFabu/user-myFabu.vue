@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="orderNav flexRowBetween whiteBj color6 W-Fixed borderB1" style="top: 88rpx;">
+		<view class="orderNav flexRowBetween whiteBj color6 W-Fixed borderB1">
 			<view class="tt flexCenter" :class="curr==1?'on':''" @click="changeCurr('1')">动态</view>
 			<view class="tt flexCenter" :class="curr==2?'on':''" @click="changeCurr('2')">活动</view>
 			<view class="tt flexCenter" :class="curr==3?'on':''" @click="changeCurr('3')">社区</view>

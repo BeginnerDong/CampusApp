@@ -1,12 +1,13 @@
 <template>
 	<view>
 		<view class="">
-			<view class="userHead white">
-				<view class="flexRowBetween pdlr4 pdt15 pdb10 white" style="border-bottom: 1px solid #4b4b4b;">
+			<view class="userHead white" style="">
+				<view class="flexRowBetween pdlr4 pdt15 pdb10 white" style="z-index: 2;padding-top: 44px;border-bottom: 1px solid #4b4b4b;position: fixed;top: 0;width: 92%;background-color: #323232;">
 					<view @click="prev()"><image class="arrowR" style="margin-left: 0;" src="../../static/images/arrowL.png" mode=""></image></view>
 					<view class="fs15">我的</view>
 					<view @click="Router.navigateTo({route:{path:'/pages/userSetting/userSetting'}})"><image style="width: 32rpx;height: 34rpx;display: block;" src="../../static/images/about-icon.png" mode=""></image></view>
 				</view>
+				<view style="height: 83px;"></view>
 				<view class="infor pdt25 pdlr4">
 					<view class="left flex">
 						<view v-if="mainData.check_status==2" @click="Router.navigateTo({route:{path:'/pages/personHome/personHome'}})">
@@ -152,7 +153,7 @@
 	
 	@import "../../assets/style/editInfor.css";
 	page{background: #F5F5F5;padding-bottom: 60rpx;}
-	.userHead{height: 380rpx;background-image: linear-gradient(to bottom, #222222, #4e4e4e);}
+	.userHead{height: 460rpx;background-image: linear-gradient(to bottom, #222222, #4e4e4e);}
 	.userHead .arrowR{width: 18rpx;height: 32rpx;}
 	.userHead .photo{width: 120rpx;height: 120rpx;border-radius: 50%;margin-right: 20rpx;padding: 4rpx;border:1px solid #F5F5F5}
 	.userLable{line-height: 40rpx;border-radius: 8rpx;background: #fff;padding: 0 10rpx;}

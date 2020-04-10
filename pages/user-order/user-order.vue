@@ -31,7 +31,7 @@
 							</view>
 						</view>
 					</view>
-					<view class="flexEnd pdt15 fs12 center borderT1" v-if="item.transport_status==1">
+					<view class="flexEnd pdt15 fs12 center borderT1" @click="orderUpdate(index)" v-if="item.transport_status==1">
 						<view class="B-Btn">确认收货</view>
 					</view>
 				</view>
@@ -130,6 +130,31 @@
 				};
 				self.$apis.orderGet(postData, callback);
 			},
+			
+			orderUpdate(index) {
+				const self = this;
+				uni.setStorageSync('canClick', false);
+				const postData = {};
+				postData.tokenFuncName = 'getUserToken';
+				postData.data = {
+					transport_status:2,
+				};
+				postData.searchItem = {
+					id:self.mainData[index].id,
+				};
+				const callback = (data) => {
+					uni.setStorageSync('canClick', true);
+					if (data && data.solely_code == 100000) {
+						self.$Utils.showToast('操作成功','none');
+						setTimeout(function() {
+							self.getMainData(true)
+						}, 1000);
+					} else {
+						self.$Utils.showToast(data.msg,'none')
+					}
+				};
+				self.$apis.orderUpdate(postData, callback);
+			 },
 		}
 	};
 </script>

@@ -1,7 +1,7 @@
 <template>
 	<view>
 		
-		<view class="flexRowBetween indexTit borderB1 W-Fixed">
+		<view class="flexRowBetween indexTit borderB1 W-Fixed" style="padding-top: 44px;">
 			<view class="userPhoto" @click="Router.navigateTo({route:{path:'/pages/user/user'}})">
 				<image :src="userInfoData.mainImg&&userInfoData.mainImg.length>0?userInfoData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 			</view>
@@ -11,7 +11,7 @@
 			</view>
 			<view @click="Router.navigateTo({route:{path:'/pages/seach/seach'}})"><image class="seachBtn" src="../../static/images/home-icon.png" mode=""></image></view>
 		</view>
-		
+		<view style="height: 44px;background-color: #fff;"></view>
 		<view class="pdtb25"></view>
 		
 		<view class="fabubtn" v-if="userInfoData.check_status==2" @click="Router.navigateTo({route:{path:'/pages/persDynamic/persDynamic'}})">
@@ -75,7 +75,7 @@
 					<view class="ftw pdt10 pdb5" v-if="item.type==2">{{item.title}}</view>
 					<view class="fs12" :class="item.type!=2?'pdt10':''">{{item.content}}</view>
 					<view class="imgbox" style="padding-top: 20rpx;">
-						<view v-for="(c_item,c_index) in item.mainImg" :class="item.mainImg.length==1?'lisOne':(item.mainImg.length==2?'lisTwo':'lisThree')">
+						<view class="img" v-for="(c_item,c_index) in item.mainImg" :class="item.mainImg.length==1?'lisOne':(item.mainImg.length==2?'lisTwo':'lisThree')">
 							<image :src="c_item.url" mode="aspectFill" @click="previewImage(index,c_index)"></image>
 						</view>
 					</view>

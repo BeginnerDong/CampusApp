@@ -61,7 +61,7 @@
                     "alipay" : {}
                 },
                 "share" : {},
-                "ad" : null,
+                "ad" : {},
                 "oauth" : {
                     "weixin" : {
                         "appid" : "wx7d61c32ff19567e9",
@@ -70,6 +70,9 @@
                     }
                 }
             }
+        },
+        "uniStatistics" : {
+            "enable" : false
         }
     },
     /* SDK配置 */
@@ -85,7 +88,10 @@
             "minified" : true
         },
         "usingComponents" : false,
-        "permission" : {}
+        "permission" : {},
+        "uniStatistics" : {
+            "enable" : false
+        }
     },
     "h5" : {
         "title" : "校园APP",
@@ -95,6 +101,32 @@
         "router" : {
             "base" : "/wx/"
         },
-        "domain" : "https://www.local-scanner.com"
+        "domain" : "https://www.local-scanner.com",
+        "uniStatistics" : {
+            "enable" : false
+        }
+    },
+    "uniStatistics" : {
+        "enable" : false
+    },
+    "mp-alipay" : {
+        "uniStatistics" : {
+            "enable" : false
+        }
+    },
+    "mp-baidu" : {
+        "uniStatistics" : {
+            "enable" : false
+        }
+    },
+    "mp-qq" : {
+        "uniStatistics" : {
+            "enable" : false
+        }
+    },
+    "mp-toutiao" : {
+        "uniStatistics" : {
+            "enable" : false
+        }
     }
 }
