@@ -27,7 +27,7 @@
 				<view class="item flex borderB1">
 					<view class="icon"><image src="../../static/images/perfect-information-icon3.png" mode=""></image></view>
 					<view class="rr">
-						<picker mode="date"  @change="timeChange">
+						<picker mode="date" fields="year"  @change="timeChange">
 							<view>{{submitData.admission_time!=''?submitData.admission_time:'入学时间'}}</view>
 						</picker>
 						<!-- <input type="number" maxlength="11" value="" placeholder="入学时间"> -->

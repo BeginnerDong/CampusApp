@@ -31,6 +31,21 @@
 		</view>
 		
 		
+		
+		<view class="realnameshow whiteBj radius10 pdb25" v-if="is_realnameshow">
+			<view class="closebtn" style="z-index: 2;" @click="realnameshow">×</view>
+			<view>
+				<image class="bjImg w" src="../../static/images/about-icon2.png" mode="widthFix"></image>
+			</view>
+			<view class="pdt25 pdb15 center fs18 ftw">实名认证</view>
+			<view class="fs12 pdl20 pdr20">您还未认证身份信息，为方便您使用与享受更多的特权服务，请前去认证身份，完善资料。</view>
+			<view class="submitbtn mgt25 mgb25" @click="Router.navigateTo({route:{path:'/pages/user-realname/user-realname'}})">
+				<button class="btn">立即实名</button>
+			</view>
+			<view class="center color9 mgb10" @click="realnameshow">下次验证</view>
+			
+		</view>
+		
 	</view>
 </template>
 
@@ -41,6 +56,8 @@
 			return {
 				Router:this.$Router,
 				Utils:this.$Utils,
+				is_realnameshow:false,
+				
 				showView: false,
 				is_show:false,
 				mainData:[],
@@ -96,6 +113,28 @@
 		
 		methods: {
 			
+			realnameshow(){
+				const self = this;
+				self.is_show = !self.is_show;
+				self.is_realnameshow = !self.is_realnameshow
+			},
+			
+			getUserInfoData() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getUserToken';
+				postData.searchItem = {
+					user_no: uni.getStorageSync('user_info').user_no
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.userInfoData = res.info.data[0];
+					};
+					self.$Utils.finishFunc('getUserInfoData');
+				};
+				self.$apis.userInfoGet(postData, callback);
+			},
+			
 			getMainData(isNew) {
 				const self = this;
 				if (isNew) {
@@ -132,6 +171,11 @@
 				const self = this;
 				var nowTime = Date.parse(new Date())/1000;
 				uni.setStorageSync('canClick', false);
+				if(self.userInfoData.check_status!=2){
+					uni.setStorageSync('canClick', true);
+					self.realnameshow()
+					return
+				};
 				if(self.submitData.content==''){
 					uni.setStorageSync('canClick', true);
 					self.$Utils.showToast('内容不能为空', 'none', 1000);
@@ -169,7 +213,8 @@
 <style>
 	@import "../../assets/style/tidings.css";
 	page{padding-bottom: 130rpx;background: #F5F5F5;}
-	
+	.realnameshow{width: 80%;position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);z-index: 42;}
+	.realnameshow .bjImg{width: 100%;display: block;}
 	
 </style>
 

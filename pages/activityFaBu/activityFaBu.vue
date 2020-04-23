@@ -56,7 +56,7 @@
 			<view class="item flexRowBetween">
 				<view class="ll">活动位置</view>
 				<view class="rr">
-					<view class="flexEnd"  @click="weizhiShow">
+					<view class="flexEnd"  @click="weizhiShow" :style="submitData.position==''?'color:#999':''">
 						{{submitData.position!=''?submitData.position:'请选择'}}
 						<view class="mgl10">
 							<image class="jiaBtn" src="../../static/images/release-icon1.png" mode=""></image>
@@ -90,7 +90,10 @@
 			<view class="item flexRowBetween">
 				<view class="ll">参与人数</view>
 				<view class="rr">
-					<input type="number" v-model="submitData.num" placeholder="请输入" placeholder-class="placeholder" />
+					<picker mode="selector" :range="numArray" @change="numChange">
+						<view :style="submitData.num==''?'color:#999':''">{{submitData.num!=''?submitData.num:'请选择参与人数'}}</view>
+					</picker>
+					<!-- <input type="number" v-model="submitData.num" placeholder="请输入" placeholder-class="placeholder" /> -->
 				</view>
 			</view>
 			<view class="item flexRowBetween">
@@ -104,7 +107,7 @@
 			<button class="btn" type="button" @click="$Utils.stopMultiClick(submit)">发布</button>
 		</view>
 		
-		<view class="black-bj" v-if="is_show"></view>
+		<view class="black-bj" v-if="is_show" @click="weizhiShow"></view>
 		<view class="weizhiShow radius10 whiteBj fs13" v-if="is_weizhiShow">
 			<view class="item" @click="choosePosition('室内')">室内</view>
 			<view class="item" @click="choosePosition('室外')">室外</view>
@@ -124,6 +127,7 @@
 				seltCurr:0,
 				is_weizhiShow:false,
 				index:0,
+				numArray:['不限','1-10','10-20','20-30','30-40','40-50'],
 				array:['西安市','咸阳市','渭南市','铜川市','宝鸡市','汉中市','安康市'],
 				submitData:{
 					title:'',
@@ -155,6 +159,11 @@
 		},
 		
 		methods: {
+			
+			numChange(e){
+				const self = this;
+				self.submitData.num = self.numArray[e.detail.value]
+			},
 			
 			switch1Change: function (e) {
 				const self = this;

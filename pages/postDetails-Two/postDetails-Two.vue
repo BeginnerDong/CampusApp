@@ -89,7 +89,7 @@
 					<input v-model="submitDataTwo.content" placeholder="请输入回复..."/>
 				</view>
 				<view class="rrBtn">
-					<button  @click="addMessageTwo()">发送1</button>
+					<button  @click="addMessageTwo()">发送</button>
 				</view>
 			</view>
 		</view>
@@ -102,7 +102,7 @@
 				<image class="icon" src="../../static/images/home-icon3.png" mode=""></image>
 				<text>评论</text>
 			</view>
-			<view class="tt flexCenter">
+			<view class="tt flexCenter" @click="clickGood">
 				<image class="icon" :src="originData.goodMe&&originData.goodMe.length>0&&originData.goodMe[0].status==1?'../../static/images/home-icon6.png':'../../static/images/home-icon5.png'" mode=""></image>
 				<text>赞</text>
 			</view>
@@ -354,6 +354,7 @@
 				postData.tokenFuncName = 'getUserToken';
 				const callback = (res) => {
 					if (res.solely_code == 100000) {
+						self.submitData.content = '';
 						self.getMainData(true)
 					} else {
 						self.$Utils.showToast(res.msg, 'none', 1000)
@@ -376,6 +377,7 @@
 				postData.tokenFuncName = 'getUserToken';
 				const callback = (res) => {
 					if (res.solely_code == 100000) {
+						self.submitDataTwo.content = '';
 						self.getMainData(true)
 					} else {
 						self.$Utils.showToast(res.msg, 'none', 1000)

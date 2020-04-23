@@ -37,7 +37,7 @@
 					</view>
 				</view>
 			</view>
-			<view class="fs12 color6 mglr4 pdtb15">请上传毕业证或学生证照片，已毕业用户请上传毕业证，未毕业用户请上传学生证</view>
+			<view class="fs12 color6 mglr4 pdtb15">请上传毕业证或学生证照片，已毕业用户请上传毕业证或者身份证，未毕业用户请上传学生证</view>
 		</view>
 		
 		<view class="submitbtn" style="margin-top:160rpx;">

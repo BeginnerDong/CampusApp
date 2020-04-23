@@ -67,7 +67,8 @@
 				wx_info:{},
 				userHomeDate:[{},{}],
 				userInfoData:{},
-				mainData:[]
+				mainData:[],
+				user_no:''
 			}
 		},
 		

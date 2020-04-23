@@ -20,7 +20,7 @@
 		
 		<view class="pdtb25"></view>
 		
-		<view class="black-bj" v-if="is_show"></view>
+		<view class="black-bj" v-if="is_show" @click="close"></view>
 		<!-- 城市 -->
 		<view class="zongheShow whiteBj fs13" v-if="is_zongheShow">
 			<view class="item flexRowBetween" v-for="(item,index) in cityData" :key="index" :class="cityIndex==index?'on':''" 
@@ -478,10 +478,20 @@
 				self.$apis.logUpdate(postData, callback);
 			},
 			
+			close(){
+				const self = this;
+				self.is_show = false;
+				self.is_realnameshow = false;
+				self.is_zongheShow = false;
+				self.is_timeShow = false
+				self.is_screenShow = false
+			},
+			
 			realnameshow(){
 				const self = this;
 				self.is_show = !self.is_show;
-				self.is_realnameshow = !self.is_realnameshow
+				self.is_realnameshow = !self.is_realnameshow;
+				
 			},
 			
 			changeCity(index){
