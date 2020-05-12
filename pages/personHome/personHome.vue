@@ -5,8 +5,8 @@
 			<view class="headBJ">
 				<image :src="submitData.bannerImg.length>0?submitData.bannerImg[0].url:'../../static/images/gerenzhuye-img.png'"  mode=""></image>
 			</view>
-			<view class="pr" style="z-index: 2;">
-				<view class="headTit flexRowBetween pdlr4 pdt25 pdb10 white">
+			<view class="pr" style="z-index: 2;padding-top: 44px;">
+				<view class="headTit flexRowBetween pdlr4 white">
 					<view class="item" @click="prev()"><image class="arrowR" style="margin-left: 0;" src="../../static/images/arrowL.png" mode=""></image></view>
 					<view class="item fs15 center">个人主页</view>
 					<view class="item fs12 flexEnd" 
