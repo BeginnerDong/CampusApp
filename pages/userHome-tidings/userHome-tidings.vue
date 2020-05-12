@@ -85,7 +85,7 @@
 			self.submitData.mainImg=uni.getStorageSync('user_info').info.mainImg;
 			self.submitData.relation_id=self.id;
 			self.me = uni.getStorageSync('user_info').user_no;
-			self.$Utils.loadAll(['getMainData'], self);
+			self.$Utils.loadAll(['getMainData','getUserInfoData'], self);
 		},
 		
 		onReachBottom() {

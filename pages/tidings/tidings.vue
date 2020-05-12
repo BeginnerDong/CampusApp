@@ -128,7 +128,7 @@
 				</view>
 				<view class="text">首页</view>
 			</view>
-			<view class="navbar_item" @click="Router.navigateTo({route:{path:'/pages/activity/activity'}})">
+			<view class="navbar_item" @click="Router.redirectTo({route:{path:'/pages/activity/activity'}})">
 				<view class="nav_img">
 					<image src="../../static/images/nabar2.png" />
 				</view>
@@ -146,7 +146,7 @@
 				</view>
 				<view class="text">NIP</view>
 			</view>
-			<view class="navbar_item" @click="Router.redirectTo({route:{path:'/pages/tidings/tidings'}})" >
+			<view class="navbar_item">
 				<view class="nav_img">
 					<image src="../../static/images/nabar5-a.png" />
 				</view>

@@ -6,7 +6,7 @@
 				<image :src="userInfoData.bannerImg&&userInfoData.bannerImg.length>0?userInfoData.bannerImg[0].url:'../../static/images/gerenzhuye-img.png'"  mode=""></image>
 			</view>
 			<view class="pr" style="z-index: 2;">
-				<view class="flexRowBetween pdlr4 pdt15 pdb10 white">
+				<view class="flexRowBetween pdlr4 pdt25 pdb10 white">
 					<view @click="prev()"><image class="arrowR" style="margin-left: 0;" src="../../static/images/arrowL.png" mode=""></image></view>
 					<view class="fs15">ta的主页</view>
 					<view class="gzBtn fs12 center color6 whiteBj" @click="Utils.stopMultiClick(getChatID)">私信</view>

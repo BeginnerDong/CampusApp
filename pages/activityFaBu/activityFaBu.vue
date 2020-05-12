@@ -242,7 +242,7 @@
 			upLoadImg(type) {
 				const self = this;	
 				if (self.submitData[type].length > 8) {
-					api.showToast('仅限9张', 'fail');
+					self.$Utils.showToast('仅限9张', 'fail');
 					return;
 				};
 				wx.showLoading({
@@ -261,7 +261,7 @@
 					}
 				};				
 				wx.chooseImage({
-					count: 9,
+					count: 9-self.submitData[type].length,
 					success: function(res) {
 						console.log(res);
 						var tempFilePaths = res.tempFilePaths;

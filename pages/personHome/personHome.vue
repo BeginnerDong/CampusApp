@@ -6,7 +6,7 @@
 				<image :src="submitData.bannerImg.length>0?submitData.bannerImg[0].url:'../../static/images/gerenzhuye-img.png'"  mode=""></image>
 			</view>
 			<view class="pr" style="z-index: 2;">
-				<view class="headTit flexRowBetween pdlr4 pdt15 pdb10 white">
+				<view class="headTit flexRowBetween pdlr4 pdt25 pdb10 white">
 					<view class="item" @click="prev()"><image class="arrowR" style="margin-left: 0;" src="../../static/images/arrowL.png" mode=""></image></view>
 					<view class="item fs15 center">个人主页</view>
 					<view class="item fs12 flexEnd" 
@@ -134,6 +134,18 @@
 		},
 		
 		methods: {
+			
+			toDetail(type,id){
+				const self = this;
+				console.log(type)
+				console.log(id)
+				if(type==2){
+					self.Router.navigateTo({route:{path:'/pages/activityDetail/activityDetail?id='+id}})
+				}else{
+					self.Router.navigateTo({route:{path:'/pages/postDetails-Two/postDetails-Two?id='+id}})
+				}
+			},
+			
 			prev(){
 				const self = this;
 				self.$Router.back(1)
@@ -156,6 +168,7 @@
 				postData.user_no = uni.getStorageSync('user_info').user_no;
 				postData.paginate = self.$Utils.cloneForm(self.paginate);
 				postData.tokenFuncName = 'getUserToken';
+				console.log('postData',postData)
 				const callback = (res) => {
 					if (res.info.data.length > 0) {
 						for (var i = 0; i < res.info.data.length; i++) {

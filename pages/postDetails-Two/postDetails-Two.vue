@@ -14,6 +14,9 @@
 							<view class="fs10 color6">{{originData.create_time}}</view>
 						</view>
 					</view>
+					<view class="flexEnd" v-if="me==originData.user_no" @click="deleteThis()">
+						<view class="gzBtn fs12 center white color6Bj">删除</view>
+					</view>
 					<view class="pr" v-if="originData.type==3">
 						<view class="flexEnd" @click="shareBtnShow">
 							<view class="dian"></view>
@@ -37,7 +40,7 @@
 				<view class="imgbox">
 					
 					<view class="img" v-for="(item,index) in originData.mainImg" :class="originData.mainImg.length==1?'lisOne':(originData.mainImg.length==2?'lisTwo':'lisThree')">
-						<image :src="item.url" mode="aspectFill"></image>
+						<image :src="item.url" mode="aspectFill" @click="previewImage(index)"></image>
 					</view>
 				</view>
 			</view>
@@ -73,17 +76,17 @@
 				<view class="noDataBox"><image src="../../static/images/nodata.png" mode=""></image></view>
 			</view>
 		</view>
-		<view class="fx-PlZan pdlr4 fs12 color6 borderB1" style="bottom: 160rpx;" v-if="submitDataTwo.passage1==''">
+		<view class="fx-PlZan pdlr4 fs12 color6 borderB1" style="bottom: 80rpx;display: flex;" v-if="submitDataTwo.passage1==''&&isShowInput">
 			<view class="flexRowBetween" style="width: 100%;">
 				<view class="input" style="width: 85%;">
-					<input v-model="submitData.content" placeholder="请输入回复..." />
+					<input v-model="submitData.content" placeholder="请输入评论..." />
 				</view>
 				<view class="rrBtn">
 					<button @click="addMessage()">发送</button>
 				</view>
 			</view>
 		</view>
-		<view class="fx-PlZan pdlr4 fs12 color6 borderB1" style="bottom: 160rpx;" v-if="submitDataTwo.passage1!=''">
+		<view class="fx-PlZan pdlr4 fs12 color6 borderB1" style="bottom: 80rpx;display: flex;" v-if="submitDataTwo.passage1!=''">
 			<view class="flexRowBetween" style="width: 100%;">
 				<view class="input" style="width: 85%;">
 					<input v-model="submitDataTwo.content" placeholder="请输入回复..."/>
@@ -94,11 +97,11 @@
 			</view>
 		</view>
 		<view class="fx-PlZan pdlr4 flexRowBetween fs12 color6">
-			<view class="tt flexCenter" v-if="originData.type==3">
+			<view class="tt flexCenter" @click="copy()" v-if="originData.type==3">
 				<image class="icon" src="../../static/images/home-icon4.png" mode=""></image>
 				<text>分享</text>
 			</view>
-			<view class="tt flexCenter">
+			<view class="tt flexCenter" @click="showInput">
 				<image class="icon" src="../../static/images/home-icon3.png" mode=""></image>
 				<text>评论</text>
 			</view>
@@ -142,7 +145,9 @@
 					relation_id:'',
 					passage1:''
 				},
-				messageId:''
+				messageId:'',
+				isShowInput:'',
+				me:''
 			}
 		},
 		
@@ -154,7 +159,8 @@
 			self.submitData.mainImg=uni.getStorageSync('user_info').info.mainImg;
 			self.submitDataTwo.title=uni.getStorageSync('user_info').info.name;
 			self.submitDataTwo.mainImg=uni.getStorageSync('user_info').info.mainImg;
-			self.$Utils.loadAll(['getOriginData','getMainData'], self);
+			self.me = uni.getStorageSync('user_info').user_no;
+			self.$Utils.loadAll(['getOriginData','getMainData','getShareData'], self);
 		},
 		
 		onReachBottom() {
@@ -167,6 +173,90 @@
 		},
 		
 		methods: {
+			
+			copy(){
+				const self = this;
+				uni.setClipboardData({
+				    data: self.shareData.url,
+				    success: function () {
+				        self.$Utils.showToast('分享链接已复制', 'none')
+				    }
+				});
+			},
+			
+			getShareData() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getUserToken';
+				postData.searchItem = {
+					title:'分享'
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.shareData = res.info.data[0];
+					}
+					self.$Utils.finishFunc('getShareData');
+				};
+				self.$apis.labelGet(postData, callback);
+			},
+			
+			deleteThis() {
+				const self = this;
+				uni.showModal({
+					title: '提示',
+					content: '确定删除此条动态/活动吗？',
+					showCancel:true,
+					success: function(res) {
+						if (res.confirm) {
+							const postData = {
+								searchItem: {
+									id: self.originData.id
+								},
+								data: {
+									status: -1
+								}
+							};
+							postData.tokenFuncName = 'getUserToken';
+							const callback = (res) => {
+								uni.setStorageSync('canClick', true);
+								if (res.solely_code == 100000) {
+									self.$Utils.showToast('删除成功', 'none', 1000)
+									setTimeout(function() {
+										uni.navigateBack({
+											delta:1
+										})
+									}, 1000);
+								} else {
+									self.$Utils.showToast(res.msg, 'none', 1000)
+								};
+							};
+							self.$apis.newsUpdate(postData, callback);
+						} else if (res.cancel) {
+							uni.setStorageSync('canClick', true);	
+							console.log('用户点击取消');
+						}
+					}
+				});
+			},
+			
+			previewImage: function(index) {
+				const self = this;
+				var imageList = [];
+				var current = self.originData.mainImg[index].url;
+				for (var i = 0; i < self.originData.mainImg.length; i++) {
+					imageList.push(self.originData.mainImg[i].url)
+				}
+				uni.previewImage({
+					current: current,
+					urls: imageList
+				})
+			},
+			
+			showInput(){
+				const self = this;
+				self.submitDataTwo.passage1 = '';
+				self.isShowInput = !self.isShowInput
+			},
 			
 			reply(index){
 				const self =  this;

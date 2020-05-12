@@ -67,7 +67,7 @@
 				</view>
 				<view class="text">首页</view>
 			</view>
-			<view class="navbar_item" @click="Router.navigateTo({route:{path:'/pages/activity/activity'}})">
+			<view class="navbar_item" @click="Router.redirectTo({route:{path:'/pages/activity/activity'}})">
 				<view class="nav_img">
 					<image src="../../static/images/nabar2.png" />
 				</view>
@@ -79,7 +79,7 @@
 				</view>
 				<view class="text">发现</view>
 			</view>
-			<view class="navbar_item" @click="Router.redirectTo({route:{path:'/pages/NIP/NIP'}})">
+			<view class="navbar_item">
 				<view class="nav_img">
 					<image src="../../static/images/nabar4-a.png" />
 				</view>

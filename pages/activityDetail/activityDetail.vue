@@ -3,7 +3,7 @@
 		
 		<view class="comment mglr4 activeBox">
 			<view class="child">
-				<image v-if="mainData.signMe.length>0" class="FX-icon" src="../../static/images/activity-icon1.png" mode=""></image>
+				<image v-if="mainData.signMe&&mainData.signMe.length>0" class="FX-icon" src="../../static/images/activity-icon1.png" mode=""></image>
 				<view class="flexRowBetween">
 					
 					<view class="flex">
@@ -15,25 +15,25 @@
 							<view class="fs10 color6">{{mainData.create_time}}</view>
 						</view>
 					</view>
-					<!-- <view class="flexEnd">
-						<view class="gzBtn fs12 center white color6Bj">关注</view>
-					</view> -->
+					<view class="flexEnd" v-if="me==mainData.user_no" @click="deleteThis()">
+						<view class="gzBtn fs12 center white color6Bj">删除</view>
+					</view>
 				</view>
 				<view class="ftw pdt10 pdb5">{{mainData.title}}</view>
 				<view class="fs12 color6">{{mainData.content}}</view>
 				<view class="imgbox">
 					
 					<view class="img" v-for="(item,index) in mainData.mainImg" :class="mainData.mainImg.length==1?'lisOne':(mainData.mainImg.length==2?'lisTwo':'lisThree')">
-						<image :src="item.url" mode="aspectFill"></image>
+						<image :src="item.url" mode="aspectFill" @click="previewImage(index)"></image>
 					</view>
 				</view>
 				<view class="label pdt15 flexEnd fs13">
 					<view class="lis flex"  @click="clickCollect()">
-						<image :src="mainData.collectMe.length>0&&mainData.collectMe[0].status==1?'../../static/images/activity-icon3.png':'../../static/images/activity-icon2.png'" mode=""></image>
+						<image :src="mainData.collectMe&&mainData.collectMe.length>0&&mainData.collectMe[0].status==1?'../../static/images/activity-icon3.png':'../../static/images/activity-icon2.png'" mode=""></image>
 						<view>收藏</view>
 					</view>
 					<view class="lis flex" @click="clickGood()">
-						<image :src="mainData.goodMe.length>0&&mainData.goodMe[0].status==1?'../../static/images/home-icon6.png':'../../static/images/home-icon5.png'" mode=""></image>
+						<image :src="mainData.goodMe&&mainData.goodMe.length>0&&mainData.goodMe[0].status==1?'../../static/images/home-icon6.png':'../../static/images/home-icon5.png'" mode=""></image>
 						<view>{{mainData.good?mainData.good.count:0}}</view>
 					</view>
 				</view>
@@ -61,10 +61,10 @@
 		<view class="f5H5"></view>
 		
 		<view class="pdtb25 mglr4">
-			<view class="submitbtn" v-if="mainData.signMe.length==0">
+			<view class="submitbtn" v-if="mainData.signMe&&mainData.signMe.length==0">
 				<button class="btn" type="button"  @click="$Utils.stopMultiClick(signUp)">报名参加</button>
 			</view>
-			<view class="center fs13 color6 pdtb15" v-if="mainData.signMe.length>0">报名成功，可以在我的-参加活动中查看入场券</view>
+			<view class="center fs13 color6 pdtb15" v-if="mainData.signMe&&mainData.signMe.length>0">报名成功，可以在我的-参加活动中查看入场券</view>
 		</view>
 		
 		
@@ -101,15 +101,31 @@
 				is_show:false,
 				is_alertBox:false,
 				is_signUpOK:false,
-				mainData:{}
+				mainData:{},
+				me:''
 			}
 		},
 		onLoad(options) {
 			const self = this;
 			self.id = options.id;
 			self.$Utils.loadAll(['getMainData'], self);
+			self.me = uni.getStorageSync('user_info').user_no
 		},
+		
 		methods: {
+			
+			previewImage(index) {
+				const self = this;
+				var imageList = [];
+				var current = self.mainData.mainImg[index].url;
+				for (var i = 0; i < self.mainData.mainImg.length; i++) {
+					imageList.push(self.mainData.mainImg[i].url)
+				}
+				uni.previewImage({
+					current: current,
+					urls: imageList
+				})
+			},
 			
 			alertBoxShow(){
 				const self = this;
@@ -364,6 +380,47 @@
 					uni.setStorageSync('canClick', true);	
 				};
 				self.$apis.logAdd(postData, callback);
+			},
+			
+			
+			
+			deleteThis() {
+				const self = this;
+				uni.showModal({
+					title: '提示',
+					content: '确定删除此条动态/活动吗？',
+					showCancel:true,
+					success: function(res) {
+						if (res.confirm) {
+							const postData = {
+								searchItem: {
+									id: self.mainData.id
+								},
+								data: {
+									status: -1
+								}
+							};
+							postData.tokenFuncName = 'getUserToken';
+							const callback = (res) => {
+								uni.setStorageSync('canClick', true);
+								if (res.solely_code == 100000) {
+									self.$Utils.showToast('删除成功', 'none', 1000)
+									setTimeout(function() {
+										uni.navigateBack({
+											delta:1
+										})
+									}, 1000);
+								} else {
+									self.$Utils.showToast(res.msg, 'none', 1000)
+								};
+							};
+							self.$apis.newsUpdate(postData, callback);
+						} else if (res.cancel) {
+							uni.setStorageSync('canClick', true);	
+							console.log('用户点击取消');
+						}
+					}
+				});
 			},
 			
 			

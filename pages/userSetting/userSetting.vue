@@ -11,6 +11,10 @@
 					<view class="rr"><image class="arrowR" src="../../static/images/about-icon1.png" mode=""></image></view>
 				</view>
 			</view>
+			
+			<view class="submitbtn" style="margin-top:200rpx;">
+				<button class="btn" type="button"  @click="loginOff">退出登录</button>
+			</view>
 		</view>
 		
 		
@@ -32,6 +36,19 @@
 			//self.$Utils.loadAll(['getMainData'], self);
 		},
 		methods: {
+			
+			loginOff(){
+				const self = this;
+				uni.removeStorageSync('user_token')
+				uni.removeStorageSync('user_info')
+				
+				
+				self.Router.reLaunch({
+					route: {
+						path: '/pages/index/index'
+					}
+				})
+			},
 		}
 	};
 </script>

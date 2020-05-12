@@ -9,9 +9,12 @@
 				<view @click="Router.navigateTo({route:{path:'/pages/seach/seach'}})"><image class="seachBtn" src="../../static/images/home-icon.png" mode=""></image></view>
 			</view>
 			<view class="orderNav flexRowBetween whiteBj color6  borderB1">
-				<view class="tt flexCenter" :class="is_zongheShow==true?'on':''" @click="zongheShow">城市<image class="arrowB" src="../../static/images/activity-icon.png" mode=""></image></view>
-				<view class="tt flexCenter" :class="is_timeShow==true?'on':''" @click="timeShow">时间<image class="arrowB" src="../../static/images/activity-icon.png" mode=""></image></view>
-				<view class="tt flexCenter" :class="is_screenShow==true?'on':''"  @click="screenShow">筛选<image class="arrowB" src="../../static/images/activity-icon.png" mode=""></image></view>
+				<view class="tt flexCenter" :class="is_zongheShow==true?'on':''" @click="zongheShow">
+					{{cityData[cityIndex]&&cityIndex!=0?cityData[cityIndex]:'城市'}}<image class="arrowB" src="../../static/images/activity-icon.png" mode=""></image></view>
+				<view class="tt flexCenter" :class="is_timeShow==true?'on':''" @click="timeShow">
+					{{timeData[timeIndex]&&timeIndex!=0?timeData[timeIndex].title:'时间'}}<image class="arrowB" src="../../static/images/activity-icon.png" mode=""></image></view>
+				<view class="tt flexCenter" :class="is_screenShow==true?'on':''"  @click="screenShow">
+					{{screenData[screenIndex]&&screenIndex!=0?screenData[screenIndex]:'筛选'}}<image class="arrowB" src="../../static/images/activity-icon.png" mode=""></image></view>
 			</view>
 		</view>
 		
@@ -68,7 +71,8 @@
 						<view class="gzBtn fs12 center white">关注</view>
 					</view> -->
 				</view>
-				<view class="ftw pdt10 pdb5">{{item.title}}</view>
+				<view class="ftw pdt10 pdb5" :data-id="item.id" 
+				@click="Router.navigateTo({route:{path:'/pages/activityDetail/activityDetail?id='+$event.currentTarget.dataset.id}})">{{item.title}}</view>
 				<view class="fs12 color6" :data-id="item.id" 
 				@click="Router.navigateTo({route:{path:'/pages/activityDetail/activityDetail?id='+$event.currentTarget.dataset.id}})">
 				{{item.content}}
@@ -127,7 +131,7 @@
 				</view>
 				<view class="text">首页</view>
 			</view>
-			<view class="navbar_item" @click="Router.navigateTo({route:{path:'/pages/activity/activity'}})">
+			<view class="navbar_item">
 				<view class="nav_img">
 					<image src="../../static/images/nabar2-a.png" />
 				</view>
@@ -168,14 +172,14 @@
 				is_show:false,
 				cityIndex:-1,
 				is_zongheShow:false,
-				cityData:['西安市','咸阳市','渭南市','铜川市','宝鸡市','汉中市','安康市'],
+				cityData:['全部','西安市','咸阳市','渭南市','铜川市','宝鸡市','汉中市','安康市'],
 				timeIndex:-1,
 				is_timeShow:false,
 				is_time:false,
-				timeData:[{title:'最近三天',value:86400*2},{title:'最近一周',value:86400*6},{title:'最近一个月',value:86400*30},{title:'最近半年',value:86400*182},{title:'最近一年',value:86400*364}],
+				timeData:[{title:'全部',value:0},{title:'最近三天',value:86400*2},{title:'最近一周',value:86400*6},{title:'最近一个月',value:86400*30},{title:'最近半年',value:86400*182},{title:'最近一年',value:86400*364}],
 				screenIndex:-1,
 				is_screenShow:false,
-				screenData:['热门','新鲜'],
+				screenData:['全部','热门','新鲜'],
 				searchItem:{
 					thirdapp_id:2,
 					report:0,
@@ -207,6 +211,14 @@
 		onPullDownRefresh() {
 			const self = this;
 			console.log('refresh');
+			self.is_show = false;
+			self.is_realnameshow = false;
+			self.is_zongheShow = false;
+			self.is_timeShow = false;
+			self.is_screenShow = false;
+			self.cityIndex = -1;
+			self.timeIndex = -1;
+			self.screenIndex = -1;
 			self.searchItem={
 				thirdapp_id:2,
 				report:0,
@@ -218,6 +230,19 @@
 		},
 		
 		methods: {
+			
+			previewImage: function(index,c_index) {
+				const self = this;
+				var imageList = [];
+				var current = self.mainData[index].mainImg[c_index].url;
+				for (var i = 0; i < self.mainData[index].mainImg.length; i++) {
+					imageList.push(self.mainData[index].mainImg[i].url)
+				}
+				uni.previewImage({
+					current: current,
+					urls: imageList
+				})
+			},
 			
 			getUserInfoData() {
 				const self = this;
@@ -496,8 +521,13 @@
 			
 			changeCity(index){
 				const self = this;
+				
 				self.cityIndex = index;
-				self.searchItem.city = self.cityData[self.cityIndex];
+				if(index==0){
+					delete self.searchItem.city
+				}else{
+					self.searchItem.city = self.cityData[self.cityIndex];
+				};
 				self.is_show = !self.is_show
 				self.is_zongheShow = !self.is_zongheShow;
 				self.getMainData(true)
@@ -519,7 +549,12 @@
 				const self = this;
 				var nowTime = Date.parse(new Date())/1000;
 				self.timeIndex = index;
-				self.searchItem.create_time = ['>',nowTime-self.timeData[self.timeIndex].value];
+				if(index==0){
+					delete self.searchItem.create_time
+				}else{
+					self.searchItem.create_time = ['>',nowTime-self.timeData[self.timeIndex].value];
+				};
+				
 				self.is_show = !self.is_show;
 				self.is_timeShow = !self.is_timeShow;
 				self.getMainData(true)

@@ -51,11 +51,11 @@
 					</view>
 					
 				</view>
-				<view class="" @click="toDetail(item.type,item.id)">
-					<view class="ftw pdt10 pdb5" v-if="item.type==2">{{item.title}}</view>
-					<view class="fs12" :class="item.type!=2?'pdt10':''">{{item.content}}</view>
+				<view class="">
+					<view class="ftw pdt10 pdb5" v-if="item.type==2"  @click="toDetail(item.type,item.id)">{{item.title}}</view>
+					<view class="fs12" :class="item.type!=2?'pdt10':''"  @click="toDetail(item.type,item.id)">{{item.content}}</view>
 					<view class="imgbox" style="padding-top: 20rpx;">
-						<view v-for="(c_item,c_index) in item.mainImg" :class="item.mainImg.length==1?'lisOne':(item.mainImg.length==2?'lisTwo':'lisThree')">
+						<view class="img" v-for="(c_item,c_index) in item.mainImg" :class="item.mainImg.length==1?'lisOne':(item.mainImg.length==2?'lisTwo':'lisThree')">
 							<image :src="c_item.url" mode="aspectFill" @click="previewImage(index,c_index)"></image>
 						</view>
 					</view>
@@ -71,11 +71,11 @@
 						
 						<view>收藏</view>
 					</view>
-					<view class="lis flex" v-if="item.type==3">
+					<view class="lis flex" v-if="item.type==3"  @click="toDetail(item.type,item.id)">
 						<image src="../../static/images/home-icon4.png" mode=""></image>
 						<view>{{item.share?item.share.count:0}}</view>
 					</view>
-					<view class="lis flex" v-if="item.type!=2">
+					<view class="lis flex" v-if="item.type!=2"  @click="toDetail(item.type,item.id)">
 						<image src="../../static/images/home-icon3.png" mode=""></image>
 						<view>{{item.comment?item.comment.count:0}}</view>
 					</view>
@@ -165,6 +165,19 @@
 				}else{
 					self.Router.navigateTo({route:{path:'/pages/postDetails-Two/postDetails-Two?id='+id}})
 				}
+			},
+			
+			previewImage: function(index,c_index) {
+				const self = this;
+				var imageList = [];
+				var current = self.mainData[index].mainImg[c_index].url;
+				for (var i = 0; i < self.mainData[index].mainImg.length; i++) {
+					imageList.push(self.mainData[index].mainImg[i].url)
+				}
+				uni.previewImage({
+					current: current,
+					urls: imageList
+				})
 			},
 			
 			realnameshow(){
