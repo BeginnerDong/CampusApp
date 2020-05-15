@@ -3,7 +3,7 @@
 		<view class="">
 			
 			<view class="pdlr4" >
-				<textarea value="" placeholder="请输入你想说的话" v-model="submitData.content"/>
+				<textarea maxlength="-1" placeholder="请输入你想说的话" v-model="submitData.content"/>
 			</view>
 			
 			<view class="pdlr4 mgb15 borderB1">
@@ -54,10 +54,7 @@
 					name:'',
 					type :3,
 					content:'',
-					mainImg:[{url:'../../static/images/release-icon.png'},
-					{url:'../../static/images/release-icon.png'},
-					{url:'../../static/images/release-icon.png'},
-					{url:'../../static/images/release-icon.png'},],
+					mainImg:[],
 					headImg:'',
 					community_id:'',
 					behavior:''

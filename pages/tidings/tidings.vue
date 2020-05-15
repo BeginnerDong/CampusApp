@@ -35,7 +35,7 @@
 						</view>
 					</view>
 					<view class="pdtb10">赞了这条{{item.news&&item.news[0]&&item.news[0].type==1?'动态':(item.news&&item.news[0]&&item.news[0].type==2?'活动':'社区文章')}}</view>
-					<view class="cont f5bj flex" @click="toDetail(item.type,item.news[0].id)">
+					<view class="cont f5bj flex" @click="toDetail(item.news[0].type,item.news[0].id)">
 						<view class="pic" v-if="item.news&&item.news[0]&&item.news[0].mainImg
 						&&item.news[0].mainImg.length>0">
 						<image  :src="item.news&&item.news[0]&&item.news[0].mainImg&&
@@ -64,7 +64,7 @@
 						</view>
 					</view>
 					<view class="pdtb10" >{{item.content}}</view>
-					<view class="cont f5bj flex" @click="toDetail(item.type,item.news[0].id)">
+					<view class="cont f5bj flex" @click="toDetail(item.news[0].type,item.news[0].id)">
 						<view class="pic" v-if="item.news&&item.news[0]&&item.news[0].mainImg
 						&&item.news[0].mainImg.length>0">
 						<image :src="item.news&&item.news[0]&&item.news[0].mainImg&&
