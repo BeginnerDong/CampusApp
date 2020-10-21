@@ -4,8 +4,8 @@
 		<view class="comment pdlr4 whiteBj">
 			<view class="child">
 				<view class="flex">
-					<view class="photo">
-						<image :src="mainData.mainImg&&mainData.mainImg[0]?mainData.mainImg[0].url:''" mode=""></image>
+					<view class="photo"  @click="toHome(mainData.user_no)">
+						<image :src="mainData.mainImg&&mainData.mainImg[0]?mainData.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 					</view>
 					<view class="name">
 						<view class="fs12">{{mainData.title}}</view>
@@ -23,8 +23,8 @@
 			<view class="pinglunLis">
 				<view class="item" v-for="(item,index) in mainData.reply" :key="index">
 					<view class="flex">
-						<view class="pler-photo">
-							<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:''" mode=""></image>
+						<view class="pler-photo" @click="toHome(item.user_no)">
+							<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 						</view>
 						<view class="name mgl10">
 							<view class="fs12">{{item.title}}</view>
@@ -58,6 +58,15 @@
 		},
 		
 		methods: {
+			
+			toHome(user_no){
+				const self = this;
+				if(user_no==uni.getStorageSync('user_info').user_no){
+					self.Router.navigateTo({route:{path:'/pages/personHome/personHome'}})
+				}else{
+					self.Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+user_no}})
+				}
+			},
 			
 			getMainData() {
 				const self = this;

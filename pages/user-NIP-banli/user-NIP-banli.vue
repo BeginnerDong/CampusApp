@@ -183,13 +183,13 @@
 				var postData = {};
 				postData = {
 					aliPay: {
-						price: self.totalScore
+						price: self.chooseCard.price
 					}
 				};
 				if (self.currPay == 2) {
 					postData = {
 						wxPay: {
-							price: self.totalScore
+							price: self.chooseCard.price
 						}
 					}
 				};
@@ -212,6 +212,7 @@
 						user_no: uni.getStorageSync('user_info').user_no
 					}
 				}, ];
+				console.log(postData)
 				const callback = (res) => {
 					if (res.solely_code == 100000) {
 						uni.setStorageSync('canClick', true);
@@ -234,7 +235,7 @@
 							} else {
 								var orderInfo = res.info
 							}
-
+						
 							console.log(res.info);
 							uni.requestPayment({
 

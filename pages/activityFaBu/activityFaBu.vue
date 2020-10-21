@@ -153,12 +153,30 @@
 		
 		onLoad() {
 			const self = this;
-			self.submitData.name=uni.getStorageSync('user_info').info.name;
-			self.submitData.headImg=uni.getStorageSync('user_info').info.mainImg;
-			// self.$Utils.loadAll(['getMainData'], self);
+			
+			self.$Utils.loadAll(['getMainData'], self);
 		},
 		
 		methods: {
+			
+			getMainData() {
+				const self = this;
+				const postData = {};
+				postData.tokenFuncName = 'getUserToken';
+				postData.noShowLoading = true;
+				postData.searchItem = {
+					user_no: uni.getStorageSync('user_info').user_no
+				};
+				const callback = (res) => {
+					if (res.info.data.length > 0) {
+						self.mainData = res.info.data[0];
+						self.submitData.name=self.mainData.name;
+						self.submitData.headImg=self.mainData.mainImg;
+					};
+					self.$Utils.finishFunc('getMainData');
+				};
+				self.$apis.userInfoGet(postData, callback);
+			},
 			
 			numChange(e){
 				const self = this;

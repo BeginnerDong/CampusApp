@@ -36,12 +36,14 @@
 				<image v-if="item.signMe.length>0" class="FX-icon" src="../../static/images/activity-icon1.png" mode=""></image>
 				<view class="flexRowBetween">
 					<view class="flex">
-						<view class="photo" :data-user_no ="item.user_no"
-						@click="Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+$event.currentTarget.dataset.user_no}})">
+						<view class="photo"
+						@click="toHome(item.user_no)">
 							<image :src="item.headImg&&item.headImg[0]?item.headImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 						</view>
 						<view class="name">
-							<view class="fs12">{{item.name}}<span style="font-size: 10pxcolor:#666;">
+							<view class="fs12">{{item.name!=''?item.name:'用户'+item.user_no}}<span v-if="item.type==3" 
+							style="font-size: 8px;color:#666;margin-left: 10rpx;">
+								({{item.community&&item.community.title?item.community.title:''}})
 							</span></view>
 							<view class="fs10 color6">{{item.create_time}}</view>
 						</view>
@@ -73,10 +75,15 @@
 				</view>
 				<view class="">
 					<view class="ftw pdt10 pdb5" v-if="item.type==2"  @click="toDetail(item.type,item.id)">{{item.title}}</view>
-					<view class="fs12" :class="item.type!=2?'pdt10':''"  @click="toDetail(item.type,item.id)">{{item.content}}</view>
+					<view class="fs12" :class="item.type!=2?'pdt10':''"  @click="toDetail(item.type,item.id)">
+					<text>{{item.content}}</text>
+					<!-- <textarea style="padding: 0;color: #000000;line-height: 1.5;"  autoHeight="true"  v-model="item.content" disabled="true">
+						
+					</textarea> -->
+					</view>
 					<view class="imgbox" style="padding-top: 20rpx;">
-						<view class="img" v-for="(c_item,c_index) in item.mainImg" :class="item.mainImg.length==1?'lisOne':(item.mainImg.length==2?'lisTwo':'lisThree')">
-							<image :src="c_item.url" mode="aspectFill" @click="previewImage(index,c_index)"></image>
+						<view class="img" v-for="(c_item,c_index) in item.mainImg" :key="c_index" :class="item.mainImg.length==1?'lisOne':(item.mainImg.length==2?'lisTwo':'lisThree')">
+							<image lazy-load="true" :src="c_item.url" mode="aspectFill" @click="previewImage(index,c_index)"></image>
 						</view>
 					</view>
 				</view>
@@ -187,14 +194,20 @@
 					user_type:0
 				},
 				mainData:[],
-				willId:-1
+				willId:-1,
+				paginate:{
+					count: 0,
+					currentPage: 1,
+					is_page: true,
+					pagesize: 5
+				}
 				
 			}
 		},
 		
 		onLoad() {
 			const self = this;
-			self.paginate = self.$Utils.cloneForm(self.$AssetsConfig.paginate);
+			self.paginate = self.$Utils.cloneForm(self.paginate);
 			self.$Utils.loadAll(['getUserInfoData','getSliderData','getMainData'], self);
 			// self.$Utils.loadAll(['getMainData'], self);
 		},
@@ -213,7 +226,38 @@
 			self.willId = -1;
 		},
 		
+		onPullDownRefresh() {
+			const self = this;
+			console.log('refresh'),
+			self.sliderData = [],
+			self.is_show = false,
+			self.is_realnameshow = false,
+			self.is_shareBtnShow = false,
+			self.is_like = false,
+			self.willId = -1;
+
+			self.searchItem={
+				thirdapp_id:2,
+				report:0,
+				user_type:0
+			};
+			self.getSliderData();
+			self.getUserInfoData();
+			self.getMainData(true)	
+		},
+		
 		methods: {
+			
+			
+			
+			toHome(user_no){
+				const self = this;
+				if(user_no==uni.getStorageSync('user_info').user_no){
+					self.Router.navigateTo({route:{path:'/pages/personHome/personHome'}})
+				}else{
+					self.Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+user_no}})
+				}
+			},
 			
 			previewImage: function(index,c_index) {
 				const self = this;
@@ -352,6 +396,16 @@
 						key: 'relation_id',
 						condition: 'in',
 					},
+					community: {
+						tableName: 'Community',
+						searchItem: {
+							status:1,
+						},
+						middleKey: 'community_id',
+						key: 'id',
+						condition: 'in',
+						info:['title']
+					},
 					comment: {
 						tableName: 'Message',
 						searchItem: {
@@ -394,8 +448,9 @@
 				const callback = (res) => {
 					if (res.info.data.length > 0) {
 						self.mainData.push.apply(self.mainData,res.info.data)
+						
 					}
-
+					uni.stopPullDownRefresh();
 					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.getNews(postData, callback);

@@ -47,7 +47,10 @@
 			@click="Router.navigateTo({route:{path:'/pages/foodDetail/foodDetail?id='+$event.currentTarget.dataset.id}})">
 				<view class="fs15 ftw">{{item.title}}</view>
 				<view class="fs12 color6 pdtb5">{{item.shop?item.shop.address:''}}</view>
-				<view class="price fs16 ftw">{{item.price}}</view>
+				<view class="red flex">
+					<view class=" ftw fs15 mgr5">NIP:</view>
+					<view class=" fs15">{{item.price}}</view>
+				</view>
 				<view class="ThreeImg flex">
 					<view class="imgs" v-for="c_item in item.mainImg"><image :src="c_item.url" mode=""></image></view>
 					<!-- <view class="imgs"><image src="../../static/images/nip-img.png" mode=""></image></view>
@@ -140,6 +143,12 @@
 			};
 		},
 		
+		onPullDownRefresh() {
+			const self = this;
+			console.log('refresh'),
+			self.getMainData(true)	
+		},
+		
 		methods: {
 			
 			getUserInfoData() {
@@ -216,7 +225,7 @@
 					if (res.info.data.length > 0) {
 						self.mainData.push.apply(self.mainData,res.info.data)
 					}
-			
+					uni.stopPullDownRefresh();
 					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.productGet(postData, callback);

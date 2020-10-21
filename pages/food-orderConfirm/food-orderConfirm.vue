@@ -33,7 +33,7 @@
 				</view>
 				<view class="pdtb15 flexRowBetween">
 					<view>小计</view>
-					<view class="price fs14">{{totalScore}}</view>
+					<view class="red fs14">NIP: {{totalScore}}</view>
 				</view>
 			</view>
 			
@@ -50,7 +50,21 @@
 		<!-- 底部菜单按钮 -->
 		<view class="xqbotomBar flexRowBetween">
 			<view class="left fs12 color6">合计<text class="price fs16">{{totalScore}}<span style="font-size: 12px;" v-if="isFree">(会员免单一份)</span></text></view>
-			<view class="payBtn pubBj white" @click="Utils.stopMultiClick(submit)">提交订单</view>
+			<view class="payBtn pubBj white" @click="Utils.stopMultiClick(submit)">立即兑换</view>
+		</view>
+		
+		
+		<view class="black-bj" v-show="is_show"></view>
+		<view class="payShow whiteBj radius10 center" v-show="is_payShow">
+			<view class="closebtn fs18" @click="payShow">×</view>
+			<view class="fs16 color2 pdt5 avoidOverflow2">{{mainData.title}}</view>
+			<view class="fs14 red mgt20">NIP:{{totalScore}}</view>
+			<!-- <view class="flexCenter pdt20">
+				<view class="time fs12 color6">请在<text class="red">19:57</text>内完成支付</view>
+			</view> -->
+			<view class="submitbtn" style="margin-top: 140rpx;">
+				<button class="Wbtn" type="button" @click="goPay">立即兑换</button>
+			</view>
 		</view>
 		
 		<view class="black-bj" v-show="is_show"></view>
@@ -215,11 +229,11 @@
 					uni.setStorageSync('canClick',true);
 					self.$Utils.showToast('请补全信息','none')
 				}else{
-					/* if(parseFloat(self.userInfoData.score)<parseFloat(self.totalScore)){
+					if(parseFloat(self.userInfoData.score)<parseFloat(self.totalScore)){
 						uni.setStorageSync('canClick',true);
-						self.$Utils.showToast('积分不足','none');
+						self.$Utils.showToast('NIP不足','none');
 						return
-					} */
+					}
 					var data = self.$Utils.cloneForm(self.submitData);
 					if(parseInt(self.userInfoData.member_time)>nowTime&&self.userInfoData.order.length==0){
 						data.free = 1
@@ -247,7 +261,7 @@
 						self.orderId = res.info.id;
 						//self.goPay()
 						self.is_show = !self.is_show;
-						self.is_paywayShow = !self.is_paywayShow;
+						self.is_payShow = !self.is_payShow;
 					} else {		
 						uni.setStorageSync('canClick', true);
 						uni.showToast({
@@ -260,6 +274,67 @@
 			},
 			
 			goPay(order_id) {
+				const self = this;	
+				const postData = {
+					score:{
+						price:self.totalScore
+					}
+				};
+				postData.tokenFuncName = 'getUserToken',
+				postData.searchItem = {
+					id: self.orderId
+				};	
+				const callback = (res) => {
+					if (res.solely_code == 100000) {
+						uni.setStorageSync('canClick', true);
+						if (res.info) {
+							const payCallback = (payData) => {
+								console.log('payData', payData)
+								if (payData == 1) {
+									uni.showToast({
+										title: '兑换成功',
+										duration: 1000,
+										success: function() {
+											
+										}
+									});
+									setTimeout(function() {
+										self.$Router.redirectTo({route:{path:'/pages/user-NIP-coupon/user-NIP-coupon'}})
+									}, 1000);
+								} else {
+									uni.setStorageSync('canClick', true);
+									uni.showToast({
+										title: '兑换失败',
+										duration: 2000
+									});
+								};
+							};
+							self.$Utils.realPay(res.info, payCallback);
+						} else {
+							
+							uni.showToast({
+								title: '兑换成功',
+								duration: 1000,
+								success: function() {
+									
+								}
+							});
+							setTimeout(function() {
+								self.$Router.redirectTo({route:{path:'/pages/user-NIP-coupon/user-NIP-coupon'}})
+							}, 1000);
+						};
+					} else {
+						uni.setStorageSync('canClick', true);
+						uni.showToast({
+							title: res.msg,
+							duration: 2000
+						});
+					};
+				};
+				self.$apis.pay(postData, callback);
+			},
+			
+			/* goPay(order_id) {
 				const self = this;	
 				var nowTime = Date.parse(new Date());
 				var postData = {};
@@ -297,7 +372,7 @@
 								var obj={
 									appid:res.info.appId,      //id 应用id
 									partnerid:'1573719401',              //商户号 
-									prepayid:arr,                         //预支付
+									prepayid:arr,                         //预兑换
 									package:'Sign=WXPay',
 									noncestr:res.info.nonceStr,
 									timestamp:res.info.timeStamp,   //时间戳
@@ -338,28 +413,6 @@
 								    console.log('fail:' + JSON.stringify(err));
 								},
 							});
-							/* const payCallback = (payData) => {
-								console.log('payData', payData)
-								if (payData == 1) {
-									uni.showToast({
-										title: '支付成功',
-										duration: 1000,
-										success: function() {
-											
-										}
-									});
-									setTimeout(function() {
-										self.$Router.redirectTo({route:{path:'/pages/user-NIP-coupon/user-NIP-coupon'}})
-									}, 1000);
-								} else {
-									uni.setStorageSync('canClick', true);
-									uni.showToast({
-										title: '支付失败',
-										duration: 2000
-									});
-								};
-							};
-							self.$Utils.realPay(res.info, payCallback); */
 						} else {
 							
 							uni.showToast({
@@ -382,7 +435,8 @@
 					};
 				};
 				self.$apis.pay(postData, callback);
-			},
+			}, */
+		
 		}
 	};
 </script>

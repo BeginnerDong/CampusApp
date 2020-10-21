@@ -1,7 +1,7 @@
 <template>
 	<view>
 		
-		<view class="pdlr4 whiteBj">
+		<view class="pdlr4 whiteBj" style="z-index: 2;padding-top: 44px;">
 			<view class="flexRowBetween pdtb10">
 				<view @click="prev()"><image class="backIcon" style="margin-left: 0;" src="../../static/images/arrowL2.png" mode=""></image></view>
 				<view class="gzBtn fs12 center white" style="background: #666;" 

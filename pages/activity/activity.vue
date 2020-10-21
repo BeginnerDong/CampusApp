@@ -58,12 +58,11 @@
 				<image v-if="item.enrollMe.length>0" class="FX-icon" src="../../static/images/activity-icon1.png" mode=""></image>
 				<view class="flexRowBetween">
 					<view class="flex">
-						<view class="photo" :data-user_no ="item.user_no"
-						@click="Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+$event.currentTarget.dataset.user_no}})">
+						<view class="photo" @click="toHome(item.user_no)">
 							<image :src="item.headImg&&item.headImg[0]?item.headImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 						</view>
 						<view class="name">
-							<view class="fs12">{{item.name}}</view>
+							<view class="fs12">{{item.name!=''?item.name:'用户'+item.user_no}}</view>
 							<view class="fs10 color6">{{item.create_time}}</view>
 						</view>
 					</view>
@@ -230,6 +229,15 @@
 		},
 		
 		methods: {
+			
+			toHome(user_no){
+				const self = this;
+				if(user_no==uni.getStorageSync('user_info').user_no){
+					self.Router.navigateTo({route:{path:'/pages/personHome/personHome'}})
+				}else{
+					self.Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+user_no}})
+				}
+			},
 			
 			previewImage: function(index,c_index) {
 				const self = this;

@@ -4,11 +4,13 @@
 		<view class="whiteBj pdlr4 pdt15 pdb15">
 			<view class="ftw">社区人数<text class="fs12 ftn">({{logData.length}})</text></view>
 			<view class="flex SQPerNum pdt10">
-				<view class="photo" v-for="(item,index) in logData" :key="index" :data-user_no ="item.user_no"
-						@click="Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+$event.currentTarget.dataset.user_no}})">
+				<view class="photo" v-for="(item,index) in logData" :key="index"
+						@click="toHome(item.user_no)">
 							<image :src="item.userInfo&&item.userInfo.mainImg&&item.userInfo.mainImg[0]?item.userInfo.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 						</view>
-				<view class="photo" @click="Router.navigateTo({route:{path:'/pages/user-mySheQu-peopleNum/user-mySheQu-peopleNum?id='+id}})"><image src="../../static/images/community-icon01.png" mode=""></image></view>
+				<view class="photo"  style="overflow: hidden;border-radius: 50%;background-color: #E5E5E5;color: #999;text-align: center;line-height: 80rpx;" @click="Router.navigateTo({route:{path:'/pages/user-mySheQu-peopleNum/user-mySheQu-peopleNum?id='+id}})">
+					···
+				</view>
 			</view>
 		</view>
 		
@@ -21,7 +23,7 @@
 				</view>
 				<view class="infor">
 					<view class="list flexRowBetween" v-for="(c_item,c_index) in item.data" 
-					@click="toDetail(c_item.type,c_item.id)">
+					@click="toDetail(c_item.type,c_item.id)" :key="c_index">
 						<view class="pic" v-if="c_item.mainImg&&c_item.mainImg.length>0">
 							<image :src="c_item.mainImg&&c_item.mainImg[0]?c_item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 						</view>
@@ -75,6 +77,15 @@
 		},
 		
 		methods: {
+			
+			toHome(user_no){
+				const self = this;
+				if(user_no==uni.getStorageSync('user_info').user_no){
+					self.Router.navigateTo({route:{path:'/pages/personHome/personHome'}})
+				}else{
+					self.Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+user_no}})
+				}
+			},
 			
 			getLogData() {
 				const self = this;

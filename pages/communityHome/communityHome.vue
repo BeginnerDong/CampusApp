@@ -9,7 +9,7 @@
 						<view class="fs16">{{mainData.title}}</view>
 					</view>
 				</view>
-				<view class="gzBtn fs12 center white" style="background: #666;" v-if="mainData.log&&mainData.log.length==0">加入</view>
+				<view class="gzBtn fs12 center white" style="background: #666;" @click="joinCommunity" v-if="mainData.log&&mainData.log.length==0">加入</view>
 				<view class="gzBtn fs12 center white" style="background: #666;" v-if="mainData.log&&mainData.log.length>0">已加入</view>
 			</view>
 		</view>
@@ -78,6 +78,44 @@
 		},
 		
 		methods: {
+			
+			joinCommunity() {
+				const self = this;
+				uni.showModal({
+					title: '提示',
+					content: '确定加入该社区？',
+					showCancel:true,
+					success: function(res) {
+						if (res.confirm) {
+							const postData = {};
+							postData.tokenFuncName = 'getUserToken';
+							
+							postData.data = {};
+							postData.data = {
+								type:6,
+								relation_table:'Community',
+								relation_id:self.mainData.id,
+							};
+							const callback = (data) => {				
+								if (data.solely_code == 100000) {					
+									self.$Utils.showToast('已加入', 'none', 1000)
+									setTimeout(function() {
+										self.getMainData()
+									}, 1000);
+								} else {
+									uni.setStorageSync('canClick', true);
+									self.$Utils.showToast(data.msg, 'none', 1000)
+								}	
+							};
+							self.$apis.logAdd(postData, callback);
+						} else if (res.cancel) {
+							uni.setStorageSync('canClick', true);	
+							console.log('用户点击取消');
+						}
+					}
+				});
+				
+			},
 			
 			getMainData() {
 				const self = this;

@@ -18,7 +18,7 @@
 					<view>发布者：</view>
 					<view class="flexEnd">
 						<view><image class="photo" :src="item.headImg&&item.headImg[0]?item.headImg[0].url:''" mode=""></image></view>
-						<view class="mgl10">{{item.name}}：{{item.phone}}</view>
+						<view class="mgl10">{{item.name!=''?item.name:'用户'+item.user_no}}：{{item.phone}}</view>
 					</view>
 				</view>
 			</view>

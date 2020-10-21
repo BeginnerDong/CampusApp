@@ -81,8 +81,7 @@
 			self.id = options.id;
 			self.searchItem.relation_id = self.id;
 			self.paginate.last_page = true;
-			self.submitData.name=uni.getStorageSync('user_info').info.name;
-			self.submitData.mainImg=uni.getStorageSync('user_info').info.mainImg;
+			
 			self.submitData.relation_id=self.id;
 			self.me = uni.getStorageSync('user_info').user_no;
 			self.$Utils.loadAll(['getMainData','getUserInfoData'], self);
@@ -129,6 +128,8 @@
 				const callback = (res) => {
 					if (res.info.data.length > 0) {
 						self.userInfoData = res.info.data[0];
+						self.submitData.name=self.userInfoData.name;
+						self.submitData.mainImg=self.userInfoData.mainImg;
 					};
 					self.$Utils.finishFunc('getUserInfoData');
 				};

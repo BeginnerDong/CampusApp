@@ -5,12 +5,11 @@
 			<view class="child">
 				<view class="flexRowBetween">
 					<view class="flex">
-						<view class="photo" 
-						@click="Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+$originData.user_no}})">
+						<view class="photo" @click="toHome(originData.user_no)">
 							<image :src="originData.headImg&&originData.headImg[0]?originData.headImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 						</view>
 						<view class="name">
-							<view class="fs12">{{originData.name}}</view>
+							<view class="fs12">{{originData.name!=''?originData.name:'用户'+originData.user_no}}</view>
 							<view class="fs10 color6">{{originData.create_time}}</view>
 						</view>
 					</view>
@@ -39,7 +38,7 @@
 				<view class="font14 pdt10">{{originData.content}}</view>
 				<view class="imgbox">
 					
-					<view class="img" v-for="(item,index) in originData.mainImg" :class="originData.mainImg.length==1?'lisOne':(originData.mainImg.length==2?'lisTwo':'lisThree')">
+					<view class="img" v-for="(item,index) in originData.mainImg" :key="index" :class="originData.mainImg.length==1?'lisOne':(originData.mainImg.length==2?'lisTwo':'lisThree')">
 						<image :src="item.url" mode="aspectFill" @click="previewImage(index)"></image>
 					</view>
 				</view>
@@ -51,11 +50,11 @@
 			<view class="pinglunLis" v-if="mainData.length>0">
 				<view class="item" v-for="(item,index) in mainData" :key="index">
 					<view class="flex">
-						<view class="pler-photo">
+						<view class="pler-photo" @click="toHome(item.user_no)">
 							<image :src="item.mainImg&&item.mainImg[0]?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 						</view>
 						<view class="name mgl10">
-							<view class="fs12 color6">{{item.title}}</view>
+							<view class="fs12 color6">{{item.title!=''?item.title:'用户'+item.user_no}}</view>
 							<view class="fs10 color9">{{item.create_time}}</view>
 						</view>
 					</view>
@@ -173,6 +172,15 @@
 		},
 		
 		methods: {
+			
+			toHome(user_no){
+				const self = this;
+				if(user_no==uni.getStorageSync('user_info').user_no){
+					self.Router.navigateTo({route:{path:'/pages/personHome/personHome'}})
+				}else{
+					self.Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+user_no}})
+				}
+			},
 			
 			copy(){
 				const self = this;

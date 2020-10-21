@@ -113,6 +113,13 @@
 			const self = this;
 			self.$Utils.loadAll(['getMainData'], self);
 		},
+		
+		onPullDownRefresh() {
+			const self = this;
+			console.log('refresh'),
+			self.getMainData();
+		},
+		
 		methods: {
 			prev(){
 				const self = this;
@@ -130,6 +137,7 @@
 					if (res.info.data.length > 0) {
 						self.mainData = res.info.data[0];
 					};
+					uni.stopPullDownRefresh();
 					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.userInfoGet(postData, callback);

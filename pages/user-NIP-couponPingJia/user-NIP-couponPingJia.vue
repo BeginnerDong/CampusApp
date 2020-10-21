@@ -4,7 +4,8 @@
 			<view class="flex">
 				<view class="pic">
 					<image :src="mainData.shop&&mainData.shop[0]&&mainData.shop[0].mainImg
-					&&mainData.shop[0].mainImg[0]?mainData.shop[0].mainImg[0].url:''" mode=""></image>
+					&&mainData.shop[0].mainImg[0]?mainData.shop[0].mainImg[0].url:''"
+					 mode=""></image>
 				</view>
 				<view class="infor mgl10  fs12 color6" style="width: 70%;">
 					<view class="fs14 color2 ftw">{{mainData.shop&&mainData.shop[0]?mainData.shop[0].name:''}}</view>
@@ -15,18 +16,18 @@
 				</view>
 			</view>
 		</view>
-		
+
 		<view class="mglr4 whiteBj radius8 mgt15 pdlr4">
 			<view class="pdtb15 flex borderB1">
 				<view class="mgr10 fs13">总体</view>
 				<view class="starBox mgr5">
-					<image v-for="item in stars" @click="select(item)"
-					:src="item<=submitData.score?'../../static/images/the-store-icon4.png':'../../static/images/the-store-icon5.png'" mode=""></image>
+					<image v-for="item in stars" @click="select(item)" :src="item<=submitData.score?'../../static/images/the-store-icon4.png':'../../static/images/the-store-icon5.png'"
+					 mode=""></image>
 				</view>
 			</view>
 			<view class="borderB1 mgb15">
 				<textarea class="fs12 " style="height: 240rpx;" v-model="submitData.description" placeholder="说几句,让更多小伙伴了解我" />
-			</view>
+				</view>
 			<view class="oh" style="display: flex;">
 				<block v-for="(image,index) in submitData.bannerImg" :key="index">
 					<view class="picRow">
@@ -76,14 +77,30 @@
 		onLoad(options) {
 			const self = this;
 			self.id = options.id;
-			self.$Utils.loadAll(['getMainData'], self)
-			self.submitData.title = uni.getStorageSync('user_info').info.name;
-			self.submitData.mainImg = uni.getStorageSync('user_info').info.mainImg
+			self.$Utils.loadAll(['getMainData','getUserInfoData'], self)
 		},
 		
 		methods: {
 			
-			
+				
+				getUserInfoData() {
+					const self = this;
+					const postData = {};
+					postData.tokenFuncName = 'getUserToken';
+					postData.searchItem = {
+						user_no: uni.getStorageSync('user_info').user_no
+					};
+					const callback = (res) => {
+						if (res.info.data.length > 0) {
+							self.userInfoData = res.info.data[0];
+							self.submitData.title=self.userInfoData.name;
+							self.submitData.mainImg=self.userInfoData.mainImg;
+						};
+						self.$Utils.finishFunc('getUserInfoData');
+					};
+					self.$apis.userInfoGet(postData, callback);
+				},
+				
 			  upLoadImg(type) {
 			  	const self = this;	
 			  	if (self.submitData[type].length > 2) {
@@ -179,6 +196,7 @@
 				uni.setStorageSync('canClick', false);
 				var newObject = self.$Utils.cloneForm(self.submitData);
 				delete newObject.bannerImg;
+				delete newObject.mainImg;
 				const pass = self.$Utils.checkComplete(newObject);
 				console.log('pass', pass);
 				console.log('self.submitData', self.submitData)

@@ -1,13 +1,13 @@
 <template>
 	<view>
 		
-		<view class=" pdlr4 whiteBj">
+		<view class=" pdlr4 whiteBj" style="z-index: 2;padding-top: 44px;">
 			<view class="flexRowBetween pdtb10">
 				<view @click="prev()"><image class="backIcon" src="../../static/images/arrowL2.png" mode=""></image></view>
 				<view class="gzBtn fs12 center white" style="background: #666;" @click="$Utils.stopMultiClick(userInfoUpdate)">确定</view>
 			</view>
 		</view>
-		<view class="pdlr4 mgt15">
+		<view class="pdlr4 mgt15" >
 			<view class="pdb10" style="border-bottom: 1px solid #ddd;">
 				<input type="text" v-model="submitData.name" placeholder="请输入昵称" placeholder-class="placeholder">
 			</view>

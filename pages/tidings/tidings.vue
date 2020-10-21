@@ -91,7 +91,7 @@
 					</view>
 					<view class="rr">
 						<view class="flexRowBetween pdb5">
-							<view class="fs15">{{item.name}}</view>
+							<view class="fs15">{{item.name!=''?item.name:'用户'+item.user_no}}</view>
 							<view class="fs10 color9">{{item.update_time}}</view>
 						</view>
 						<view class="fs12 color6 avoidOverflow">{{item.last_chat?item.last_chat.content:""}}</view>
@@ -260,7 +260,7 @@
 					},
 					userinfo:{
 						tableName:'UserInfo',
-						middleKey:'relation_user',
+						middleKey:'user_no',
 						key:'user_no',
 						searchItem:{
 							status:1
@@ -390,6 +390,6 @@
 	.sixinCont .ll{width: 18%}
 	.sixinCont .ll image{width: 100rpx;height: 100rpx;border-radius: 50%; display: block;}
 	.sixinCont .rr{width: 82%;}
-	.dialogBox{position: fixed;left: 0;top: 180rpx;right: 0;bottom: 110rpx;overflow-y: auto;padding-bottom: 60rpx;box-sizing: border-box;}
+	.dialogBox{position: fixed;left: 0;top: 190rpx;right: 0;bottom: 110rpx;overflow-y: auto;padding-bottom: 60rpx;box-sizing: border-box;}
 	
 </style>

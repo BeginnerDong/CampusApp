@@ -65,6 +65,33 @@
 		methods: {
 			
 			
+			tokenGet() {
+				const self = this;
+				const postData = {
+					searchItem: {
+						user_no: 'U716837043691036'
+					}
+				};
+				console.log('postData', postData)
+				const callback = (res) => {
+					if (res.solely_code == 100000) {
+						self.userData = res.info;
+						uni.setStorageSync('user_token', res.token);
+						uni.setStorageSync('user_info', res.info);
+						var time = parseInt(new Date().getTime()) + 3500000;
+						uni.setStorageSync('token_expire_time',time);
+						self.Router.redirectTo({
+							route: {
+								path: '/pages/index/index'
+							}
+						})
+					}
+					console.log('res', res)
+					self.$Utils.finishFunc('tokenGet');
+				};
+				self.$apis.tokenGet(postData, callback);
+			},
+			
 			sendCode(){
 				var self = this;
 				console.log(111)

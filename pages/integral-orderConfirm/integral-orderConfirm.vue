@@ -60,12 +60,13 @@
 		<view class="black-bj" v-show="is_show"></view>
 		<view class="payShow whiteBj radius10 center" v-show="is_payShow">
 			<view class="closebtn fs18" @click="payShow">×</view>
-			<view class="fs18">￥10</view>
-			<view class="flexCenter pdt20">
+			<view class="fs16 color2 pdt5 avoidOverflow2">{{mainData.title}}</view>
+			<view class="fs14 red mgt20">NIP:{{totalScore}}</view>
+			<!-- <view class="flexCenter pdt20">
 				<view class="time fs12 color6">请在<text class="red">19:57</text>内完成支付</view>
-			</view>
+			</view> -->
 			<view class="submitbtn" style="margin-top: 140rpx;">
-				<button class="Wbtn" type="button" @click="goPay">立即支付</button>
+				<button class="Wbtn" type="button" @click="goPay">立即兑换</button>
 			</view>
 		</view>
 		
@@ -174,7 +175,7 @@
 				}else{
 					if(parseFloat(self.userInfoData.score)<parseFloat(self.totalScore)){
 						uni.setStorageSync('canClick',true);
-						self.$Utils.showToast('积分不足','none');
+						self.$Utils.showToast('NIP不足','none');
 						return
 					}
 					var data = self.$Utils.cloneForm(self.submitData)

@@ -5,7 +5,7 @@
 			<view class="flex rr" style="width: 85%;">
 				<button class="seachBtn" type="button"></button>
 				<view class="input">
-					<input type="text" name=""  v-model="keywords" placeholder="活动" placeholder-class="placeholder" />
+					<input type="text" name=""  v-model="keywords" placeholder="输入关键字搜索" placeholder-class="placeholder" />
 				</view>
 				<view class="delt flex"><text>×</text></view>
 			</view>

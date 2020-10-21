@@ -57,6 +57,12 @@
 			};
 		},
 		
+		onPullDownRefresh() {
+			const self = this;
+			console.log('refresh'),
+			self.getMainData(true)	
+		},
+		
 		methods: {
 			
 			getMainData(isNew) {
@@ -101,6 +107,7 @@
 					if (res.info.data.length > 0) {
 						self.mainData.push.apply(self.mainData,res.info.data)
 					}
+					uni.stopPullDownRefresh();
 					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.productGet(postData, callback);

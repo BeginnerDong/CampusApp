@@ -42,40 +42,35 @@
 				<view class="child" v-for="(item,index) in mainData.message" :key="index" v-if="index<2">
 					<view class="flexRowBetween">
 						<view class="flex">
-							<view class="photo"><image src="../../static/images/home-img1.png" mode=""></image></view>
+							<view class="photo"><image :src="item.mainImg&&item.mainImg.length>0?item.mainImg[0].url:'../../static/images/about-img.png'" mode=""></image></view>
 							<view class="name">
-								<view class="fs12">小白</view>
-								<view class="fs10 color6">2019.12.25 16:31</view>
+								<view class="fs12">{{item.title}}</view>
+								<view class="fs10 color6">{{item.create_time}}</view>
 							</view>
 						</view>
 						<view class="flexEnd">
+							
 							<view class="starBox mgr5">
-								<image src="../../static/images/the-store-icon4.png" mode=""></image>
-								<image src="../../static/images/the-store-icon4.png" mode=""></image>
-								<image src="../../static/images/the-store-icon4.png" mode=""></image>
-								<image src="../../static/images/the-store-icon4.png" mode=""></image>
-								<image src="../../static/images/the-store-icon5.png" mode=""></image>
+								<image v-for="(c_item,c_index) in stars" :key="c_index" :src="item.score > c_item ?(item.score/2-c_item == 0.5?halfSrc:selectedSrc) : normalSrc" mode="">
+								
+								</image>
 							</view>
 						</view>
 					</view>
-					<view class="fs12 pdt10">真材细做，货真价实-信远斋桂花酸梅汤和是加客服的说法联合国就过来发的是两个号复健科单身公害了</view>
-					<view class="imgbox">
-						<view class="img lisThree">
-							<image src="../../static/images/the-store-img2.png" mode=""></image>
-						</view>
-						<view class="img lisThree">
-							<image src="../../static/images/the-store-img2.png" mode=""></image>
-						</view>
-						<view class="img lisThree">
-							<image src="../../static/images/the-store-img2.png" mode=""></image>
+
+					<view class="fs12 pdt10">{{item.description}}</view>
+					<view class="imgbox" v-if="item.bannerImg.length>0">
+						<view class="img lisThree" v-for="(c_item,c_index) in item.bannerImg" :key="c_index">
+							<image :src="item.url" mode=""></image>
 						</view>
 					</view>
 				</view>
 			</view>
-			<view class="comment" v-if="mainData.message&&mainData.message.length==0">
+			<view class="comment" style="line-height: 60rpx;" v-if="mainData.message&&mainData.message.length==0">
 				暂无评价~
 			</view>
-			<view class="pdtb15 flexCenter" v-if="mainData.message&&mainData.message.length>2" @click="Router.navigateTo({route:{path:'/pages/shop-comment/shop-comment'}})">
+			<view class="pdtb15 flexCenter" v-if="mainData.message&&mainData.message.length>2" 
+			@click="Router.navigateTo({route:{path:'/pages/shop-comment/shop-comment?user_no='+self.user_no}})">
 				<view class="flexCenter lookAll-btn fs12">查看全部 <image class="arrowR" src="../../static/images/about-icon1.png" mode=""></image></view>
 			</view>
 		</view>
@@ -84,9 +79,9 @@
 		<!-- 商家信息 -->
 		<view class="pdlr4">
 			<view class="pdt15 ftw">商家信息</view>
-			<view class="fs13 color6 pdtb10">就分了的价格哈根flag哈拉嘎嘎监管科撒寄过来人家给感叹号给贴梗海棠让大哥花费案发后及hihi合法化反和范德萨发货后方可卡皇冠假日。</view>
-			<view>
-				<image style="width: 400rpx;height: 480rpx;" src="../../static/images/the-store-img3.png" mode=""></image>
+			<view class="fs13 color6 pdtb10">
+				<view class="content ql-editor"  v-html="mainData.content">
+				</view>
 			</view>
 		</view>
 		
@@ -102,7 +97,8 @@
 				showView: false,
 				wx_info:{},
 				pingjiaData:[{},{}],
-				mainData:{}
+				mainData:{},
+				user_no:''
 			}
 		},
 		

@@ -152,6 +152,19 @@
 		
 		methods: {
 			
+			previewImage: function(index,c_index) {
+				const self = this;
+				var imageList = [];
+				var current = self.mainData[index].mainImg[c_index].url;
+				for (var i = 0; i < self.mainData[index].mainImg.length; i++) {
+					imageList.push(self.mainData[index].mainImg[i].url)
+				}
+				uni.previewImage({
+					current: current,
+					urls: imageList
+				})
+			},
+			
 			toDetail(type,id){
 				const self = this;
 				console.log(type)

@@ -21,11 +21,11 @@
 					</view>
 				</view>
 				<view class="pdt10 borderB1"></view>
-				<view class="flexEnd fs12 pdt10">更多规则<image class="arrowB" src="../../static/images/coupons-icon1.png" mode=""></image></view>
+				<!-- <view class="flexEnd fs12 pdt10">更多规则<image class="arrowB" src="../../static/images/coupons-icon1.png" mode=""></image></view> -->
 			</view>
 			
 			<view class="pdlr4 pdt15 pdb15 radius10 whiteBj mgt15 canTing">
-				<view class="pdb10">餐厅介绍</view>
+				<view class="pdb10">商家介绍</view>
 				<view class="flex" @click="Router.redirectTo({route:{path:'/pages/shopDetail/shopDetail?user_no='+mainData.shop_no}})">
 					<view class="pic">
 						<image :src="mainData.shop&&mainData.shop[0]&&mainData.shop[0].mainImg
@@ -43,7 +43,7 @@
 			
 			<!-- 底部菜单按钮 -->
 			<view class="xqbotomBar flexRowBetween">
-				<view class="left price fs16">{{mainData.price}}</view>
+				<view class="left red fs16">NIP: {{mainData.price}}</view>
 				<view class="payBtn pubBj white" v-if="userInfoData.check_status==2" @click="Router.navigateTo({route:{path:'/pages/food-orderConfirm/food-orderConfirm?id='+mainData.id}})">立即抢购</view>
 				<view class="payBtn pubBj white" v-if="userInfoData.check_status!=2" @click="realnameshow">立即抢购</view>
 			</view>

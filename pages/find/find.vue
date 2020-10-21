@@ -24,12 +24,11 @@
 				<view class="child" v-for="(item,index) in mainData" :key="index">
 					<view class="flexRowBetween">
 						<view class="flex">
-							<view class="photo" :data-user_no ="item.user_no"
-							@click="Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+$event.currentTarget.dataset.user_no}})">
+							<view class="photo" @click="toHome(item.user_no)">
 								<image :src="item.headImg&&item.headImg[0]?item.headImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 							</view>
 							<view class="name">
-								<view class="fs12">{{item.name}}</view>
+								<view class="fs12">{{item.name!=''?item.name:'用户'+item.user_no}}</view>
 								<view class="fs10 color6">{{item.create_time}}</view>
 							</view>
 						</view>
@@ -161,6 +160,21 @@
 			</view>
 		</view>
 		
+		<view class="black-bj" v-if="is_show"></view>
+		
+		<view class="realnameshow whiteBj radius10 pdb25" v-if="is_realnameshow">
+			<view class="closebtn" style="z-index: 2;" @click="realnameshow">×</view>
+			<view>
+				<image class="bjImg w" src="../../static/images/about-icon2.png" mode="widthFix"></image>
+			</view>
+			<view class="pdt25 pdb15 center fs18 ftw">实名认证</view>
+			<view class="fs12 pdl20 pdr20">您还未认证身份信息，为方便您使用与享受更多的特权服务，请前去认证身份，完善资料。</view>
+			<view class="submitbtn mgt25 mgb25" @click="Router.navigateTo({route:{path:'/pages/user-realname/user-realname'}})">
+				<button class="btn">立即实名</button>
+			</view>
+			<view class="center color9 mgb10" @click="realnameshow">下次验证</view>
+			
+		</view>
 		
 		<!--底部tab键-->
 		<view class="navbar">
@@ -216,7 +230,8 @@
 				hasAddData:[],
 				noAddData:[],
 				userInfoData:{},
-				willId:-1
+				willId:-1,
+				is_realnameshow:false
 			}
 		},
 		
@@ -235,8 +250,41 @@
 			};
 		},
 		
+		onPullDownRefresh() {
+			const self = this;
+			console.log('refresh');
+			if(self.curr==1){
+				self.mainData = [];
+				self.$Utils.loadAll(['getMainData'], self);
+				
+			}else if(self.curr==2){
+				self.hasAddData = [];
+				self.$Utils.loadAll(['getHasAddData'], self);
+				
+			}else if(self.curr==3){
+				self.noAddData = [];
+				self.$Utils.loadAll(['getNoAddData'], self);
+				
+			}
+		},
+		
 		methods: {
 			
+			
+			toHome(user_no){
+				const self = this;
+				if(user_no==uni.getStorageSync('user_info').user_no){
+					self.Router.navigateTo({route:{path:'/pages/personHome/personHome'}})
+				}else{
+					self.Router.navigateTo({route:{path:'/pages/userHome/userHome?user_no='+user_no}})
+				}
+			},
+			
+			realnameshow(){
+				const self = this;
+				self.is_show = !self.is_show;
+				self.is_realnameshow = !self.is_realnameshow
+			},
 			
 			previewImage: function(index,c_index) {
 				const self = this;
@@ -433,7 +481,7 @@
 					if (res.info.data.length > 0) {
 						self.mainData.push.apply(self.mainData,res.info.data)
 					}
-			
+					uni.stopPullDownRefresh();
 					self.$Utils.finishFunc('getMainData');
 				};
 				self.$apis.getNews(postData, callback);
@@ -475,6 +523,7 @@
 					if (res.info.data.length > 0) {
 						self.hasAddData.push.apply(self.hasAddData,res.info.data);
 					}
+					uni.stopPullDownRefresh();
 					self.$Utils.finishFunc('getHasAddData');
 				};
 				self.$apis.communityGet(postData, callback);
@@ -498,6 +547,7 @@
 					if (res.info.data.length > 0) {
 						self.noAddData.push.apply(self.noAddData,res.info.data);
 					}
+					uni.stopPullDownRefresh();
 					self.$Utils.finishFunc('getNoAddData');
 				};
 				self.$apis.getUnfollow(postData, callback);
@@ -703,4 +753,6 @@
 	
 	.joinOK{padding: 0 10rpx;width: 140rpx;text-align: center;line-height: 50rpx;border-radius: 30rpx;border: 1px solid #eee;box-sizing: border-box;}
 	.joinOK .okIcon{width: 21rpx;height: 15rpx;display: block;margin-right: 10rpx;}
+	.realnameshow{width: 80%;position: fixed;top: 50%;left: 50%;transform: translate(-50%,-50%);z-index: 42;}
+	.realnameshow .bjImg{width: 100%;display: block;}
 </style>

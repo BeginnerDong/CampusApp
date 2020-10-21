@@ -19,7 +19,7 @@
 								<image :src="item.headImg&&item.headImg[0]?item.headImg[0].url:'../../static/images/about-img.png'" mode=""></image>
 							</view>
 							<view class="name">
-								<view class="fs12">{{item.name}}</view>
+								<view class="fs12">{{item.name!=''?item.name:'用户'+item.user_no}}</view>
 								<view class="fs10 color6">{{item.create_time}}</view>
 							</view>
 						</view>
